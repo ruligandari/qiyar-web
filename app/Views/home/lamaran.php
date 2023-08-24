@@ -4,12 +4,13 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    <title>Portfolio Details - Append Bootstrap Temlate</title>
+    <title>Home - Lamaran</title>
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
     <!-- Favicons -->
-    <link href="<?= base_url('front/')?>assets/img/favicon.png" rel="icon" />
+    
+    <link rel="icon" href="<?= base_url('front/') ?>assets/img/logoqiyar.png">
     <link href="<?= base_url('front/')?>assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
 
     <!-- Fonts -->
@@ -100,7 +101,7 @@
         <nav class="breadcrumbs">
           <div class="container">
             <ol>
-              <li><a href="index.html">Home</a></li>
+              <li><a href="<?= base_url('/')?>">Home</a></li>
               <li class="current">Lamaran</li>
             </ol>
           </div>

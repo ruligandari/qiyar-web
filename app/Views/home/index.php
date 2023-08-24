@@ -5,13 +5,13 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    <title>Home - Append Bootstrap Temlate</title>
+    <title>Home - Qiyar Media</title>
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
     <!-- Favicons -->
-    <link href="<?= base_url('front/') ?>assets/img/favicon.png" rel="icon" />
     <link href="<?= base_url('front/') ?>assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+    <link rel="icon" href="<?= base_url('front/') ?>assets/img/logoqiyar.png">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
