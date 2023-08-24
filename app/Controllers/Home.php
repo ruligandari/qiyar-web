@@ -14,6 +14,6 @@ class Home extends BaseController
         $data = [
             'title' => 'Lamaran',
         ];
-        return view('lamaran', $data);
+        return view('home/lamaran', $data);
     }
 }
