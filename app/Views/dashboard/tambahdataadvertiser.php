@@ -8,7 +8,6 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Data Advertiser</h1>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
     </div>
      <!-- DataTales Example -->
      <div class="card shadow mb-4">
@@ -24,19 +23,25 @@
   <div class="form-group">
     <label for="exampleInputEmail1">Nama Advertiser</label>
         <select class="custom-select">
-            <option selected>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            <option selected>Pilih Advertiser</option>
+            <option value="Zaka">Zaka</option>
+            <option value="Dwi">Dwi</option>
+            <option value="Fatan">Fatan</option>
+            <option value="Dwiki">Dwiki</option>
+            <option value="Harsono">Harsono</option>
         </select>
   </div>
   <div class="form-group">
     <label for="exampleInputEmail1">Nama Produk</label>
         <select class="custom-select">
-            <option selected>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+        <option selected>Pilih Produk</option>
+        <?php
+            foreach($produk as $data):
+        ?>
+            <option value="<?=$data['nama_produk'] ?>"><?=$data['nama_produk'] ?></option>
+        <?php
+        endforeach
+        ?>
         </select>
   </div>
   <div class="form-group">

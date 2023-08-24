@@ -112,13 +112,15 @@
       <!-- Portfolio-details Section - Portfolio Details Page -->
       <section id="portfolio-details" class="portfolio-details">
         <div class="container" data-aos="fade-up">
-          <form>
+          <form method="POST" action="<?= base_url('dashboard/tambah-lamaran')?>" enctype="multipart/form-data">
+
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label"
                 >Nama Lengkap <b style="color: red">*</b></label
               >
               <input
                 type="text"
+                name="nama"
                 class="form-control"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
@@ -131,6 +133,7 @@
               >
               <input
                 type="text"
+                name="email"
                 class="form-control"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
@@ -143,6 +146,7 @@
               >
               <input
                 type="text"
+                name="nomor"
                 class="form-control"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
@@ -155,6 +159,7 @@
               >
               <input
                 type="file"
+                name="cv"
                 class="form-control"
                 aria-label="file example"
                 required

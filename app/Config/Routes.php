@@ -46,6 +46,10 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('/', 'dashboard\DashboardController::index');
     $routes->get('data-advertiser', 'dashboard\AdvertiserController::index');
     $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata');
+    $routes->get('data-produk', 'dashboard\ProdukController::index');
+    $routes->get('tambah-data-produk', 'dashboard\ProdukController::tambahdata');
+    $routes->get('lamaran', 'dashboard\LamaranController::index');
+    $routes->post('tambah-lamaran', 'dashboard\LamaranController::tambahdata');
 });
 
 

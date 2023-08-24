@@ -21,7 +21,7 @@ class LoginController extends BaseController
         $user = $UserModel->where('email', $email)->first();
 
         if ($user) {
-            if (password_verify($password, $user['password'])) {
+            if ($password == $user['password']) {
                 $data = [
                     'nama' => $user['nama'],
                     'email' => $user['email'],
@@ -29,13 +29,14 @@ class LoginController extends BaseController
                     'logged_in' => TRUE
                 ];
                 session()->set($data);
-                return redirect()->to('/dashboard');
+                session()->setFlashdata('success', 'Sukses Bro');
+                return redirect()->to(base_url('login'));
             } else {
-                session()->setFlashdata('pesan', 'Password salah');
+                session()->setFlashdata('gagal', 'Password salah');
                 return redirect()->to('/login');
             }
         } else {
-            session()->setFlashdata('pesan', 'Email tidak terdaftar');
+            session()->setFlashdata('gagal', 'Email tidak terdaftar');
             return redirect()->to('/login');
         }
     }

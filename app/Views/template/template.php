@@ -45,6 +45,16 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                Produk
+            </div>
+            <li class="nav-item <?= $title == 'Data Produk' ? 'active' : '' ?>">
+                <a class="nav-link" href="<?=base_url('dashboard/data-produk')?>">
+                <i class="fas fa-fw fa-file"></i>
+                    <span>Data Produk</span></a>
+            </li>
              <!-- Divider -->
              <hr class="sidebar-divider">
             <div class="sidebar-heading">
@@ -63,7 +73,7 @@
                 Requirement
             </div>
             <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="<?=base_url('dashboard/lamaran')?>">
                 <i class="fas fa-fw fa-plus"></i>
                     <span>Lamaran</span></a>
             </li>
@@ -232,6 +242,8 @@
 
     <!-- Page level custom scripts -->
     <script src="<?= base_url() ?>js/demo/datatables-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?= $this->renderSection('script') ?>
 </body>
 
 </html>
