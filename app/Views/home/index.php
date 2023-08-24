@@ -50,10 +50,10 @@
             <!-- Nav Menu -->
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="index.html#hero" class="active">Home</a></li>
+                    <li><a href="#hero" class="active">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="<?= base_url('lamaran') ?>">Lamaran</a></li>
-                    <li><a href="index.html#team">Team</a></li>
+                    <li><a href="#team">Team</a></li>
                 </ul>
 
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
