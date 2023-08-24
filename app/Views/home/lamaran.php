@@ -63,17 +63,17 @@
           class="logo d-flex align-items-center me-auto me-xl-0"
         >
           <!-- Uncomment the line below if you also wish to use an image logo -->
-          <img src="assets/img/logoqiyar.png" alt="" />
+          <img src="<?= base_url('front/')?>assets/img/logoqiyar.png" alt="" />
           <h1>Qiyar Media</h1>
         </a>
 
         <!-- Nav Menu -->
         <nav id="navmenu" class="navmenu">
           <ul>
-            <li><a href="index.html#hero">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="lamaran.html" class="active">Lamaran</a></li>
-            <li><a href="index.html#team">Team</a></li>
+            <li><a href="<?= base_url('/')?>">Home</a></li>
+            <li><a href="<?= base_url('/')?>#about">About</a></li>
+            <li><a href="#" class="active">Lamaran</a></li>
+            <li><a href="<?= base_url('/')?>#team">Team</a></li>
           </ul>
 
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -179,13 +179,6 @@
           <strong class="px-1">Qiyar Media</strong>
           <span>All Rights Reserved</span>
         </p>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you've purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
       </div>
     </footer>
     <!-- End Footer -->
