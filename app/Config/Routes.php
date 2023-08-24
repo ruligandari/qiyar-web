@@ -44,6 +44,8 @@ $routes->get('logout', 'Admin\LoginController::login');
 // dashboard group
 $routes->group('dashboard', function ($routes) {
     $routes->get('/', 'dashboard\DashboardController::index');
+    $routes->get('data-advertiser', 'dashboard\AdvertiserController::index');
+    $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata');
 });
 
 
