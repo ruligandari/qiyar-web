@@ -67,6 +67,16 @@
                     <i class="fas fa-fw fa-file"></i>
                     <span>Data Advertiser</span></a>
             </li>
+            <li class="nav-item <?= $title == 'Pengeluaran Advertiser' ? 'active' : '' ?>">
+                <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-advertiser') ?>">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Pengeluaran Advertiser</span></a>
+            </li>
+            <!-- <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">
+                <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Pemasukan Advertiser</span></a>
+            </li> -->
             <!-- Divider -->
             <hr class="sidebar-divider">
 

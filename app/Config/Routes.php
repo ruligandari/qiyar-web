@@ -45,7 +45,10 @@ $routes->get('logout', 'Admin\LoginController::login');
 $routes->group('dashboard', function ($routes) {
     $routes->get('/', 'dashboard\DashboardController::index');
     $routes->get('data-advertiser', 'dashboard\AdvertiserController::index');
+    $routes->get('pengeluaran-advertiser', 'dashboard\AdvertiserController::pengeluaranadv');
     $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata');
+    $routes->get('tambah-data-pengeluaran-advertiser', 'dashboard\AdvertiserController::tambahdatapengeluaranadv');
+    $routes->post('tambah-data-pengeluaran-advertiser/add', 'dashboard\AdvertiserController::add');
 
     $routes->get('data-produk', 'dashboard\ProdukController::index');
     $routes->get('tambah-data-produk', 'dashboard\ProdukController::tambahdata');
