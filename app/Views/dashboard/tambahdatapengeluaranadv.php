@@ -9,12 +9,12 @@
 <?= $this->section('content'); ?>
 <div class="container-fluid">
 
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Data Pengeluaran Advertiser</h1>
-    </div>
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Data Pengeluaran Advertiser</h1>
+  </div>
 
-    <?php if (session()->getFlashdata('success')) : ?>
+  <?php if (session()->getFlashdata('success')) : ?>
     <script>
       Swal.fire({
         position: 'center',
@@ -38,57 +38,54 @@
       });
     </script>
   <?php endif ?>
-     <!-- DataTales Example -->
-     <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                                <div class=""><h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
-                        </div>
-                        <div class="card-body">
-                        <form method="POST" action="<?= base_url('dashboard/tambah-data-pengeluaran-advertiser/add') ?>">
-    <div class="form-group">
-    <label for="formGroupExampleInput">Tanggal Input</label>
-    <input type="text" class="form-control" value="<?=date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input" readonly>
-  </div>  
-  <div class="form-group">
-    <label for="formGroupExampleInput">Waktu</label>
-    <input type="time" class="form-control" name="waktu" id="formGroupExampleInput">
-  </div>   
-  <div class="form-group">
-    <label for="exampleInputEmail1">Nama Advertiser</label>
-        <select class="custom-select" name="nama_advertiser">
-            <option selected>Pilih Advertiser</option>
-            <option value="Zaka">Zaka</option>
-            <option value="Dwi">Dwi</option>
-            <option value="Fatan">Fatan</option>
-            <option value="Dwiki">Dwiki</option>
-            <option value="Harsono">Harsono</option>
-        </select>
-  </div>
-  <div class="form-group">
-    <label for="formGroupExampleInput">Bank Tujuan</label>
-    <input type="text" class="form-control" id="formGroupExampleInput" name="banktujuan" placeholder="Masukan Bank Tujuan">
-  </div>                          
-  <div class="form-group">
-    <label for="formGroupExampleInput">Jumlah</label>
-    <input type="text" class="form-control formatted-input" id="harga" name="jumlah" placeholder="Masukan Jumlah">
-  </div>
-  <div class="form-group">
-    <label for="formGroupExampleInput">Keterangan</label>
-    <textarea class="form-control" id="formGroupExampleInput" name="keterangan" placeholder="Masukan Keterangan"></textarea>
-  </div>
-  <div class="form-group">
-    <label for="formGroupExampleInput">Total</label>
-    <input type="text" class="form-control" id="formGroupExampleInput" name="total" placeholder="Masukan Total">
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-                        </div>
-                    </div>
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <div class="">
+        <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="<?= base_url('dashboard/tambah-data-pengeluaran-advertiser/add') ?>">
+          <div class="form-group">
+            <label for="formGroupExampleInput">Tanggal Input</label>
+            <input type="text" class="form-control" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input" readonly>
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Waktu</label>
+            <input type="time" class="form-control" name="waktu" id="formGroupExampleInput">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Nama Advertiser</label>
+            <select class="custom-select" name="nama_advertiser">
+              <option selected>Pilih Advertiser</option>
+              <option value="Zaka">Zaka</option>
+              <option value="Dwi">Dwi</option>
+              <option value="Fatan">Fatan</option>
+              <option value="Dwiki">Dwiki</option>
+              <option value="Harsono">Harsono</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Bank Tujuan</label>
+            <input type="text" class="form-control" id="formGroupExampleInput" name="banktujuan" placeholder="Masukan Bank Tujuan">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Jumlah</label>
+            <input type="text" class="form-control formatted-input" id="harga" name="jumlah" placeholder="Masukan Jumlah">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Nama Bank Penerima</label>
+            <textarea class="form-control" id="formGroupExampleInput" name="keterangan" placeholder="Masukan Nama Bank Penerima"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
 
-</div>
-<?= $this->endSection(); ?>
+  </div>
+  <?= $this->endSection(); ?>
 
-<?= $this->section('script'); ?>
+  <?= $this->section('script'); ?>
   <script>
     function addThousandSeparator(input) {
       // Menambahkan pemisah ribuan ke input

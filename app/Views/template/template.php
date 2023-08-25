@@ -17,6 +17,7 @@
 
     <!-- Custom styles for this template-->
     <link href="<?= base_url('/') ?>css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <?= $this->renderSection('header'); ?>
 
@@ -254,7 +255,6 @@
 
     <!-- Page level custom scripts -->
     <script src="<?= base_url() ?>js/demo/datatables-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?= $this->renderSection('script') ?>
 </body>
 

@@ -38,4 +38,10 @@ class PengeluaranadvertiserModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getTotal()
+    {
+        $query = $this->db->query("SELECT SUM(jumlah) AS total FROM pengeluaran_advertiser");
+        return $query->getRow()->total;
+    }
 }
