@@ -17,7 +17,7 @@ class AdvertiserController extends BaseController
         $advertiser = $this->advertiser->findAll();
         $data = [
             'title' => 'Data Advertiser',
-            'produk' => $produk ,
+            'produk' => $produk,
             'advertiser' => $advertiser
         ];
         return view('dashboard/dataadvertiser', $data);
@@ -26,7 +26,7 @@ class AdvertiserController extends BaseController
     {
         $pengeluaranadv = $this->pengeluaranadv->findAll();
         $data = [
-            'title' => 'Pengeluaran Advertiser' ,
+            'title' => 'Pengeluaran Advertiser',
             'pengeluaranadv' => $pengeluaranadv
         ];
         return view('dashboard/pengeluaranadvertiser', $data);
@@ -35,7 +35,7 @@ class AdvertiserController extends BaseController
     {
         $advertiser = $this->advertiser->findAll();
         $data = [
-            'title' => 'Pengeluaran Advertiser' ,
+            'title' => 'Pengeluaran Advertiser',
             'advertiser' => $advertiser
         ];
         return view('dashboard/pengeluaranadvertiser', $data);
@@ -127,5 +127,10 @@ class AdvertiserController extends BaseController
             session()->setFlashdata('success', 'Data berhasil ditambahkan');
             return redirect()->to('/dashboard/tambah-data-pengeluaran-advertiser');
         }
-}
+    }
+
+    public function filterTanggal()
+    {
+        $id = $this->request->getPost('tanggal');
+    }
 }

@@ -49,6 +49,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata');
     $routes->get('tambah-data-pengeluaran-advertiser', 'dashboard\AdvertiserController::tambahdatapengeluaranadv');
     $routes->post('tambah-data-pengeluaran-advertiser/add', 'dashboard\AdvertiserController::add');
+    $routes->post('data-advertiser', 'dashboard\AdvertiserController::filterTanggal');
 
     $routes->get('data-produk', 'dashboard\ProdukController::index');
     $routes->get('tambah-data-produk', 'dashboard\ProdukController::tambahdata');
