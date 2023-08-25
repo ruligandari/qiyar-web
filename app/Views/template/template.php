@@ -18,6 +18,8 @@
     <!-- Custom styles for this template-->
     <link href="<?= base_url('/') ?>css/sb-admin-2.min.css" rel="stylesheet">
 
+    <?= $this->renderSection('header'); ?>
+
 </head>
 
 <body id="page-top">
@@ -41,7 +43,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item <?= $title == 'Dashboard' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?=base_url('dashboard')?>">
+                <a class="nav-link" href="<?= base_url('dashboard') ?>">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -51,18 +53,18 @@
                 Produk
             </div>
             <li class="nav-item <?= $title == 'Data Produk' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?=base_url('dashboard/data-produk')?>">
-                <i class="fas fa-fw fa-file"></i>
+                <a class="nav-link" href="<?= base_url('dashboard/data-produk') ?>">
+                    <i class="fas fa-fw fa-file"></i>
                     <span>Data Produk</span></a>
             </li>
-             <!-- Divider -->
-             <hr class="sidebar-divider">
+            <!-- Divider -->
+            <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 Kantor
             </div>
             <li class="nav-item <?= $title == 'Data Advertiser' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?=base_url('dashboard/data-advertiser')?>">
-                <i class="fas fa-fw fa-file"></i>
+                <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
+                    <i class="fas fa-fw fa-file"></i>
                     <span>Data Advertiser</span></a>
             </li>
             <!-- Divider -->
@@ -70,11 +72,11 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Requirement
+                Requitment
             </div>
             <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?=base_url('dashboard/lamaran')?>">
-                <i class="fas fa-fw fa-plus"></i>
+                <a class="nav-link" href="<?= base_url('dashboard/lamaran') ?>">
+                    <i class="fas fa-fw fa-plus"></i>
                     <span>Lamaran</span></a>
             </li>
             <!-- Divider -->
@@ -226,7 +228,7 @@
     <script src="<?= base_url() ?>js/demo/chart-pie-demo.js"></script>
 
     <!-- Code injected by live-server -->
-  <!-- Bootstrap core JavaScript-->
+    <!-- Bootstrap core JavaScript-->
     <script src="<?= base_url() ?>vendor/jquery/jquery.min.js"></script>
     <script src="<?= base_url() ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
