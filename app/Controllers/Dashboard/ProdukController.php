@@ -71,4 +71,57 @@ class ProdukController extends BaseController
             return redirect()->to('/dashboard/tambah-data-produk');
         }
     }
+
+    public  function edit($id)
+    {
+        $produk = $this->produk->find($id);
+        $data = [
+            'title' => 'Data Produk',
+            'produk' => $produk,
+        ];
+        return view('dashboard/editdataproduk', $data);
+    }
+
+    public function update()
+    {
+        $id_produk = $this->request->getPost('id_produk');
+        $nama_produk = $this->request->getPost('nama_produk');
+        $stock = $this->request->getPost('stock');
+        $harga = $this->request->getPost('harga');
+
+        // convert 140,000 to 140000
+        $harga = str_replace(',', '', $harga);
+
+        $data = [
+            'nama_produk' => $nama_produk,
+            'stock' => $stock,
+            'harga' => $harga,
+        ];
+
+        // update data
+        $produk = $this->produk->update($id_produk, $data);
+        if ($produk) {
+            session()->setFlashdata('success', 'Data berhasil diupdate');
+            return redirect()->to('/dashboard/data-produk');
+        } else {
+            session()->setFlashdata('error', 'Data gagal diupdate');
+            return redirect()->to('/dashboard/data-produk');
+        }
+    }
+
+    public function delete()
+    {
+        $id = $this->request->getPost('id');
+        $produk = $this->produk->delete($id);
+        if ($produk) {
+            $data = [
+                'success' => true,
+            ];
+        } else {
+            $data = [
+                'success' => false,
+            ];
+        }
+        echo json_encode($data);
+    }
 }
