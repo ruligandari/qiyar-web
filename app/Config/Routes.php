@@ -65,6 +65,10 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('lamaran', 'dashboard\LamaranController::index');
     $routes->post('lamaran/delete', 'dashboard\LamaranController::delete');
     $routes->post('tambah-lamaran', 'dashboard\LamaranController::tambahdata');
+
+    $routes->get('pemasukan-advertiser', 'dashboard\PemasukanAdvertiserController::index');
+    $routes->get('tambah-data-pemasukan-advertiser', 'dashboard\PemasukanAdvertiserController::tambahdatapemasukanadv');
+    $routes->post('tambah-data-pemasukan-advertiser/add', 'dashboard\PemasukanAdvertiserController::add');
 });
 
 

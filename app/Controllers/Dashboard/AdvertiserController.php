@@ -10,6 +10,7 @@ class AdvertiserController extends BaseController
     function __construct()
     {
         $this->produk = new \App\Models\ProdukModel();
+        $this->advertiser = new \App\Models\AdvertiserModel();
         $this->pengeluaranadv = new \App\Models\PengeluaranadvertiserModel();
     }
     public function index()

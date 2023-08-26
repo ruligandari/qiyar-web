@@ -48,15 +48,15 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Data Advertiser</h1>
+        <h1 class="h3 mb-0 text-gray-800">Pemasukan Advertiser</h1>
     </div>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
-                    <h6 class=" font-weight-bold text-primary">Data Advertiser</h6>
-                    <a href="<?= base_url('dashboard/data-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <h6 class=" font-weight-bold text-primary">Data Pemasukan Advertiser</h6>
+                    <a href="<?= base_url('dashboard/tambah-data-pemasukan-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                 </div>
             </div>
         </div>
@@ -80,25 +80,33 @@
                         <tr>
                             <th>No</th>
                             <th>Tanggal</th>
-                            <th>Nama Advertiser</th>
-                            <th>Pengeluaran</th>
+                            <th>Waktu</th>
+                            <th>Expedisi</th>
+                            <th>Bank Tujuan</th>
+                            <th>Nama Bank Penerima</th>
+                            <th>Jumlah</th>
+                            <th>Upload Bukti</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         $no = 1;
-                        foreach ($advertiser as $data) :
+                        foreach ($pemasukanadv as $data) :
                         ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><?= $data['tanggal_pembelian'] ?></td>    
-                                <td><?= $data['nama_advertiser'] ?></td>
-                                <td><?= number_format($data['total_harga'], 0, ',', '.') ?>
+                                <td><?= $data['tanggal'] ?></td>
+                                <td><?= $data['waktu'] ?></td>
+                                <td><?= $data['expedisi'] ?></td>
+                                <td><?= $data['bank_tujuan'] ?></td>
+                                <td><?= $data['penerima'] ?></td>
+                                <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
+                                <td><?= $data['upload_bukti'] ?></td>
                                 </td>
                                 <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/data-advertiser/edit/') . $data['id_advertiser'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_advertiser'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
+                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                 </td>
                             </tr>
                         <?php
@@ -107,7 +115,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="3"></td>
+                            <td colspan="7"></td>
                             <td><b>Total</b></td>
                             <td id="totalSum"></td>
                         </tr>
@@ -197,7 +205,7 @@
 
         // Sum the "jumlah" column
         function sumColumn() {
-            let sum = table.column(3, {
+            let sum = table.column(6, {
                 search: 'applied'
             }).data().reduce(function(acc, curr) {
                 let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
@@ -207,7 +215,9 @@
             // Format the sum as Indonesian currency
             let formattedSum = sum.toLocaleString('id-ID', {
                 style: 'currency',
-                currency: 'IDR'
+                currency: 'IDR',
+                minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
+                maximumFractionDigits: 2
             });
 
             // Display the formatted sum
