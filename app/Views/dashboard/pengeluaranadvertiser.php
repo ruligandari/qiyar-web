@@ -213,7 +213,9 @@
             // Format the sum as Indonesian currency
             let formattedSum = sum.toLocaleString('id-ID', {
                 style: 'currency',
-                currency: 'IDR'
+                currency: 'IDR',
+                minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
+                maximumFractionDigits: 2
             });
 
             // Display the formatted sum
