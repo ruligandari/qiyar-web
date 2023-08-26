@@ -84,7 +84,7 @@
                             <th>Nama Advertiser</th>
                             <th>Bank Tujuan</th>
                             <th>Keterangan</th>
-                            <th>Jumlah</th>
+                            <th>Jumlah (Rp)</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -100,7 +100,8 @@
                                 <td><?= $data['nama_advertiser'] ?></td>
                                 <td><?= $data['bank_tujuan'] ?></td>
                                 <td><?= $data['keterangan'] ?></td>
-                                <td>Rp. <?= number_format($data['jumlah'], 0, ',', '.') ?></td>
+                                <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
+                                </td>
                                 <td class="text-center">
                                     <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pengeluaran-advertiser/edit/') . $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                     <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
@@ -114,7 +115,7 @@
                         <tr>
                             <td colspan="5"></td>
                             <td><b>Total</b></td>
-                            <td><b>Rp. <?= number_format($total, 0, ',', '.') ?></b></td>
+                            <td id="totalSum"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -152,7 +153,6 @@
         let min = minDate.val();
         let max = maxDate.val();
         let date = new Date(data[1]);
-        let jumlah = parseInt(data[6].replace(/[^\d.-]/g, '')); // Mengambil nilai dalam kolom "Jumlah" dan mengonversi ke Int
 
         if (
             (min === null && max === null) ||
@@ -201,13 +201,44 @@
             ],
         });
 
+        // Sum the "jumlah" column
+        function sumColumn() {
+            let sum = table.column(6, {
+                search: 'applied'
+            }).data().reduce(function(acc, curr) {
+                let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
+                return acc + numericValue;
+            }, 0);
+
+            // Format the sum as Indonesian currency
+            let formattedSum = sum.toLocaleString('id-ID', {
+                style: 'currency',
+                currency: 'IDR'
+            });
+
+            // Display the formatted sum
+            $('#totalSum').html(formattedSum);
+        }
+
+        // Call sumColumn when searching/filtering is applied
+        table.on('search.dt', function() {
+            sumColumn();
+        });
+
+        // Initial sum when the page loads
+        sumColumn();
+
         table.buttons().container()
             .appendTo('#example1_wrapper .col-md-6:eq(0)');
 
         // Refilter the table
         document.querySelectorAll('#min, #max').forEach((el) => {
-            el.addEventListener('change', () => table.draw());
+            el.addEventListener('change', () => {
+                table.draw();
+                sumColumn();
+            });
         });
+
 
     });
 </script>
