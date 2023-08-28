@@ -23,7 +23,7 @@
         showConfirmButton: false,
         timer: 2000
       }).then(function() {
-        window.location = "<?= base_url('dashboard/data-pemasukan-advertiser') ?>";
+        window.location = "<?= base_url('dashboard/pemasukan-advertiser') ?>";
       });
     </script>
   <?php endif ?>
@@ -52,11 +52,11 @@
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Waktu</label>
-            <input type="time" class="form-control" name="waktu" id="formGroupExampleInput">
+            <input type="time" class="form-control" name="waktu" id="formGroupExampleInput" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Expedisi</label>
-            <select name="expedisi" id="" class="form-control">
+            <select name="expedisi" class="form-control" id="formGroupExampleInput">
               <option value="Sicepat">Sicepat</option>
               <option value="OExpress">OExpress</option>
               <option value="Ninja">Ninja</option>
@@ -64,28 +64,24 @@
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Bank Tujuan</label>
-            <input type="text" class="form-control" id="formGroupExampleInput" name="banktujuan" placeholder="Masukan Bank Tujuan">
+            <input type="text" class="form-control" id="formGroupExampleInput" name="banktujuan" placeholder="Masukan Bank Tujuan" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Nama Bank Penerima</label>
-            <textarea class="form-control" id="formGroupExampleInput" name="penerima" placeholder="Masukan Nama Bank Penerima"></textarea>
+            <textarea class="form-control" id="formGroupExampleInput" name="penerima" placeholder="Masukan Nama Bank Penerima" required></textarea>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Jumlah</label>
-            <input type="text" class="form-control formatted-input" id="harga" name="jumlah" placeholder="Masukan Jumlah">
+            <input type="text" class="form-control formatted-input" id="harga" name="jumlah" placeholder="Masukan Jumlah" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">Upload</span>
-              </div>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputGroupFile01" name="upload_bukti">
-                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-              </div>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="customFile">
+              <label class="custom-file-label" for="customFile" id="custom_File">Choose file</label>
             </div>
           </div>
+
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>

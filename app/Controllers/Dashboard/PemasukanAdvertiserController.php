@@ -11,6 +11,7 @@ class PemasukanAdvertiserController extends BaseController
     {
         $this->pemasukanadv = new \App\Models\PemasukanAdvertiserModel();
     }
+
     public function index()
     {
         $pemasukanadv = $this->pemasukanadv->findAll();
@@ -20,15 +21,16 @@ class PemasukanAdvertiserController extends BaseController
         ];
         return view('dashboard/pemasukanadvertiser', $data);
     }
-    // public function tambahdatapemasukanadv()
-    // {
-    //     $pemasukanadv = $this->pemasukanadv->findAll();
-    //     $data = [
-    //         'title' => 'Pemasukan Advertiser',
-    //         'pemasukanadv' => $pemasukanadv
-    //     ];
-    //     return view('dashboard/tambahdatapemasukanadv', $data);
-    // }
+
+    public function tambahdatapemasukanadv()
+    {
+        $pemasukanadv = $this->pemasukanadv->findAll();
+        $data = [
+            'title' => 'Pemasukan Advertiser',
+            'pemasukanadv' => $pemasukanadv
+        ];
+        return view('dashboard/tambahdatapemasukanadv', $data);
+    }
     // public function pengeluaranadvertiser()
     // {
     //     $advertiser = $this->advertiser->findAll();
@@ -65,75 +67,34 @@ class PemasukanAdvertiserController extends BaseController
         $penerima = $this->request->getPost('penerima');
         $jumlah = $this->request->getPost('jumlah');
         $upload_bukti = $this->request->getFile('upload_bukti');
-        //    menambahkan validasi
-        $validation =  \Config\Services::validation();
-        $validate = $this->validate([
-            'waktu' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Waktu harus diisi',
-                ],
-            ],
-            'expedisi' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Ekspedisi harus diisi',
-                ],
-            ],
-            'banktujuan' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Bank Tujuan harus diisi',
-                ],
-            ],
-            'jumlah' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Jumlah harus diisi',
-                ],
-            ],
-            'upload_bukti' => [
-                'rules' => 'uploaded[jpg,jpeg,png]',
-                'errors' => [
-                    'required' => 'Upload Bukti harus diisi',
-                ],
-            ],
-
-        ]);
-
 
         // convert 140,000 to 140000
         $jumlah = str_replace(',', '', $jumlah);
-        dd($validate);
-        if (!$validate) {
-            session()->setFlashdata('error', 'error nih');
-            return redirect()->to('/dashboard/tambah-data-pemasukan-advertiser')->withInput();
-        } else {
-            $data = [
-                'tanggal' => $tanggal,
-                'waktu' => $waktu,
-                'expedisi' => $expedisi,
-                'bank_tujuan' => $banktujuan,
-                'penerima' => $penerima,
-                'jumlah' => $jumlah,
-                'upload_bukti' => $upload_bukti->getName()
-            ];
-            $this->pemasukanadv->insert($data);
-            $upload_bukti->move('bukti_pemasukan_advertiser');
-            session()->setFlashdata('success', 'Data berhasil ditambahkan');
-            return redirect()->to('/dashboard/tambah-data-pemasukan-advertiser');
-        }
+
+        $data = [
+            'tanggal' => $tanggal,
+            'waktu' => $waktu,
+            'expedisi' => $expedisi,
+            'bank_tujuan' => $banktujuan,
+            'penerima' => $penerima,
+            'jumlah' => $jumlah,
+            'upload_bukti' => $upload_bukti->getName()
+        ];
+        $this->pemasukanadv->insert($data);
+        $upload_bukti->move('bukti_pemasukan_advertiser');
+        session()->setFlashdata('success', 'Data berhasil ditambahkan');
+        return redirect()->to('/dashboard/tambah-data-pemasukan-advertiser');
     }
 
-    // public  function edit($id)
-    // {
-    //     $pengeluaranadv = $this->pengeluaranadv->find($id);
-    //     $data = [
-    //         'title' => 'Pengeluaran Advertiser',
-    //         'data' => $pengeluaranadv,
-    //     ];
-    //     return view('dashboard/editdatapengeluaranadv', $data);
-    // }
+    public  function edit($id)
+    {
+        $pemasukanadv = $this->pemasukanadv->find($id);
+        $data = [
+            'title' => 'Pengeluaran Advertiser',
+            'data' => $pemasukanadv,
+        ];
+        return view('dashboard/editdatapeadv', $data);
+    }
 
     // public function update()
     // {
@@ -165,21 +126,23 @@ class PemasukanAdvertiserController extends BaseController
     //     }
     // }
 
-    // public function delete()
-    // {
-    //     $id = $this->request->getPost('id');
-    //     $pengeluaranadv = $this->pengeluaranadv->delete($id);
-    //     if ($pengeluaranadv) {
-    //         $data = [
-    //             'success' => true,
-    //         ];
-    //     } else {
-    //         $data = [
-    //             'success' => false,
-    //         ];
-    //     }
-    //     echo json_encode($data);
-    // }
+    public function delete()
+    {
+        $id = $this->request->getPost('id');
+        $pemasukanadv = $this->pemasukanadv->delete($id);
+        if ($pemasukanadv) {
+            $data = [
+                'success' => true,
+                'msg' => 'Data berhasil dihapus nih!'
+            ];
+        } else {
+            $data = [
+                'success' => false,
+                'msg' => 'Data Gagal dihapus nih!'
+            ];
+        }
+        echo json_encode($data);
+    }
 
     // public function generateReport()
     // {

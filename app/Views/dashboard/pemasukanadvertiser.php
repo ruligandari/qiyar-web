@@ -85,7 +85,7 @@
                             <th>Bank Tujuan</th>
                             <th>Nama Bank Penerima</th>
                             <th>Jumlah</th>
-                            <th>Upload Bukti</th>
+                            <th>Bukti Upload</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -102,7 +102,7 @@
                                 <td><?= $data['bank_tujuan'] ?></td>
                                 <td><?= $data['penerima'] ?></td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
-                                <td><?= $data['upload_bukti'] ?></td>
+                                <td><img src="<?= base_url('bukti_pemasukan_advertiser/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></td>
                                 </td>
                                 <td class="text-center">
                                     <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
