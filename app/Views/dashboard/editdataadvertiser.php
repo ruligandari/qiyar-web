@@ -1,14 +1,19 @@
 <!-- menambahkan template/template.php -->
 <?= $this->extend('template/template'); ?>
 
+<?= $this->section('header'); ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?= $this->endSection(); ?>
+
 <!-- menambahkan section -->
 <?= $this->section('content'); ?>
 <div class="container-fluid">
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Data Advertiser</h1>
+    <h1 class="h3 mb-0 text-gray-800">Edit Data Advertiser</h1>
   </div>
+
   <!-- DataTales Example -->
   <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -16,26 +21,19 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/tambah-data-advertiser/add') ?>">
+        <form method="POST" action="<?= base_url('dashboard/data-advertiser/update') ?>">
+          <input type="hidden" name="id_advertiser" value="<?= $data['id_advertiser'] ?>">
           <div class="form-group">
-            <label for="formGroupExampleInput">Tanggal Input</label>
-            <input type="text" class="form-control" name="tanggal" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" placeholder="Tanggal Input" readonly>
+            <label for="formGroupExampleInput">Tanggal</label>
+            <input type="text" name="tanggal" class="form-control" value="<?= $data['tanggal_pembelian'] ?>" id="formGroupExampleInput" placeholder="Masukan Nama Barang" required>
           </div>
           <div class="form-group">
-            <label for="exampleInputEmail1">Nama Advertiser</label>
-            <select class="custom-select" name="nama_advertiser">
-              <option selected>Pilih Advertiser</option>
-              <option value="Zaka">Zaka</option>
-              <option value="Dwi Prayogo">Dwi Prayogo</option>
-              <option value="Fatan">Fatan</option>
-              <option value="Dwiki Renaldhi">Dwiki Renaldhi</option>
-              <option value="Harsono">Harsono</option>
-              <option value="Rino">Rino</option>
-            </select>
+            <label for="formGroupExampleInput">Nama Advertiser</label>
+            <input type="text" name="nama_advertiser" class="form-control" value="<?= $data['nama_advertiser'] ?>" required>
           </div>
           <div class="form-group">
-            <label for="formGroupExampleInput">Total Harga</label>
-            <input type="text" name="total_harga" class="form-control formatted-input" id="formGroupExampleInput" placeholder="Total Harga">
+            <label for="formGroupExampleInput">Total</label>
+            <input type="text" name="total_harga" class="form-control formatted-input" value="<?= number_format($data['total_harga'], 0, ',', '.') ?>" placeholder="Masukan Jumlah" required>
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>

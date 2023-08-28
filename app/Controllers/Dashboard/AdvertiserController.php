@@ -65,6 +65,98 @@ class AdvertiserController extends BaseController
     public function add()
     {
         $tanggal = $this->request->getPost('tanggal');
+        $nama_advertiser = $this->request->getPost('nama_advertiser');
+        $total_harga = $this->request->getPost('total_harga');
+        //    menambahkan validasi  
+        $validation =  \Config\Services::validation();
+        $validate = $this->validate([
+            'nama_advertiser' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Nama Advertiser harus diisi',
+                ],
+            ],
+            'total_harga' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'total harga harus diisi',
+                ],
+            ],
+
+        ]);
+        // convert 140,000 to 140000
+        $total_harga = str_replace(',', '', $total_harga);
+        if (!$validate) {
+            session()->setFlashdata('error', 'error nih');
+            return redirect()->to('/dashboard/tambah-data-advertiser')->withInput();
+        } else {
+            $data = [
+                'tanggal_pembelian' => $tanggal,
+                'nama_advertiser' => $nama_advertiser,
+                'total_harga' => $total_harga,
+            ];
+            $this->advertiser->insert($data);
+            session()->setFlashdata('success', 'Data berhasil ditambahkan');
+            return redirect()->to('/dashboard/data-advertiser');
+        }
+    }
+
+    public  function edit($id)
+    {
+        $advertiser = $this->advertiser->find($id);
+        $data = [
+            'title' => 'Data Advertiser',
+            'data' => $advertiser,
+        ];
+        return view('dashboard/editdataadvertiser', $data);
+    }
+
+    public function update()
+    {
+        $id_advertiser = $this->request->getPost('id_advertiser');
+        $tanggal = $this->request->getPost('tanggal');
+        $nama_advertiser = $this->request->getPost('nama_advertiser');
+        $total_harga = $this->request->getPost('total_harga');
+
+        // convert 140,000 to 140000
+        $total_harga = str_replace(',', '', $total_harga);
+
+
+        $data = [
+            'tanggal_pembelian' => $tanggal,
+            'nama_advertiser' => $nama_advertiser,
+            'total_harga' => $total_harga,
+        ];
+
+        // update data
+        $advertiser = $this->advertiser->update($id_advertiser, $data);
+        if ($advertiser) {
+            session()->setFlashdata('success', 'Data berhasil diupdate');
+            return redirect()->to('/dashboard/data-advertiser');
+        } else {
+            session()->setFlashdata('error', 'Data gagal diupdate');
+            return redirect()->to('/dashboard/data-advertiser/edit/' . $id_advertiser);
+        }
+    }
+
+    public function delete()
+    {
+        $id = $this->request->getPost('id');
+        $advertiser = $this->advertiser->delete($id);
+        if ($advertiser) {
+            $data = [
+                'success' => true,
+            ];
+        } else {
+            $data = [
+                'success' => false,
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function addpengeluaranadv()
+    {
+        $tanggal = $this->request->getPost('tanggal');
         $waktu = $this->request->getPost('waktu');
         $nama_advertiser = $this->request->getPost('nama_advertiser');
         $banktujuan = $this->request->getPost('banktujuan');
@@ -125,8 +217,7 @@ class AdvertiserController extends BaseController
             return redirect()->to('/dashboard/tambah-data-pengeluaran-advertiser');
         }
     }
-
-    public  function edit($id)
+    public  function editpengeluaran($id)
     {
         $pengeluaranadv = $this->pengeluaranadv->find($id);
         $data = [
@@ -136,7 +227,7 @@ class AdvertiserController extends BaseController
         return view('dashboard/editdatapengeluaranadv', $data);
     }
 
-    public function update()
+    public function updatepengeluaran()
     {
         $id_pengeluaran = $this->request->getPost('id_pengeluaran');
         $nama_advertiser = $this->request->getPost('nama_advertiser');
@@ -166,7 +257,7 @@ class AdvertiserController extends BaseController
         }
     }
 
-    public function delete()
+    public function deletepengeluaran()
     {
         $id = $this->request->getPost('id');
         $pengeluaranadv = $this->pengeluaranadv->delete($id);

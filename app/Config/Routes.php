@@ -45,14 +45,19 @@ $routes->get('logout', 'Admin\LoginController::login');
 $routes->group('dashboard', function ($routes) {
     $routes->get('/', 'dashboard\DashboardController::index');
     $routes->get('data-advertiser', 'dashboard\AdvertiserController::index');
-    $routes->get('pengeluaran-advertiser', 'dashboard\AdvertiserController::pengeluaranadv');
-    $routes->get('pengeluaran-advertiser/edit/(:any)', 'dashboard\AdvertiserController::edit/$1');
-    $routes->post('pengeluaran-advertiser/update', 'dashboard\AdvertiserController::update');
-    $routes->post('pengeluaran-advertiser/delete', 'dashboard\AdvertiserController::delete');
-    $routes->post('pengeluaran-advertiser/generate-report', 'dashboard\AdvertiserController::generateReport');
+    $routes->post('data-advertiser/delete', 'dashboard\AdvertiserController::delete');
+    $routes->get('data-advertiser/edit/(:any)', 'dashboard\AdvertiserController::edit/$1');
+    $routes->post('data-advertiser/update', 'dashboard\AdvertiserController::update');
     $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata');
+    $routes->post('tambah-data-advertiser/add', 'dashboard\AdvertiserController::add');
+
+    $routes->get('pengeluaran-advertiser', 'dashboard\AdvertiserController::pengeluaranadv');
+    $routes->get('pengeluaran-advertiser/edit/(:any)', 'dashboard\AdvertiserController::editpengeluaran/$1');
+    $routes->post('pengeluaran-advertiser/update', 'dashboard\AdvertiserController::updatepengeluaran');
+    $routes->post('pengeluaran-advertiser/delete', 'dashboard\AdvertiserController::deletepengeluaran');
+    $routes->post('pengeluaran-advertiser/generate-report', 'dashboard\AdvertiserController::generateReport');
     $routes->get('tambah-data-pengeluaran-advertiser', 'dashboard\AdvertiserController::tambahdatapengeluaranadv');
-    $routes->post('tambah-data-pengeluaran-advertiser/add', 'dashboard\AdvertiserController::add');
+    $routes->post('tambah-data-pengeluaran-advertiser/add', 'dashboard\AdvertiserController::addpengeluaranadv');
     $routes->post('data-advertiser', 'dashboard\AdvertiserController::filterTanggal');
 
     $routes->get('data-produk', 'dashboard\ProdukController::index');

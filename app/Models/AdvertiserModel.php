@@ -8,7 +8,7 @@ class AdvertiserModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'data_advertiser';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'id_advertiser';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
@@ -18,7 +18,7 @@ class AdvertiserModel extends Model
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
+    protected $createdField  = 'created_    at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 

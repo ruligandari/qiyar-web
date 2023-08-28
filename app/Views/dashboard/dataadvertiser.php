@@ -28,7 +28,7 @@
         Swal.fire({
             position: 'center',
             icon: 'success',
-            text: 'Data produk berhasil diupdate!',
+            text: 'Data berhasil diupdate!',
             showConfirmButton: false,
             timer: 2000
         })
@@ -56,7 +56,7 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Advertiser</h6>
-                    <a href="<?= base_url('dashboard/data-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <a href="<?= base_url('dashboard/tambah-data-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@
                         ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><?= $data['tanggal_pembelian'] ?></td>    
+                                <td><?= $data['tanggal_pembelian'] ?></td>
                                 <td><?= $data['nama_advertiser'] ?></td>
                                 <td><?= number_format($data['total_harga'], 0, ',', '.') ?>
                                 </td>
@@ -245,7 +245,7 @@
             const id = this.getAttribute("data-id");
 
             Swal.fire({
-                title: "Apakah Anda yakin akan menghapus produk ini?",
+                title: "Apakah Anda yakin akan menghapus data ini?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -257,7 +257,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pengeluaran-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/data-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },
@@ -266,7 +266,7 @@
                             if (data.success) {
                                 Swal.fire(
                                     "Dihapus!",
-                                    "Data Lamaran Berhasil Dihapus",
+                                    "Data Advertiser Berhasil Dihapus",
                                     "success"
                                 ).then(() => {
                                     // Muat ulang halaman setelah penghapusan

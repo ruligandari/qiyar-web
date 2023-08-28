@@ -59,10 +59,11 @@
             <select class="custom-select" name="nama_advertiser">
               <option selected>Pilih Advertiser</option>
               <option value="Zaka">Zaka</option>
-              <option value="Dwi">Dwi</option>
+              <option value="Dwi Prayogo">Dwi Prayogo</option>
               <option value="Fatan">Fatan</option>
-              <option value="Dwiki">Dwiki</option>
+              <option value="Dwiki Renaldhi">Dwiki Renaldhi</option>
               <option value="Harsono">Harsono</option>
+              <option value="Rino">Rino</option>
             </select>
           </div>
           <div class="form-group">
