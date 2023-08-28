@@ -3,6 +3,7 @@
 
 <?= $this->section('header'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 <?= $this->endSection(); ?>
 
 <!-- menambahkan section -->
@@ -76,10 +77,7 @@
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="customFile">
-              <label class="custom-file-label" for="customFile" id="custom_File">Choose file</label>
-            </div>
+            <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" name="upload_bukti">
           </div>
 
           <button type="submit" class="btn btn-primary">Submit</button>
@@ -91,6 +89,9 @@
   <?= $this->endSection(); ?>
 
   <?= $this->section('script'); ?>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
   <script>
     function addThousandSeparator(input) {
       // Menambahkan pemisah ribuan ke input
