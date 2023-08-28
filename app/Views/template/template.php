@@ -63,6 +63,16 @@
             <div class="sidebar-heading">
                 Kantor
             </div>
+            <li class="nav-item <?= $title == 'Pengeluaran Kantor' ? 'active' : '' ?>">
+                <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-kantor') ?>">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Pengeluaran Kantor</span></a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                Advertiser
+            </div>
             <li class="nav-item <?= $title == 'Data Advertiser' ? 'active' : '' ?>">
                 <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
                     <i class="fas fa-fw fa-file"></i>

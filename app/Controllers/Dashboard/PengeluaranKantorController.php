@@ -5,30 +5,30 @@ namespace App\Controllers\Dashboard;
 use App\Controllers\BaseController;
 use DateTime;
 
-class PemasukanAdvertiserController extends BaseController
+class PengeluaranKantorController extends BaseController
 {
     function __construct()
     {
-        $this->pemasukanadv = new \App\Models\PemasukanAdvertiserModel();
+        $this->pengeluarankantor = new \App\Models\PengeluaranKantorModel();
     }
     public function index()
     {
-        $pemasukanadv = $this->pemasukanadv->findAll();
+        $pengeluarankantor = $this->pengeluarankantor->findAll();
         $data = [
-            'title' => 'Pemasukan Advertiser',
-            'pemasukanadv' => $pemasukanadv
+            'title' => 'Pengeluaran Kantor',
+            'pengeluarankantor' => $pengeluarankantor
         ];
-        return view('dashboard/pemasukanadvertiser', $data);
+        return view('dashboard/pengeluarankantor', $data);
     }
-    // public function tambahdatapemasukanadv()
-    // {
-    //     $pemasukanadv = $this->pemasukanadv->findAll();
-    //     $data = [
-    //         'title' => 'Pemasukan Advertiser',
-    //         'pemasukanadv' => $pemasukanadv
-    //     ];
-    //     return view('dashboard/tambahdatapemasukanadv', $data);
-    // }
+    public function tambahdatapengeluarankantor()
+    {
+        $pengeluarankantor = $this->pengeluarankantor->findAll();
+        $data = [
+            'title' => 'Pengeluaran Kantor',
+            'pengeluarankantor' => $pengeluarankantor
+        ];
+        return view('dashboard/tambahdatapengeluarankantor', $data);
+    }
     // public function pengeluaranadvertiser()
     // {
     //     $advertiser = $this->advertiser->findAll();
@@ -56,74 +56,74 @@ class PemasukanAdvertiserController extends BaseController
     //     ];
     //     return view('dashboard/tambahdataadvertiser', $data);
     // }
-    public function add()
-    {
-        $tanggal = $this->request->getPost('tanggal');
-        $waktu = $this->request->getPost('waktu');
-        $expedisi = $this->request->getPost('expedisi');
-        $banktujuan = $this->request->getPost('banktujuan');
-        $penerima = $this->request->getPost('penerima');
-        $jumlah = $this->request->getPost('jumlah');
-        $upload_bukti = $this->request->getFile('upload_bukti');
-        //    menambahkan validasi
-        $validation =  \Config\Services::validation();
-        $validate = $this->validate([
-            'waktu' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Waktu harus diisi',
-                ],
-            ],
-            'expedisi' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Ekspedisi harus diisi',
-                ],
-            ],
-            'banktujuan' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Bank Tujuan harus diisi',
-                ],
-            ],
-            'jumlah' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Jumlah harus diisi',
-                ],
-            ],
-            'upload_bukti' => [
-                'rules' => 'uploaded[jpg,jpeg,png]',
-                'errors' => [
-                    'required' => 'Upload Bukti harus diisi',
-                ],
-            ],
+    // public function add()
+    // {
+    //     $tanggal = $this->request->getPost('tanggal');
+    //     $waktu = $this->request->getPost('waktu');
+    //     $expedisi = $this->request->getPost('expedisi');
+    //     $banktujuan = $this->request->getPost('banktujuan');
+    //     $penerima = $this->request->getPost('penerima');
+    //     $jumlah = $this->request->getPost('jumlah');
+    //     $upload_bukti = $this->request->getFile('upload_bukti');
+    //     //    menambahkan validasi
+    //     $validation =  \Config\Services::validation();
+    //     $validate = $this->validate([
+    //         'waktu' => [
+    //             'rules' => 'required',
+    //             'errors' => [
+    //                 'required' => 'Waktu harus diisi',
+    //             ],
+    //         ],
+    //         'expedisi' => [
+    //             'rules' => 'required',
+    //             'errors' => [
+    //                 'required' => 'Ekspedisi harus diisi',
+    //             ],
+    //         ],
+    //         'banktujuan' => [
+    //             'rules' => 'required',
+    //             'errors' => [
+    //                 'required' => 'Bank Tujuan harus diisi',
+    //             ],
+    //         ],
+    //         'jumlah' => [
+    //             'rules' => 'required',
+    //             'errors' => [
+    //                 'required' => 'Jumlah harus diisi',
+    //             ],
+    //         ],
+    //         'upload_bukti' => [
+    //             'rules' => 'uploaded[jpg,jpeg,png]',
+    //             'errors' => [
+    //                 'required' => 'Upload Bukti harus diisi',
+    //             ],
+    //         ],
 
-        ]);
+    //     ]);
 
 
-        // convert 140,000 to 140000
-        $jumlah = str_replace(',', '', $jumlah);
-        dd($validate);
-        if (!$validate) {
-            session()->setFlashdata('error', 'error nih');
-            return redirect()->to('/dashboard/tambah-data-pemasukan-advertiser')->withInput();
-        } else {
-            $data = [
-                'tanggal' => $tanggal,
-                'waktu' => $waktu,
-                'expedisi' => $expedisi,
-                'bank_tujuan' => $banktujuan,
-                'penerima' => $penerima,
-                'jumlah' => $jumlah,
-                'upload_bukti' => $upload_bukti->getName()
-            ];
-            $this->pemasukanadv->insert($data);
-            $upload_bukti->move('bukti_pemasukan_advertiser');
-            session()->setFlashdata('success', 'Data berhasil ditambahkan');
-            return redirect()->to('/dashboard/tambah-data-pemasukan-advertiser');
-        }
-    }
+    //     // convert 140,000 to 140000
+    //     $jumlah = str_replace(',', '', $jumlah);
+    //     dd($validate);
+    //     if (!$validate) {
+    //         session()->setFlashdata('error', 'error nih');
+    //         return redirect()->to('/dashboard/tambah-data-pemasukan-advertiser')->withInput();
+    //     } else {
+    //         $data = [
+    //             'tanggal' => $tanggal,
+    //             'waktu' => $waktu,
+    //             'expedisi' => $expedisi,
+    //             'bank_tujuan' => $banktujuan,
+    //             'penerima' => $penerima,
+    //             'jumlah' => $jumlah,
+    //             'upload_bukti' => $upload_bukti->getName()
+    //         ];
+    //         $this->pemasukanadv->insert($data);
+    //         $upload_bukti->move('bukti_pemasukan_advertiser');
+    //         session()->setFlashdata('success', 'Data berhasil ditambahkan');
+    //         return redirect()->to('/dashboard/tambah-data-pemasukan-advertiser');
+    //     }
+    // }
 
     // public  function edit($id)
     // {

@@ -69,6 +69,9 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('pemasukan-advertiser', 'dashboard\PemasukanAdvertiserController::index');
     $routes->get('tambah-data-pemasukan-advertiser', 'dashboard\PemasukanAdvertiserController::tambahdatapemasukanadv');
     $routes->post('tambah-data-pemasukan-advertiser/add', 'dashboard\PemasukanAdvertiserController::add');
+
+    $routes->get('pengeluaran-kantor', 'dashboard\PengeluaranKantorController::index');
+    $routes->get('tambah-data-pengeluaran-kantor', 'dashboard\PengeluaranKantorController::tambahdatapengeluarankantor');
 });
 
 
