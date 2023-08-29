@@ -38,11 +38,14 @@ $routes->get('lamaran', 'Home::lamaran');
 // login
 $routes->get('login', 'Admin\LoginController::index');
 $routes->post('auth', 'Admin\LoginController::login');
-$routes->get('logout', 'Admin\LoginController::login');
+$routes->get('logout', 'Admin\LoginController::logout');
 
 
-// dashboard group
-$routes->group('dashboard', function ($routes) {
+// dashboard group dengan filter auth
+
+
+
+$routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->get('/', 'dashboard\DashboardController::index');
     $routes->get('data-advertiser', 'dashboard\AdvertiserController::index');
     $routes->post('data-advertiser/delete', 'dashboard\AdvertiserController::delete');
@@ -74,9 +77,16 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('pemasukan-advertiser', 'dashboard\PemasukanAdvertiserController::index');
     $routes->get('tambah-data-pemasukan-advertiser', 'dashboard\PemasukanAdvertiserController::tambahdatapemasukanadv');
     $routes->post('tambah-data-pemasukan-advertiser/add', 'dashboard\PemasukanAdvertiserController::add');
+    $routes->post('pemasukan-advertiser/delete', 'dashboard\PemasukanAdvertiserController::delete');
+    $routes->get('pemasukan-advertiser/edit/(:any)', 'dashboard\PemasukanAdvertiserController::edit/$1');
+    $routes->post('pemasukan-advertiser/update', 'dashboard\PemasukanAdvertiserController::update');
 
     $routes->get('pengeluaran-kantor', 'dashboard\PengeluaranKantorController::index');
     $routes->get('tambah-data-pengeluaran-kantor', 'dashboard\PengeluaranKantorController::tambahdatapengeluarankantor');
+    $routes->post('pengeluaran-kantor/add', 'dashboard\PengeluaranKantorController::add');
+    $routes->post('pengeluaran-kantor/delete', 'dashboard\PengeluaranKantorController::delete');
+    $routes->get('pengeluaran-kantor/edit/(:any)', 'dashboard\PengeluaranKantorController::edit/$1');
+    $routes->post('pengeluaran-kantor/update', 'dashboard\PengeluaranKantorController::update');
 });
 
 

@@ -28,22 +28,32 @@
         Swal.fire({
             position: 'center',
             icon: 'success',
-            text: 'Data produk berhasil diupdate!',
+            text: '<?= session()->getFlashdata('success') ?>',
             showConfirmButton: false,
             timer: 2000
         })
     </script>
 <?php endif ?>
 <?php if (session()->getFlashdata('error')) : ?>
-    <script>
-        Swal.fire({
-            position: 'center',
-            icon: 'error',
-            text: '<?= session()->getFlashdata('error') ?>',
-            showConfirmButton: false,
-            timer: 2000
-        });
-    </script>
+    <!-- tambahkan alert bootstrap error dari validasi -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <?php
+        $errors = session()->getFlashdata('error');
+        if (is_array($errors) && count($errors) > 0) {
+            echo '<ul>';
+            foreach ($errors as $error) {
+                echo "<li>$error</li>";
+            }
+            echo '</ul>';
+        } else {
+            echo $errors; // Ini akan menampilkan pesan jika 'error' bukan array.
+        }
+        ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
 <?php endif ?>
 <div class="container-fluid">
     <!-- Page Heading -->
@@ -101,10 +111,10 @@
                                 <td><?= $data['jenis_pengeluaran'] ?></td>
                                 <td><?= $data['bank_tujuan'] ?></td>
                                 <td><?= $data['nama_penerima'] ?></td>
-                                <td><?= $data['bukti_transfer'] ?></td>
+                                <td><img src="<?= base_url('bukti_pengeluaran_kantor/') . $data['bukti_transfer'] ?>" alt="" style="width:50px; height:50px;"></td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?></td>
                                 <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-advertiser/edit/') . $data['id_pengeluaran_kantor'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pengeluaran-kantor/edit/') . $data['id_pengeluaran_kantor'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                     <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_pengeluaran_kantor'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                 </td>
                             </tr>
@@ -266,7 +276,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pengeluaran-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/pengeluaran-kantor/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },

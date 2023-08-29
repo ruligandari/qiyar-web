@@ -73,11 +73,13 @@
             <div class="sidebar-heading">
                 Advertiser
             </div>
-            <li class="nav-item <?= $title == 'Data Advertiser' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
-                    <i class="fas fa-fw fa-file"></i>
-                    <span>Data Advertiser</span></a>
-            </li>
+            <?php if (session()->get('role') == '1' || session()->get('role') == 2) : ?>
+                <li class="nav-item <?= $title == 'Data Advertiser' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Data Advertiser</span></a>
+                </li>
+            <?php endif; ?>
             <li class="nav-item <?= $title == 'Pengeluaran Advertiser' ? 'active' : '' ?>">
                 <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-advertiser') ?>">
                     <i class="fas fa-fw fa-file"></i>
@@ -104,6 +106,17 @@
                 <a class="nav-link" href="<?= base_url('dashboard/lamaran') ?>">
                     <i class="fas fa-fw fa-plus"></i>
                     <span>Lamaran</span></a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Logout
+            </div>
+            <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
+                <a class="nav-link active" href="<?= base_url('logout') ?>">
+                    <i class="fas fa-fw fa-sign-out-alt"></i>
+                    <span>Logout</span></a>
             </li>
             <!-- Divider -->
             <hr class="sidebar-divider">

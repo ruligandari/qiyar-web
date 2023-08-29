@@ -90,41 +90,55 @@ class PemasukanAdvertiserController extends BaseController
     {
         $pemasukanadv = $this->pemasukanadv->find($id);
         $data = [
-            'title' => 'Pengeluaran Advertiser',
+            'title' => 'Pemasukan Advertiser',
             'data' => $pemasukanadv,
         ];
-        return view('dashboard/editdatapeadv', $data);
+        return view('dashboard/editdatapemasukanadv', $data);
     }
 
-    // public function update()
-    // {
-    //     $id_pengeluaran = $this->request->getPost('id_pengeluaran');
-    //     $nama_advertiser = $this->request->getPost('nama_advertiser');
-    //     $jumlah = $this->request->getPost('jumlah');
-    //     $keterangan = $this->request->getPost('keterangan');
-    //     $bank_tujuan = $this->request->getPost('bank_tujuan');
+    public function update()
+    {
+        $id = $this->request->getPost('id');
+        $expedisi = $this->request->getPost('expedisi');
+        $jumlah = $this->request->getPost('jumlah');
+        $penerima = $this->request->getPost('penerima');
+        $bank_tujuan = $this->request->getPost('bank_tujuan');
+        $upload_bukti = $this->request->getFile('upload_bukti');
 
-    //     // convert 140,000 to 140000
-    //     $jumlah = str_replace(',', '', $jumlah);
+        // convert 140,000 or 140.000 to 140000
+        if (strpos($jumlah, ',') !== false) {
+            $jumlah = str_replace(',', '', $jumlah);
+        } else if (strpos($jumlah, '.') !== false) {
+            $jumlah = str_replace('.', '', $jumlah);
+        }
+
+        $data = [
+            'expedisi' => $expedisi,
+            'jumlah' => $jumlah,
+            'penerima' => $penerima,
+            'bank_tujuan' => $bank_tujuan,
+            'upload_bukti' => $upload_bukti->getName()
+        ];
+
+        // hapus file lama
+        $pemasukanadv = $this->pemasukanadv->find($id);
+        if ($pemasukanadv['upload_bukti'] != "") {
+            unlink('bukti_pemasukan_advertiser/' . $pemasukanadv['upload_bukti']);
+        }
+        // upload file baru
+        $upload_bukti->move('bukti_pemasukan_advertiser');
 
 
-    //     $data = [
-    //         'nama_advertiser' => $nama_advertiser,
-    //         'jumlah' => $jumlah,
-    //         'keterangan' => $keterangan,
-    //         'bank_tujuan' => $bank_tujuan,
-    //     ];
-
-    //     // update data
-    //     $pengeluaranadv = $this->pengeluaranadv->update($id_pengeluaran, $data);
-    //     if ($pengeluaranadv) {
-    //         session()->setFlashdata('success', 'Data berhasil diupdate');
-    //         return redirect()->to('/dashboard/pengeluaran-advertiser');
-    //     } else {
-    //         session()->setFlashdata('error', 'Data gagal diupdate');
-    //         return redirect()->to('/dashboard/pengeluaran-advertiser');
-    //     }
-    // }
+        // update data
+        $pengeluaranadv = $this->pemasukanadv->update($id, $data);
+        if ($pengeluaranadv) {
+            session()->setFlashdata('success', 'Data berhasil diupdate');
+            return redirect()->to('/dashboard/pemasukan-advertiser');
+        } else {
+            session()->setFlashdata('error', 'Data gagal diupdate');
+            return redirect()->to('/dashboard/pemasukan-advertiser');
+        }
+    }
 
     public function delete()
     {
@@ -143,33 +157,4 @@ class PemasukanAdvertiserController extends BaseController
         }
         echo json_encode($data);
     }
-
-    // public function generateReport()
-    // {
-    //     $min = $this->request->getVar('min');
-    //     $max = $this->request->getVar('max');
-
-    //     // mengubah data ke format tanggal Tue Aug 01 2023 07:00:00 GMT+0700 (Indochina Time) ke 2023-08-01
-    //     $min = substr($min, 0, 33);
-    //     $max = substr($max, 0, 33);
-    //     $date_awal = new DateTime($min);
-    //     $date_akhir = new DateTime($max);
-    //     $min = $date_awal->format('Y-m-d');
-    //     $max = $date_akhir->format('Y-m-d');
-
-    //     dd($min, $max);
-
-    //     if ($min && $max == null) {
-    //         $pengeluaranadv = $this->pengeluaranadv->findAll();
-    //         dd($pengeluaranadv);
-    //     }
-
-    //     $pengeluaranadv = $this->pengeluaranadv->where('tanggal >=', $min)->where('tanggal <=', $max)->findAll();
-    //     $data = [
-    //         'title' => 'Pengeluaran Advertiser',
-    //         'pengeluaranadv' => $pengeluaranadv
-    //     ];
-    //     dd($data);
-    //     return view('dashboard/pengeluaranadvertiser', $data);
-    // }
 }

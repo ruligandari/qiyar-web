@@ -21,12 +21,13 @@ class LoginController extends BaseController
         $user = $UserModel->where('email', $email)->first();
 
         if ($user) {
-            if ($password == $user['password']) {
+            if (password_verify($password, $user['password'])) {
+
                 $data = [
                     'nama' => $user['nama'],
                     'email' => $user['email'],
                     'role' => $user['role'],
-                    'logged_in' => TRUE
+                    'isLogin' => TRUE
                 ];
                 session()->set($data);
                 session()->setFlashdata('success', 'Sukses Bro');
@@ -43,7 +44,9 @@ class LoginController extends BaseController
 
     public function logout()
     {
+        // logout
         session()->destroy();
+        session()->setFlashdata('success-logout', 'Logout Berhasil');
         return redirect()->to('/login');
     }
 }

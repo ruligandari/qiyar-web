@@ -27,16 +27,26 @@
       });
     </script>
   <?php endif ?>
-  <?php if (!empty(session()->getFlashdata('error'))) : ?>
-    <script>
-      Swal.fire({
-        position: 'center',
-        icon: 'error',
-        text: '<?= session()->getFlashdata('error') ?>',
-        showConfirmButton: false,
-        timer: 2000
-      });
-    </script>
+  <?php if (session()->getFlashdata('error')) : ?>
+    <!-- tambahkan alert bootstrap error dari validasi -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <?php
+      $errors = session()->getFlashdata('error');
+      if (is_array($errors) && count($errors) > 0) {
+        echo '<ul>';
+        foreach ($errors as $error) {
+          echo "<li>$error</li>";
+        }
+        echo '</ul>';
+      } else {
+        echo $errors; // Ini akan menampilkan pesan jika 'error' bukan array.
+      }
+      ?>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
   <?php endif ?>
   <!-- DataTales Example -->
   <div class="card shadow mb-4">
@@ -45,7 +55,7 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/tambah-data-pemasukan-advertiser/add')  ?> " enctype="multipart/form-data">
+        <form method="POST" action="<?= base_url('dashboard/pengeluaran-kantor/add')  ?> " enctype="multipart/form-data">
           <div class="form-group">
             <label for="formGroupExampleInput">Tanggal Input</label>
             <input type="text" class="form-control" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input" readonly>
@@ -56,9 +66,9 @@
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Jenis Pengeluaran</label>
-            <select name="expedisi" id="" class="form-control">
-              <option value="Sicepat">Pengeluaran Kantor</option>
-              <option value="OExpress">Belanja Barang</option>
+            <select name="jenis_pengeluaran" id="" class="form-control">
+              <option value="Pengeluaran Kantor">Pengeluaran Kantor</option>
+              <option value="Belanja Barang">Belanja Barang</option>
             </select>
           </div>
           <div class="form-group">
@@ -70,51 +80,79 @@
             <textarea class="form-control" id="formGroupExampleInput" name="penerima" placeholder="Masukan Nama Bank Penerima"></textarea>
           </div>
           <div class="form-group">
-            <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">Upload</span>
-              </div>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputGroupFile01" name="upload_bukti">
-                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
             <label for="formGroupExampleInput">Jumlah</label>
             <input type="text" class="form-control formatted-input" id="harga" name="jumlah" placeholder="Masukan Jumlah">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
+            <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" name="upload_bukti">
+            <br id="jarak">
+            <img id="previewImage" src="" style="max-width: 100%; max-height: 200px;">
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
+
+
     </div>
-
   </div>
-  <?= $this->endSection(); ?>
 
-  <?= $this->section('script'); ?>
-  <script>
-    function addThousandSeparator(input) {
-      // Menambahkan pemisah ribuan ke input
-      return input.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+</div>
+<?= $this->endSection(); ?>
+
+<?= $this->section('script'); ?>
+<script>
+  // Mendapatkan elemen input file
+  var inputFile = document.getElementById('exampleFormControlFile1');
+
+  // Mendapatkan elemen gambar untuk menampilkan preview
+  var previewImage = document.getElementById('previewImage');
+  var jarak = document.getElementById('jarak');
+
+  // Menambahkan event listener untuk menghandle perubahan input file
+  inputFile.addEventListener('change', function() {
+    var file = inputFile.files[0];
+
+    if (file) {
+      // Membaca file sebagai URL data
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        // Menampilkan gambar pada elemen gambar
+        previewImage.src = e.target.result;
+        // Menampilkan elemen gambar
+        previewImage.style.display = 'block';
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      // Menghapus elemen gambar jika tidak ada file yang dipilih
+      previewImage.parentNode.removeChild(previewImage);
+      jarak.parentNode.removeChild(jarak);
     }
+  });
+</script>
+<script>
+  function addThousandSeparator(input) {
+    // Menambahkan pemisah ribuan ke input
+    return input.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 
-    // Ambil elemen input pertama dengan kelas "formatted-input"
-    const inputElement = document.querySelector(".formatted-input");
+  // Ambil elemen input pertama dengan kelas "formatted-input"
+  const inputElement = document.querySelector(".formatted-input");
 
-    inputElement.addEventListener("input", function() {
-      // Ambil nilai dari input
-      const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
+  inputElement.addEventListener("input", function() {
+    // Ambil nilai dari input
+    const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
 
-      // Pastikan nilaiInput adalah angka valid
-      if (!isNaN(nilaiInput)) {
-        // Tambahkan pemisah ribuan ke nilaiInput
-        const nilaiFormat = addThousandSeparator(nilaiInput.toString());
+    // Pastikan nilaiInput adalah angka valid
+    if (!isNaN(nilaiInput)) {
+      // Tambahkan pemisah ribuan ke nilaiInput
+      const nilaiFormat = addThousandSeparator(nilaiInput.toString());
 
-        // Masukkan nilai yang diformat kembali ke input
-        inputElement.value = nilaiFormat;
-      }
-    });
-  </script>
-  <?= $this->endSection(); ?>
+      // Masukkan nilai yang diformat kembali ke input
+      inputElement.value = nilaiFormat;
+    }
+  });
+</script>
+<?= $this->endSection(); ?>

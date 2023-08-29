@@ -267,16 +267,17 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pengeluaran-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/pemasukan-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },
                         success: function(response) {
                             var data = JSON.parse(response);
+                            console.log(data);
                             if (data.success) {
                                 Swal.fire(
                                     "Dihapus!",
-                                    "Data Lamaran Berhasil Dihapus",
+                                    data.msg,
                                     "success"
                                 ).then(() => {
                                     // Muat ulang halaman setelah penghapusan
@@ -285,7 +286,7 @@
                             } else {
                                 Swal.fire(
                                     "Error!",
-                                    "Failed to delete the item.",
+                                    data.msg,
                                     "error"
                                 );
                             }

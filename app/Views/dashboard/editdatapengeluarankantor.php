@@ -11,7 +11,7 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Edit Data Pemasukan Advertiser</h1>
+    <h1 class="h3 mb-0 text-gray-800">Edit Data Pengeluaran Kantor</h1>
   </div>
 
   <!-- DataTales Example -->
@@ -21,33 +21,35 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/pemasukan-advertiser/update') ?>" enctype="multipart/form-data">
-          <input type="hidden" name="id" value="<?= $data['id'] ?>">
+        <form method="POST" action="<?= base_url('dashboard/pengeluaran-kantor/update') ?>" enctype="multipart/form-data">
+          <input type="hidden" name="id_pengeluaran_kantor" value="<?= $data['id_pengeluaran_kantor'] ?>">
           <div class="form-group">
-            <label for="formGroupExampleInput">Expedisi</label>
-            <select name="expedisi" class="form-control" id="formGroupExampleInput">
-              <option value="<?= $data['expedisi'] ?>" selected><?= $data['expedisi'] ?></option>
-              <option value="Sicepat">Sicepat</option>
-              <option value="OExpress">OExpress</option>
-              <option value="Ninja">Ninja</option>
+            <label for="formGroupExampleInput">Jenis Pengeluaran</label>
+            <select name="jenis_pengeluaran" id="" class="form-control">
+              <option value="<?= $data['jenis_pengeluaran'] ?>" selected><?= $data['jenis_pengeluaran'] ?></option>
+              <option value="Pengeluaran Kantor">Pengeluaran Kantor</option>
+              <option value="Belanja Barang">Belanja Barang</option>
             </select>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Bank Tujuan</label>
-            <input type="text" name="bank_tujuan" class="form-control" value="<?= $data['bank_tujuan'] ?>" placeholder=" Masukan Jumlah" required>
+            <input type="text" name="bank_tujuan" class="form-control formatted-input" value="<?= $data['bank_tujuan'] ?>" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Nama Bank Penerima</label>
-            <input type="text" name="penerima" placeholder="Nama Bank Penerima" class="form-control" value="<?= $data['penerima'] ?>" required>
+            <input type="text" name="nama_penerima" placeholder="Nama Bank Penerima" class="form-control formatted-input" value="<?= $data['nama_penerima'] ?>" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Jumlah</label>
-            <input type="text" name="jumlah" placeholder="Jumlah" class="form-control formatted-input" value="<?= number_format($data['jumlah'], 0, ',', '.') ?>" required>
+            <input type="text" name="jumlah" placeholder="Nama Bank Penerima" class="form-control formatted-input" value="<?= number_format($data['jumlah'], 0, ',', '.') ?>" required>
           </div>
-          <div class="form-group">
+          <div class=" form-group">
             <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
-            <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" name="upload_bukti">
-            <!-- Tampilkan gambar yang tersimpan di database -->
+            <input type="file" name="bukti_transfer" class="form-control-file form-control" id="exampleFormControlFile1">
+            <input type="hidden" name="bukti_transfer_lama" value="<?= $data['bukti_transfer'] ?>">
+            <?php if ($data['bukti_transfer'] != null) : ?>
+              <p>Bukti Transfer Sebelumnya: <a href="<?= base_url('bukti_pengeluaran_kantor/') . $data['bukti_transfer'] ?>"><?= $data['bukti_transfer'] ?></a></p>
+            <?php endif; ?>
             <br>
             <img id="previewImage" src="" style="max-width: 100%; max-height: 200px;">
           </div>
@@ -95,23 +97,21 @@
       return input.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    // Ambil semua elemen input dengan kelas "formatted-input"
-    const inputElements = document.querySelectorAll(".formatted-input");
+    // Ambil elemen input pertama dengan kelas "formatted-input"
+    const inputElement = document.querySelector(".formatted-input");
 
-    inputElements.forEach(inputElement => {
-      inputElement.addEventListener("input", function() {
-        // Ambil nilai dari input
-        const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
+    inputElement.addEventListener("input", function() {
+      // Ambil nilai dari input
+      const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
 
-        // Pastikan nilaiInput adalah angka valid
-        if (!isNaN(nilaiInput)) {
-          // Tambahkan pemisah ribuan ke nilaiInput
-          const nilaiFormat = addThousandSeparator(nilaiInput.toString());
+      // Pastikan nilaiInput adalah angka valid
+      if (!isNaN(nilaiInput)) {
+        // Tambahkan pemisah ribuan ke nilaiInput
+        const nilaiFormat = addThousandSeparator(nilaiInput.toString());
 
-          // Masukkan nilai yang diformat kembali ke input
-          inputElement.value = nilaiFormat;
-        }
-      });
+        // Masukkan nilai yang diformat kembali ke input
+        inputElement.value = nilaiFormat;
+      }
     });
   </script>
   <?= $this->endSection(); ?>
