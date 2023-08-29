@@ -28,6 +28,8 @@ class AdvFilter implements FilterInterface
         $advRole = session()->get('role');
 
         if ($advRole != '1' && $advRole != '2') {
+            // redirek kehalaman sebelumnya
+
             return redirect()->to('restrictedpage');
         }
     }
