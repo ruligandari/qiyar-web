@@ -6,7 +6,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class UserFilter implements FilterInterface
+class AdvFilter implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -25,9 +25,10 @@ class UserFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (session()->get('isLogin') != TRUE) {
-            session()->setFlashdata('gagal', 'Anda belum login');
-            return redirect()->to(base_url('login'));
+        $advRole = session()->get('role');
+
+        if ($advRole != '1' && $advRole != '2') {
+            return redirect()->to('restrictedpage');
         }
     }
 

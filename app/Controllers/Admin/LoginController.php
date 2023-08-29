@@ -49,4 +49,9 @@ class LoginController extends BaseController
         session()->setFlashdata('success-logout', 'Logout Berhasil');
         return redirect()->to('/login');
     }
+
+    public function restrictedpage()
+    {
+        return view('login/restrictedpage');
+    }
 }

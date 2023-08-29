@@ -39,7 +39,11 @@
         showConfirmButton: false,
         timer: 2000
       }).then(function() {
-        window.location = "<?= base_url('dashboard') ?>";
+        if (<?= session()->get('role') ?> == '1') {
+          window.location = "<?= base_url('dashboard') ?>";
+        } else {
+          window.location = "<?= base_url('dashboard/data-advertiser') ?>";
+        }
       });
     </script>
   <?php endif ?>

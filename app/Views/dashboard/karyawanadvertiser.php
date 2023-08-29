@@ -28,7 +28,7 @@
         Swal.fire({
             position: 'center',
             icon: 'success',
-            text: 'Data berhasil diupdate!',
+            text: '<?= session()->getFlashdata('success') ?>',
             showConfirmButton: false,
             timer: 2000
         })
@@ -42,89 +42,56 @@
             text: '<?= session()->getFlashdata('error') ?>',
             showConfirmButton: false,
             timer: 2000
-        });
+        })
     </script>
 <?php endif ?>
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Data Advertiser</h1>
+        <h1 class="h3 mb-0 text-gray-800">Karyawan Advertiser</h1>
     </div>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
-                    <h6 class=" font-weight-bold text-primary">Data Advertiser</h6>
-                    <?php if (session()->get('role') == '1') : ?>
-                        <a href="<?= base_url('dashboard/tambah-data-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
-                    <?php endif; ?>
+                    <h6 class=" font-weight-bold text-primary">Data Karyawan Advertiser</h6>
+                    <a href="<?= base_url('dashboard/karyawan-advertiser/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                 </div>
             </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table border="0" cellspacing="5" cellpadding="5">
-                    <tbody>
-                        <tr>
-                            <td>Dari :</td>
-                            <td><input type="text" id="min" name="min"></td>
-                        </tr>
-                        <tr>
-                            <td>Sampai :</td>
-                            <td><input type="text" id="max" name="max"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br>
                 <table class="table table-bordered" id="example1" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Tanggal</th>
-                            <th>Nama Advertiser</th>
-                            <th>Pengeluaran</th>
-                            <?php if (session()->get('role') == '1') : ?>
-                                <th>Aksi</th>
-                            <?php endif; ?>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         $no = 1;
-                        foreach ($advertiser as $data) :
+                        foreach ($karyawan as $data) :
                         ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><?= $data['tanggal_pembelian'] ?></td>
-                                <td><?= $data['nama_advertiser'] ?></td>
-                                <td><?= number_format($data['total_harga'], 0, ',', '.') ?>
+                                <td><?= $data['nama'] ?></td>
+                                <td><?= $data['email'] ?></td>
+                                <td><?= $data['role'] ?></td>
+                                <td class="text-center">
+                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/karyawan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                 </td>
-                                <?php if (session()->get('role') == '1') : ?>
-                                    <td class="text-center">
-                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/data-advertiser/edit/') . $data['id_advertiser'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                        <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_advertiser'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                    </td>
-                                <?php endif; ?>
                             </tr>
                         <?php
                         endforeach
                         ?>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <?php if (session()->get('role') == '1') : ?>
-                                <td colspan="3"></td>
-                                <td><b>Total</b></td>
-                                <td id="totalSum"></td>
-                            <?php endif; ?>
-                            <?php if (session()->get('role') == '3') : ?>
-                                <td colspan="2"></td>
-                                <td><b>Total</b></td>
-                                <td id="totalSum"></td>
-                            <?php endif; ?>
-                        </tr>
-                    </tfoot>
+
                 </table>
             </div>
         </div>
@@ -150,7 +117,6 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
-
 <script>
     let minDate, maxDate;
 
@@ -210,7 +176,7 @@
 
         // Sum the "jumlah" column
         function sumColumn() {
-            let sum = table.column(3, {
+            let sum = table.column(7, {
                 search: 'applied'
             }).data().reduce(function(acc, curr) {
                 let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
@@ -220,7 +186,9 @@
             // Format the sum as Indonesian currency
             let formattedSum = sum.toLocaleString('id-ID', {
                 style: 'currency',
-                currency: 'IDR'
+                currency: 'IDR',
+                minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
+                maximumFractionDigits: 2
             });
 
             // Display the formatted sum
@@ -258,7 +226,7 @@
             const id = this.getAttribute("data-id");
 
             Swal.fire({
-                title: "Apakah Anda yakin akan menghapus data ini?",
+                title: "Apakah Anda yakin akan menghapus produk ini?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -270,7 +238,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/data-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/karyawan-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },
@@ -279,7 +247,7 @@
                             if (data.success) {
                                 Swal.fire(
                                     "Dihapus!",
-                                    "Data Advertiser Berhasil Dihapus",
+                                    data.message,
                                     "success"
                                 ).then(() => {
                                     // Muat ulang halaman setelah penghapusan
@@ -288,7 +256,7 @@
                             } else {
                                 Swal.fire(
                                     "Error!",
-                                    "Failed to delete the item.",
+                                    data.message,
                                     "error"
                                 );
                             }

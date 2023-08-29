@@ -15,11 +15,14 @@ class AdvertiserController extends BaseController
     }
     public function index()
     {
-        $produk = $this->produk->findAll();
-        $advertiser = $this->advertiser->findAll();
+        if (session()->get('role') == 1) {
+
+            $advertiser = $this->advertiser->findAll();
+        } else {
+            $advertiser = $this->advertiser->where('nama_advertiser', session()->get('nama'))->findAll();
+        }
         $data = [
             'title' => 'Data Advertiser',
-            'produk' => $produk,
             'advertiser' => $advertiser
         ];
         return view('dashboard/dataadvertiser', $data);

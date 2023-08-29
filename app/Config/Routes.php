@@ -46,19 +46,18 @@ $routes->get('logout', 'Admin\LoginController::logout');
 
 
 $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
-    $routes->get('/', 'dashboard\DashboardController::index');
-    $routes->get('data-advertiser', 'dashboard\AdvertiserController::index');
-    $routes->post('data-advertiser/delete', 'dashboard\AdvertiserController::delete');
-    $routes->get('data-advertiser/edit/(:any)', 'dashboard\AdvertiserController::edit/$1');
-    $routes->post('data-advertiser/update', 'dashboard\AdvertiserController::update');
-    $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata');
-    $routes->post('tambah-data-advertiser/add', 'dashboard\AdvertiserController::add');
+    $routes->get('/', 'dashboard\DashboardController::index', ['filter' => 'advFilter']);
+    $routes->get('data-advertiser', 'dashboard\AdvertiserController::index', ['filter' => 'roleFilter']);
+    $routes->post('data-advertiser/delete', 'dashboard\AdvertiserController::delete', ['filter' => 'advFilter']);
+    $routes->get('data-advertiser/edit/(:any)', 'dashboard\AdvertiserController::edit/$1', ['filter' => 'advFilter']);
+    $routes->post('data-advertiser/update', 'dashboard\AdvertiserController::update', ['filter' => 'advFilter']);
+    $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata', ['filter' => 'advFilter']);
+    $routes->post('tambah-data-advertiser/add', 'dashboard\AdvertiserController::add', ['filter' => 'advFilter']);
 
     $routes->get('pengeluaran-advertiser', 'dashboard\AdvertiserController::pengeluaranadv');
     $routes->get('pengeluaran-advertiser/edit/(:any)', 'dashboard\AdvertiserController::editpengeluaran/$1');
     $routes->post('pengeluaran-advertiser/update', 'dashboard\AdvertiserController::updatepengeluaran');
     $routes->post('pengeluaran-advertiser/delete', 'dashboard\AdvertiserController::deletepengeluaran');
-    $routes->post('pengeluaran-advertiser/generate-report', 'dashboard\AdvertiserController::generateReport');
     $routes->get('tambah-data-pengeluaran-advertiser', 'dashboard\AdvertiserController::tambahdatapengeluaranadv');
     $routes->post('tambah-data-pengeluaran-advertiser/add', 'dashboard\AdvertiserController::addpengeluaranadv');
     $routes->post('data-advertiser', 'dashboard\AdvertiserController::filterTanggal');
@@ -87,7 +86,17 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('pengeluaran-kantor/delete', 'dashboard\PengeluaranKantorController::delete');
     $routes->get('pengeluaran-kantor/edit/(:any)', 'dashboard\PengeluaranKantorController::edit/$1');
     $routes->post('pengeluaran-kantor/update', 'dashboard\PengeluaranKantorController::update');
+
+    $routes->get('karyawan-advertiser', 'dashboard\KaryawanAdvertiserController::index');
+    $routes->get('karyawan-advertiser/tambah', 'dashboard\KaryawanAdvertiserController::tambah');
+    $routes->post('karyawan-advertiser/add', 'dashboard\KaryawanAdvertiserController::add');
+    $routes->post('karyawan-advertiser/update', 'dashboard\KaryawanAdvertiserController::update');
+    $routes->post('karyawan-advertiser/delete', 'dashboard\KaryawanAdvertiserController::delete');
+    $routes->get('karyawan-advertiser/edit/(:any)', 'dashboard\KaryawanAdvertiserController::edit/$1');
 });
+
+// restricted page
+$routes->get('restrictedpage', 'Admin\LoginController::restrictedpage');
 
 
 /*

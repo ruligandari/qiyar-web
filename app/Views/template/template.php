@@ -43,72 +43,81 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item <?= $title == 'Dashboard' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= base_url('dashboard') ?>">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-            <div class="sidebar-heading">
-                Produk
-            </div>
-            <li class="nav-item <?= $title == 'Data Produk' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= base_url('dashboard/data-produk') ?>">
-                    <i class="fas fa-fw fa-file"></i>
-                    <span>Data Produk</span></a>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-            <div class="sidebar-heading">
-                Kantor
-            </div>
-            <li class="nav-item <?= $title == 'Pengeluaran Kantor' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-kantor') ?>">
-                    <i class="fas fa-fw fa-file"></i>
-                    <span>Jenis Pengeluaran</span></a>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-            <div class="sidebar-heading">
-                Advertiser
-            </div>
-            <?php if (session()->get('role') == '1' || session()->get('role') == 2) : ?>
+            <?php if (session()->get('role') == '1') : ?>
+                <li class="nav-item <?= $title == 'Dashboard' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard') ?>">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span></a>
+                </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                    Produk
+                </div>
+                <li class="nav-item <?= $title == 'Data Produk' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/data-produk') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Data Produk</span></a>
+                </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                    Kantor
+                </div>
+                <li class="nav-item <?= $title == 'Pengeluaran Kantor' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-kantor') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Jenis Pengeluaran</span></a>
+                </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                    Advertiser
+                </div>
+                <li class="nav-item <?= $title == 'Karyawan Advertiser' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/karyawan-advertiser') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Karyawan Advertiser</span></a>
+                </li>
+            <?php endif; ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
                 <li class="nav-item <?= $title == 'Data Advertiser' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Data Advertiser</span></a>
                 </li>
             <?php endif; ?>
-            <li class="nav-item <?= $title == 'Pengeluaran Advertiser' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-advertiser') ?>">
-                    <i class="fas fa-fw fa-file"></i>
-                    <span>Pengeluaran Advertiser</span></a>
-            </li>
-            <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= base_url('dashboard/pemasukan-advertiser') ?>">
-                    <i class="fas fa-fw fa-file"></i>
-                    <span>Pemasukan Advertiser</span></a>
-            </li>
-            <!-- <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">
+            <?php if (session()->get('role') == '1') : ?>
+                <li class="nav-item <?= $title == 'Pengeluaran Advertiser' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-advertiser') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Pengeluaran Advertiser</span></a>
+                </li>
+                <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/pemasukan-advertiser') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Pemasukan Advertiser</span></a>
+                </li>
+                <!-- <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">
                 <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
                     <i class="fas fa-fw fa-file"></i>
                     <span>Pemasukan Advertiser</span></a>
             </li> -->
-            <!-- Divider -->
-            <hr class="sidebar-divider">
+                <!-- Divider -->
+                <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Requitment
-            </div>
-            <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= base_url('dashboard/lamaran') ?>">
-                    <i class="fas fa-fw fa-plus"></i>
-                    <span>Lamaran</span></a>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Requitment
+                </div>
+                <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/lamaran') ?>">
+                        <i class="fas fa-fw fa-plus"></i>
+                        <span>Lamaran</span></a>
+                </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+            <?php endif; ?>
             <!-- Heading -->
             <div class="sidebar-heading">
                 Logout
