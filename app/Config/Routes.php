@@ -54,12 +54,12 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata', ['filter' => 'advFilter']);
     $routes->post('tambah-data-advertiser/add', 'dashboard\AdvertiserController::add', ['filter' => 'advFilter']);
 
-    $routes->get('pengeluaran-advertiser', 'dashboard\AdvertiserController::pengeluaranadv');
-    $routes->get('pengeluaran-advertiser/edit/(:any)', 'dashboard\AdvertiserController::editpengeluaran/$1');
-    $routes->post('pengeluaran-advertiser/update', 'dashboard\AdvertiserController::updatepengeluaran');
-    $routes->post('pengeluaran-advertiser/delete', 'dashboard\AdvertiserController::deletepengeluaran');
-    $routes->get('tambah-data-pengeluaran-advertiser', 'dashboard\AdvertiserController::tambahdatapengeluaranadv');
-    $routes->post('tambah-data-pengeluaran-advertiser/add', 'dashboard\AdvertiserController::addpengeluaranadv');
+    $routes->get('pengeluaran-advertiser', 'dashboard\AdvertiserController::pengeluaranadv', ['filter' => 'roleFilter']);
+    $routes->get('pengeluaran-advertiser/edit/(:any)', 'dashboard\AdvertiserController::editpengeluaran/$1', ['filter' => 'advFilter']);
+    $routes->post('pengeluaran-advertiser/update', 'dashboard\AdvertiserController::updatepengeluaran', ['filter' => 'advFilter']);
+    $routes->post('pengeluaran-advertiser/delete', 'dashboard\AdvertiserController::deletepengeluaran', ['filter' => 'advFilter']);
+    $routes->get('tambah-data-pengeluaran-advertiser', 'dashboard\AdvertiserController::tambahdatapengeluaranadv', ['filter' => 'advFilter']);
+    $routes->post('tambah-data-pengeluaran-advertiser/add', 'dashboard\AdvertiserController::addpengeluaranadv', ['filter' => 'advFilter']);
     $routes->post('data-advertiser', 'dashboard\AdvertiserController::filterTanggal');
 
     $routes->get('data-produk', 'dashboard\ProdukController::index');

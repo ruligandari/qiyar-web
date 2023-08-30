@@ -29,18 +29,23 @@ class AdvertiserController extends BaseController
     }
     public function pengeluaranadv()
     {
-        $pengeluaranadv = $this->pengeluaranadv->findAll();
-        $getTotal = $this->pengeluaranadv->getTotal();
+        if (session()->get('role') == 1) {
+
+            $pengeluaranadv = $this->pengeluaranadv->findAll();
+        } else {
+            $pengeluaranadv = $this->pengeluaranadv->where('nama_advertiser', session()->get('nama'))->findAll();
+        }
+
         $data = [
             'title' => 'Pengeluaran Advertiser',
             'pengeluaranadv' => $pengeluaranadv,
-            'total' => $getTotal
         ];
         return view('dashboard/pengeluaranadvertiser', $data);
     }
     public function pengeluaranadvertiser()
     {
         $advertiser = $this->advertiser->findAll();
+
         $data = [
             'title' => 'Pengeluaran Advertiser',
             'advertiser' => $advertiser
@@ -61,7 +66,6 @@ class AdvertiserController extends BaseController
         $produk = $this->produk->findAll();
         $data = [
             'title' => 'Data Advertiser',
-            'produk' => $produk
         ];
         return view('dashboard/tambahdataadvertiser', $data);
     }
