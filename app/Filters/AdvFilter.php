@@ -29,8 +29,8 @@ class AdvFilter implements FilterInterface
 
         if ($advRole != '1' && $advRole != '2') {
             // redirek kehalaman sebelumnya
-
-            return redirect()->to('restrictedpage');
+            session()->setFlashdata('error', 'Anda tidak memiliki akses');
+            return redirect()->back();
         }
     }
 

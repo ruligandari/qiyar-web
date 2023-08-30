@@ -26,7 +26,7 @@ class UserFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (session()->get('isLogin') != TRUE) {
-            session()->setFlashdata('gagal', 'Anda belum login');
+            session()->setFlashdata('error', 'Anda belum login');
             return redirect()->to(base_url('login'));
         }
     }
