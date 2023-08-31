@@ -69,6 +69,11 @@
                         <i class="fas fa-fw fa-file"></i>
                         <span>Jenis Pengeluaran</span></a>
                 </li>
+                <li class="nav-item <?= $title == 'Tutup Buku' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/tutup-buku') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Tutup Buku</span></a>
+                </li>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading">

@@ -93,6 +93,9 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('karyawan-advertiser/update', 'dashboard\KaryawanAdvertiserController::update');
     $routes->post('karyawan-advertiser/delete', 'dashboard\KaryawanAdvertiserController::delete');
     $routes->get('karyawan-advertiser/edit/(:any)', 'dashboard\KaryawanAdvertiserController::edit/$1');
+
+    $routes->get('tutup-buku', 'dashboard\TutupBukuController::index');
+    $routes->get('tutup-buku/tambah', 'dashboard\TutupBukuController::tambah');
 });
 
 // restricted page
