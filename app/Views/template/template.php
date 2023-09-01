@@ -112,7 +112,21 @@
                 </li> -->
                 <!-- Divider -->
                 <hr class="sidebar-divider">
-
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Broadcast
+                </div>
+                <li class="nav-item <?= $title == 'Karyawan Broadcast' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/lamaran') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Karyawan Broadcast</span></a>
+                </li>
+                <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/lamaran') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Pengeluaran Broadcast</span></a>
+                </li>
+                <hr class="sidebar-divider">
                 <!-- Heading -->
                 <div class="sidebar-heading">
                     Requitment
