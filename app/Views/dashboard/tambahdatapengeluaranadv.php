@@ -48,7 +48,7 @@
         <form method="POST" action="<?= base_url('dashboard/tambah-data-pengeluaran-advertiser/add') ?>">
           <div class="form-group">
             <label for="formGroupExampleInput">Tanggal Input</label>
-            <input type="text" class="form-control" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input" readonly>
+            <input type="date" class="form-control tanggal" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input">
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Waktu</label>
@@ -84,6 +84,28 @@
   <?= $this->endSection(); ?>
 
   <?= $this->section('script'); ?>
+  <script>
+    // Ambil semua elemen input dengan kelas "tanggal"
+    const dateInputs = document.querySelector(".tanggal");
+
+    // Loop melalui setiap elemen input tanggal
+    dateInputs.forEach(function(dateInput) {
+      // Ketika nilai input berubah
+      dateInput.addEventListener("input", function() {
+        // Ambil nilai dari input
+        const inputValue = dateInput.value;
+
+        // Periksa apakah nilai input sesuai dengan format yang diinginkan (YYYY/MM/DD)
+        if (/^\d{4}\/\d{2}\/\d{2}$/.test(inputValue)) {
+          // Ubah format nilai input ke "YYYY-MM-DD"
+          const newValue = inputValue.replace(/\//g, "-");
+
+          // Set nilai input dengan format yang baru
+          dateInput.value = newValue;
+        }
+      });
+    });
+  </script>
   <script>
     function addThousandSeparator(input) {
       // Menambahkan pemisah ribuan ke input

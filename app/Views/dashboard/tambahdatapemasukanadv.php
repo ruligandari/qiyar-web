@@ -49,7 +49,7 @@
         <form method="POST" action="<?= base_url('dashboard/tambah-data-pemasukan-advertiser/add')  ?> " enctype="multipart/form-data">
           <div class="form-group">
             <label for="formGroupExampleInput">Tanggal Input</label>
-            <input type="text" class="form-control" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input" readonly>
+            <input type="date" class="form-control tanggal" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input">
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Waktu</label>
@@ -94,6 +94,29 @@
 
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+  <script>
+    // Ambil semua elemen input dengan kelas "tanggal"
+    const dateInputs = document.querySelector(".tanggal");
+
+    // Loop melalui setiap elemen input tanggal
+    dateInputs.forEach(function(dateInput) {
+      // Ketika nilai input berubah
+      dateInput.addEventListener("input", function() {
+        // Ambil nilai dari input
+        const inputValue = dateInput.value;
+
+        // Periksa apakah nilai input sesuai dengan format yang diinginkan (YYYY/MM/DD)
+        if (/^\d{4}\/\d{2}\/\d{2}$/.test(inputValue)) {
+          // Ubah format nilai input ke "YYYY-MM-DD"
+          const newValue = inputValue.replace(/\//g, "-");
+
+          // Set nilai input dengan format yang baru
+          dateInput.value = newValue;
+        }
+      });
+    });
+  </script>
+
   <script>
     function addThousandSeparator(input) {
       // Menambahkan pemisah ribuan ke input

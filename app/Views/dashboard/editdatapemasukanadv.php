@@ -44,10 +44,13 @@
             <label for="formGroupExampleInput">Jumlah</label>
             <input type="text" name="jumlah" placeholder="Jumlah" class="form-control formatted-input" value="<?= number_format($data['jumlah'], 0, ',', '.') ?>" required>
           </div>
-          <div class="form-group">
+          <div class=" form-group">
             <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
-            <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" name="upload_bukti">
-            <!-- Tampilkan gambar yang tersimpan di database -->
+            <input type="file" name="upload_bukti" class="form-control-file form-control" id="exampleFormControlFile1">
+            <input type="hidden" name="bukti_transfer_lama" value="<?= $data['upload_bukti'] ?>">
+            <?php if ($data['upload_bukti'] != null) : ?>
+              <p>Bukti Transfer Sebelumnya: <a href="<?= base_url('bukti_pengeluaran_kantor/') . $data['upload_bukti'] ?>"><?= $data['upload_bukti'] ?></a></p>
+            <?php endif; ?>
             <br>
             <img id="previewImage" src="" style="max-width: 100%; max-height: 200px;">
           </div>

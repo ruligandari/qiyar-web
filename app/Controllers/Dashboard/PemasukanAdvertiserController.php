@@ -104,6 +104,7 @@ class PemasukanAdvertiserController extends BaseController
         $penerima = $this->request->getPost('penerima');
         $bank_tujuan = $this->request->getPost('bank_tujuan');
         $upload_bukti = $this->request->getFile('upload_bukti');
+        $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
         // convert 140,000 or 140.000 to 140000
         if (strpos($jumlah, ',') !== false) {
@@ -117,16 +118,15 @@ class PemasukanAdvertiserController extends BaseController
             'jumlah' => $jumlah,
             'penerima' => $penerima,
             'bank_tujuan' => $bank_tujuan,
-            'upload_bukti' => $upload_bukti->getName()
+            'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
         ];
 
         // hapus file lama
-        $pemasukanadv = $this->pemasukanadv->find($id);
-        if ($pemasukanadv['upload_bukti'] != "") {
-            unlink('bukti_pemasukan_advertiser/' . $pemasukanadv['upload_bukti']);
+        if ($upload_bukti->getName() != null) {
+            unlink('bukti_pemasukan_advertiser/' . $bukti_transfer_lama);
+            // upload file baru
+            $upload_bukti->move('bukti_pemasukan_advertiser');
         }
-        // upload file baru
-        $upload_bukti->move('bukti_pemasukan_advertiser');
 
 
         // update data
