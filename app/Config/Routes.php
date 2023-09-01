@@ -96,6 +96,10 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
 
     $routes->get('tutup-buku', 'dashboard\TutupBukuController::index');
     $routes->get('tutup-buku/tambah', 'dashboard\TutupBukuController::tambah');
+    $routes->post('tutup-buku/add', 'dashboard\TutupBukuController::add');
+    $routes->get('tutup-buku/edit/(:any)', 'dashboard\TutupBukuController::edit/$1');
+    $routes->post('tutup-buku/update', 'dashboard\TutupBukuController::update');
+    $routes->post('tutup-buku/delete', 'dashboard\TutupBukuController::delete');
 });
 
 // restricted page

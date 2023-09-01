@@ -24,20 +24,25 @@
         <form method="POST" action="<?= base_url('dashboard/pengeluaran-advertiser/update') ?>">
           <input type="hidden" name="id_pengeluaran" value="<?= $data['id_pengeluaran'] ?>">
           <div class="form-group">
-            <label for="formGroupExampleInput">Nama Advertiser</label>
-            <input type="text" name="nama_advertiser" class="form-control" value="<?= $data['nama_advertiser'] ?>" id="formGroupExampleInput" placeholder="Masukan Nama Barang" required>
+            <label for="exampleInputEmail1">Nama Advertiser</label>
+            <select class="custom-select" name="nama_advertiser">
+              <option value="<?= $data['nama_advertiser'] ?>" selected><?= $data['nama_advertiser'] ?></option>
+              <?php foreach ($karyawan as $kar) : ?>
+                <option value="<?= $kar['nama'] ?>"><?= $kar['nama'] ?></option>
+              <?php endforeach ?>
+            </select>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Jumlah</label>
-            <input type="text" name="jumlah" class="form-control formatted-input" value="<?= number_format($data['jumlah'], 0, ',', '.') ?>" placeholder="Masukan Jumlah" required>
+            <input type="text" name="jumlah" value="<?= number_format($data['jumlah']) ?>" class="form-control formatted-input" placeholder="Masukan Jumlah" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Bank Tujuan</label>
-            <input type="text" name="bank_tujuan" class="form-control formatted-input" value="<?= $data['bank_tujuan'] ?>" required>
+            <input type="text" name="bank_tujuan" class="form-control" value="<?= $data['bank_tujuan'] ?>" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Nama Bank Penerima</label>
-            <input type="text" name="keterangan" placeholder="Nama Bank Penerima" class="form-control formatted-input" value="<?= $data['keterangan'] ?>" required>
+            <input type="text" name="keterangan" placeholder="Nama Bank Penerima" class="form-control" value="<?= $data['keterangan'] ?>" required>
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -51,13 +56,17 @@
   <script>
     function addThousandSeparator(input) {
       // Menambahkan pemisah ribuan ke input
-      return input.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     // Ambil elemen input pertama dengan kelas "formatted-input"
     const inputElement = document.querySelector(".formatted-input");
 
+    let hasUserEdited = false; // Variabel untuk melacak apakah pengguna telah mengubah input
+
     inputElement.addEventListener("input", function() {
+      hasUserEdited = true; // Set variabel hasUserEdited menjadi true saat pengguna mengubah input
+
       // Ambil nilai dari input
       const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
 
@@ -68,6 +77,14 @@
 
         // Masukkan nilai yang diformat kembali ke input
         inputElement.value = nilaiFormat;
+      }
+    });
+
+    // Ketika input kehilangan fokus, perbarui nilai asli jika pengguna telah mengubahnya
+    inputElement.addEventListener("blur", function() {
+      if (hasUserEdited) {
+        // Jika pengguna telah mengubah input, perbarui nilai asli
+        inputElement.setAttribute("value", inputElement.value.replace(/,/g, ""));
       }
     });
   </script>

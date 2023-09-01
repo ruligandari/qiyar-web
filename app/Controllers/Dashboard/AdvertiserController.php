@@ -12,6 +12,7 @@ class AdvertiserController extends BaseController
         $this->produk = new \App\Models\ProdukModel();
         $this->advertiser = new \App\Models\AdvertiserModel();
         $this->pengeluaranadv = new \App\Models\PengeluaranadvertiserModel();
+        $this->karyawan = new \App\Models\Admin\UserModel();
     }
     public function index()
     {
@@ -52,12 +53,16 @@ class AdvertiserController extends BaseController
         ];
         return view('dashboard/pengeluaranadvertiser', $data);
     }
+
     public function tambahdatapengeluaranadv()
     {
+        $karyawan = $this->karyawan->where('role', 3)->findAll();
+
         $pengeluaranadv = $this->pengeluaranadv->findAll();
         $data = [
             'title' => 'Pengeluaran Advertiser',
-            'pengeluaranadv' => $pengeluaranadv
+            'pengeluaranadv' => $pengeluaranadv,
+            'karyawan' => $karyawan,
         ];
         return view('dashboard/tambahdatapengeluaranadv', $data);
     }
@@ -226,10 +231,12 @@ class AdvertiserController extends BaseController
     }
     public  function editpengeluaran($id)
     {
+        $karyawan = $this->karyawan->where('role', 3)->findAll();
         $pengeluaranadv = $this->pengeluaranadv->find($id);
         $data = [
             'title' => 'Pengeluaran Advertiser',
             'data' => $pengeluaranadv,
+            'karyawan' => $karyawan,
         ];
         return view('dashboard/editdatapengeluaranadv', $data);
     }

@@ -58,12 +58,9 @@
             <label for="exampleInputEmail1">Nama Advertiser</label>
             <select class="custom-select" name="nama_advertiser">
               <option selected>Pilih Advertiser</option>
-              <option value="Zaka">Zaka</option>
-              <option value="Dwi Prayogo">Dwi Prayogo</option>
-              <option value="Fatan">Fatan</option>
-              <option value="Dwiki Renaldhi">Dwiki Renaldhi</option>
-              <option value="Harsono">Harsono</option>
-              <option value="Rino">Rino</option>
+              <?php foreach ($karyawan as $data) : ?>
+                <option value="<?= $data['nama'] ?>"><?= $data['nama'] ?></option>
+              <?php endforeach ?>
             </select>
           </div>
           <div class="form-group">

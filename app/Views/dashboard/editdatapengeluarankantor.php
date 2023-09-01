@@ -33,11 +33,11 @@
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Bank Tujuan</label>
-            <input type="text" name="bank_tujuan" class="form-control formatted-input" value="<?= $data['bank_tujuan'] ?>" required>
+            <input type="text" name="bank_tujuan" class="form-control " value="<?= $data['bank_tujuan'] ?>" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Nama Bank Penerima</label>
-            <input type="text" name="nama_penerima" placeholder="Nama Bank Penerima" class="form-control formatted-input" value="<?= $data['nama_penerima'] ?>" required>
+            <input type="text" name="nama_penerima" placeholder="Nama Bank Penerima" class="form-control " value="<?= $data['nama_penerima'] ?>" required>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Jumlah</label>
@@ -94,13 +94,17 @@
   <script>
     function addThousandSeparator(input) {
       // Menambahkan pemisah ribuan ke input
-      return input.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     // Ambil elemen input pertama dengan kelas "formatted-input"
     const inputElement = document.querySelector(".formatted-input");
 
+    let hasUserEdited = false; // Variabel untuk melacak apakah pengguna telah mengubah input
+
     inputElement.addEventListener("input", function() {
+      hasUserEdited = true; // Set variabel hasUserEdited menjadi true saat pengguna mengubah input
+
       // Ambil nilai dari input
       const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
 
@@ -111,6 +115,14 @@
 
         // Masukkan nilai yang diformat kembali ke input
         inputElement.value = nilaiFormat;
+      }
+    });
+
+    // Ketika input kehilangan fokus, perbarui nilai asli jika pengguna telah mengubahnya
+    inputElement.addEventListener("blur", function() {
+      if (hasUserEdited) {
+        // Jika pengguna telah mengubah input, perbarui nilai asli
+        inputElement.setAttribute("value", inputElement.value.replace(/,/g, ""));
       }
     });
   </script>

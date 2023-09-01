@@ -28,7 +28,7 @@
         Swal.fire({
             position: 'center',
             icon: 'success',
-            text: 'Data produk berhasil diupdate!',
+            text: '<?= session()->getFlashdata('success') ?>',
             showConfirmButton: false,
             timer: 2000
         })
@@ -260,7 +260,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pengeluaran-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/tutup-buku/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },

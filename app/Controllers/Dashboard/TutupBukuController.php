@@ -10,6 +10,8 @@ class TutupBukuController extends BaseController
     function __construct()
     {
         $this->laba = new \App\Models\DashboardModel();
+        $this->pengeluaranadv =  new \App\Models\PengeluaranAdvertiserModel();
+        $this->pemasukanadv =  new \App\Models\PemasukanAdvertiserModel();
     }
     public function index()
     {
@@ -56,104 +58,112 @@ class TutupBukuController extends BaseController
     // }
     public function tambah()
     {
-        $laba = $this->laba->findAll();
+        // jumlahkan total pengeluaran advertiser
+        $total_pengeluaran_adv = $this->pengeluaranadv->selectSum('jumlah')->get()->getRowArray();
+        $total_pengeluaran_adv = $total_pengeluaran_adv['jumlah'];
+
+        // jumlahkan total pemasukan advertiser
+        $total_pemasukan_adv = $this->pemasukanadv->selectSum('jumlah')->get()->getRowArray();
+        $total_pemasukan_adv = $total_pemasukan_adv['jumlah'];
+
+        $laba = $total_pemasukan_adv - $total_pengeluaran_adv;
+
         $data = [
             'title' => 'Tutup Buku',
+            'total_pengeluaran_adv' => $total_pengeluaran_adv,
+            'total_pemasukan_adv' => $total_pemasukan_adv,
+            'laba' => $laba,
         ];
         return view('dashboard/tambahdatatutupbuku', $data);
     }
-    // public function add()
-    // {
-    //     $tanggal = $this->request->getPost('tanggal');
-    //     $nama_advertiser = $this->request->getPost('nama_advertiser');
-    //     $total_harga = $this->request->getPost('total_harga');
-    //     //    menambahkan validasi  
-    //     $validation =  \Config\Services::validation();
-    //     $validate = $this->validate([
-    //         'nama_advertiser' => [
-    //             'rules' => 'required',
-    //             'errors' => [
-    //                 'required' => 'Nama Advertiser harus diisi',
-    //             ],
-    //         ],
-    //         'total_harga' => [
-    //             'rules' => 'required',
-    //             'errors' => [
-    //                 'required' => 'total harga harus diisi',
-    //             ],
-    //         ],
+    public function add()
+    {
+        $tanggal = $this->request->getPost('tanggal');
+        $total_pengeluaran_adv = $this->request->getPost('total_pengeluaran_adv');
+        $total_pemasukan_adv = $this->request->getPost('total_pemasukan_adv');
+        $laba = $this->request->getPost('total');
 
-    //     ]);
-    //     // convert 140,000 to 140000
-    //     $total_harga = str_replace(',', '', $total_harga);
-    //     if (!$validate) {
-    //         session()->setFlashdata('error', 'error nih');
-    //         return redirect()->to('/dashboard/tambah-data-advertiser')->withInput();
-    //     } else {
-    //         $data = [
-    //             'tanggal_pembelian' => $tanggal,
-    //             'nama_advertiser' => $nama_advertiser,
-    //             'total_harga' => $total_harga,
-    //         ];
-    //         $this->advertiser->insert($data);
-    //         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-    //         return redirect()->to('/dashboard/data-advertiser');
-    //     }
-    // }
+        // convert 140,000 to 140000
+        $total_pengeluaran_adv = str_replace(',', '', $total_pengeluaran_adv);
+        $total_pemasukan_adv = str_replace(',', '', $total_pemasukan_adv);
+        $laba = str_replace(',', '', $laba);
 
-    // public  function edit($id)
-    // {
-    //     $advertiser = $this->advertiser->find($id);
-    //     $data = [
-    //         'title' => 'Data Advertiser',
-    //         'data' => $advertiser,
-    //     ];
-    //     return view('dashboard/editdataadvertiser', $data);
-    // }
+        $data = [
+            'tanggal' => $tanggal,
+            'total_pengeluaran_adv' => $total_pengeluaran_adv,
+            'total_pemasukan_adv' => $total_pemasukan_adv,
+            'total' => $laba,
+        ];
 
-    // public function update()
-    // {
-    //     $id_advertiser = $this->request->getPost('id_advertiser');
-    //     $tanggal = $this->request->getPost('tanggal');
-    //     $nama_advertiser = $this->request->getPost('nama_advertiser');
-    //     $total_harga = $this->request->getPost('total_harga');
+        // validasi tutup buku hanya bisa dilakukan pada tanggal 28 setiap bulannya
+        // convert $tanggal 2023-08-01 to 01
+        $date = substr($tanggal, 8, 2);
+        $tgl_tutup_buku = "28";
 
-    //     // convert 140,000 to 140000
-    //     $total_harga = str_replace(',', '', $total_harga);
+        if ($date != $tgl_tutup_buku) {
+            session()->setFlashdata('gagal', 'Tutup buku hanya bisa dilakukan pada tanggal 28, setiap bulannya');
+            return redirect()->to('/dashboard/tutup-buku/tambah');
+        }
 
+        $this->laba->insert($data);
+        session()->setFlashdata('success', 'Data berhasil ditambahkan');
+        return redirect()->to('/dashboard/data-advertiser');
+    }
 
-    //     $data = [
-    //         'tanggal_pembelian' => $tanggal,
-    //         'nama_advertiser' => $nama_advertiser,
-    //         'total_harga' => $total_harga,
-    //     ];
+    public  function edit($id)
+    {
+        $laba = $this->laba->find($id);
+        $data = [
+            'title' => 'Tutup Buku',
+            'data' => $laba,
+        ];
+        return view('dashboard/edittutupbuku', $data);
+    }
 
-    //     // update data
-    //     $advertiser = $this->advertiser->update($id_advertiser, $data);
-    //     if ($advertiser) {
-    //         session()->setFlashdata('success', 'Data berhasil diupdate');
-    //         return redirect()->to('/dashboard/data-advertiser');
-    //     } else {
-    //         session()->setFlashdata('error', 'Data gagal diupdate');
-    //         return redirect()->to('/dashboard/data-advertiser/edit/' . $id_advertiser);
-    //     }
-    // }
+    public function update()
+    {
+        $id = $this->request->getPost('id');
+        $total_pengeluaran_adv = $this->request->getPost('total_pengeluaran_adv');
+        $total_pemasukan_adv = $this->request->getPost('total_pemasukan_adv');
+        $laba = $this->request->getPost('total');
 
-    // public function delete()
-    // {
-    //     $id = $this->request->getPost('id');
-    //     $advertiser = $this->advertiser->delete($id);
-    //     if ($advertiser) {
-    //         $data = [
-    //             'success' => true,
-    //         ];
-    //     } else {
-    //         $data = [
-    //             'success' => false,
-    //         ];
-    //     }
-    //     echo json_encode($data);
-    // }
+        // convert 140,000 to 140000
+        $total_pengeluaran_adv = str_replace('.', '', $total_pengeluaran_adv);
+        $total_pemasukan_adv = str_replace('.', '', $total_pemasukan_adv);
+        $laba = str_replace('.', '', $laba);
+
+        $data = [
+            'total_pengeluaran_adv' => $total_pengeluaran_adv,
+            'total_pemasukan_adv' => $total_pemasukan_adv,
+            'total' => $laba,
+        ];
+
+        // update data
+        $labaupdate = $this->laba->update($id, $data);
+        if ($labaupdate) {
+            session()->setFlashdata('success', 'Data tutup buku berhasil diupdate');
+            return redirect()->to('/dashboard/tutup-buku');
+        } else {
+            session()->setFlashdata('error', 'Data gagal diupdate');
+            return redirect()->to('/dashboard/tutup-buku/edit/' . $id);
+        }
+    }
+
+    public function delete()
+    {
+        $id = $this->request->getPost('id');
+        $laba = $this->laba->delete($id);
+        if ($laba) {
+            $data = [
+                'success' => true,
+            ];
+        } else {
+            $data = [
+                'success' => false,
+            ];
+        }
+        echo json_encode($data);
+    }
     // public function addpengeluaranadv()
     // {
     //     $tanggal = $this->request->getPost('tanggal');
