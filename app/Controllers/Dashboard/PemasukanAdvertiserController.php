@@ -19,7 +19,7 @@ class PemasukanAdvertiserController extends BaseController
             'title' => 'Pemasukan Advertiser',
             'pemasukanadv' => $pemasukanadv
         ];
-        return view('dashboard/pemasukanadvertiser', $data);
+        return view('dashboard/pemasukan-advertiser/pemasukanadvertiser', $data);
     }
 
     public function tambahdatapemasukanadv()
@@ -29,7 +29,7 @@ class PemasukanAdvertiserController extends BaseController
             'title' => 'Pemasukan Advertiser',
             'pemasukanadv' => $pemasukanadv
         ];
-        return view('dashboard/tambahdatapemasukanadv', $data);
+        return view('dashboard/pemasukan-advertiser/tambahdatapemasukanadv', $data);
     }
     // public function pengeluaranadvertiser()
     // {
@@ -83,7 +83,7 @@ class PemasukanAdvertiserController extends BaseController
         $this->pemasukanadv->insert($data);
         $upload_bukti->move('bukti_pemasukan_advertiser');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/tambah-data-pemasukan-advertiser');
+        return redirect()->to('/dashboard/pemasukan-advertiser/tambah-data-pemasukan-advertiser');
     }
 
     public  function edit($id)
@@ -93,7 +93,7 @@ class PemasukanAdvertiserController extends BaseController
             'title' => 'Pemasukan Advertiser',
             'data' => $pemasukanadv,
         ];
-        return view('dashboard/editdatapemasukanadv', $data);
+        return view('dashboard/pemasukan-advertiser/editdatapemasukanadv', $data);
     }
 
     public function update()
@@ -133,10 +133,10 @@ class PemasukanAdvertiserController extends BaseController
         $pengeluaranadv = $this->pemasukanadv->update($id, $data);
         if ($pengeluaranadv) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pemasukan-advertiser');
+            return redirect()->to('/dashboard/pemasukan-advertiser/pemasukan-advertiser');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pemasukan-advertiser');
+            return redirect()->to('/dashboard/pemasukan-advertiser/pemasukan-advertiser');
         }
     }
 

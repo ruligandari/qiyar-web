@@ -41,7 +41,7 @@ class AdvertiserController extends BaseController
             'title' => 'Pengeluaran Advertiser',
             'pengeluaranadv' => $pengeluaranadv,
         ];
-        return view('dashboard/pengeluaranadvertiser', $data);
+        return view('dashboard/pengeluaran-advertiser/pengeluaranadvertiser', $data);
     }
     public function pengeluaranadvertiser()
     {
@@ -64,7 +64,7 @@ class AdvertiserController extends BaseController
             'pengeluaranadv' => $pengeluaranadv,
             'karyawan' => $karyawan,
         ];
-        return view('dashboard/tambahdatapengeluaranadv', $data);
+        return view('dashboard/pengeluaran-advertiser/tambahdatapengeluaranadv', $data);
     }
     public function tambahdata()
     {
@@ -214,7 +214,7 @@ class AdvertiserController extends BaseController
         $jumlah = str_replace(',', '', $jumlah);
         if (!$validate) {
             session()->setFlashdata('error', 'error nih');
-            return redirect()->to('/dashboard/tambah-data-pengeluaran-advertiser')->withInput();
+            return redirect()->to('/dashboard/pengeluaran-advertiser/tambah-data-pengeluaran-advertiser')->withInput();
         } else {
             $data = [
                 'tanggal' => $tanggal,
@@ -226,7 +226,7 @@ class AdvertiserController extends BaseController
             ];
             $this->pengeluaranadv->insert($data);
             session()->setFlashdata('success', 'Data berhasil ditambahkan');
-            return redirect()->to('/dashboard/tambah-data-pengeluaran-advertiser');
+            return redirect()->to('/dashboard/pengeluaran-advertiser/tambah-data-pengeluaran-advertiser');
         }
     }
     public  function editpengeluaran($id)
@@ -238,7 +238,7 @@ class AdvertiserController extends BaseController
             'data' => $pengeluaranadv,
             'karyawan' => $karyawan,
         ];
-        return view('dashboard/editdatapengeluaranadv', $data);
+        return view('dashboard/pengeluaran-advertiser/editdatapengeluaranadv', $data);
     }
 
     public function updatepengeluaran()
@@ -264,10 +264,10 @@ class AdvertiserController extends BaseController
         $pengeluaranadv = $this->pengeluaranadv->update($id_pengeluaran, $data);
         if ($pengeluaranadv) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pengeluaran-advertiser');
+            return redirect()->to('/dashboard/pengeluaran-advertiser/pengeluaran-advertiser');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pengeluaran-advertiser');
+            return redirect()->to('/dashboard/pengeluaran-advertiser/pengeluaran-advertiser');
         }
     }
 

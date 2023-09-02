@@ -12,13 +12,11 @@
     <title><?= $title ?></title>
 
     <!-- Custom fonts for this template-->
-    <link href="<?= base_url() ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="<?= base_url('/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="<?= base_url('/') ?>css/sb-admin-2.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <?= $this->renderSection('header'); ?>
 
 </head>
@@ -61,7 +59,7 @@
                 </li> -->
                 <!-- Divider -->
                 <hr class="sidebar-divider">
-                <div class="sidebar-heading">
+                <div class="sidebar-heading text-white">
                     Kantor
                 </div>
                 <li class="nav-item <?= $title == 'Pengeluaran Kantor' ? 'active' : '' ?>">
@@ -69,6 +67,26 @@
                         <i class="fas fa-fw fa-file"></i>
                         <span>Jenis Pengeluaran</span></a>
                 </li>
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading text-white">
+                    Warehouse
+                </div>
+
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                        <i class="fas fa-fw fa-warehouse"></i>
+                        <span>Warehouse</span>
+                    </a>
+                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Daftar Gudang :</h6>
+                            <a class="collapse-item" href="<?= base_url('dashboard/warehouse-kuningan') ?>">Kuningan</a>
+                            <a class="collapse-item" href="<?= base_url('dashboard/warehouse-jakarta') ?>">Jakarta</a>
+                        </div>
+                    </div>
+                </li>
+
+
                 <!-- <li class="nav-item <?= $title == 'Tutup Buku' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard/tutup-buku') ?>">
                         <i class="fas fa-fw fa-file"></i>
@@ -76,7 +94,7 @@
                 </li> -->
                 <!-- Divider -->
                 <hr class="sidebar-divider">
-                <div class="sidebar-heading">
+                <div class="sidebar-heading text-white">
                     Advertiser
                 </div>
                 <li class="nav-item <?= $title == 'Karyawan Advertiser' ? 'active' : '' ?>">
@@ -113,7 +131,7 @@
                 <!-- Divider -->
                 <hr class="sidebar-divider">
                 <!-- Heading -->
-                <div class="sidebar-heading">
+                <div class="sidebar-heading text-white">
                     Broadcast
                 </div>
                 <li class="nav-item <?= $title == 'Karyawan Broadcast' ? 'active' : '' ?>">
@@ -128,7 +146,7 @@
                 </li>
                 <hr class="sidebar-divider">
                 <!-- Heading -->
-                <div class="sidebar-heading">
+                <div class="sidebar-heading text-white">
                     Requitment
                 </div>
                 <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
@@ -140,7 +158,7 @@
                 <hr class="sidebar-divider">
             <?php endif; ?>
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading text-white">
                 Logout
             </div>
             <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
@@ -280,41 +298,22 @@
     </div>
 
     <?= $this->renderSection('custom-js'); ?>
-
     <!-- Bootstrap core JavaScript-->
-    <script src="<?= base_url() ?>vendor/jquery/jquery.min.js"></script>
-    <script src="<?= base_url() ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= base_url() ?>/vendor/jquery/jquery.min.js"></script>
+    <script src="<?= base_url() ?>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="<?= base_url() ?>vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="<?= base_url() ?>/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="<?= base_url() ?>js/sb-admin-2.min.js"></script>
+    <script src="<?= base_url() ?>/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="<?= base_url() ?>vendor/chart.js/Chart.min.js"></script>
+    <script src="<?= base_url() ?>/vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="<?= base_url() ?>js/demo/chart-area-demo.js"></script>
-    <script src="<?= base_url() ?>js/demo/chart-pie-demo.js"></script>
-
-    <!-- Code injected by live-server -->
-    <!-- Bootstrap core JavaScript-->
-    <script src="<?= base_url() ?>vendor/jquery/jquery.min.js"></script>
-    <script src="<?= base_url() ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="<?= base_url() ?>vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="<?= base_url() ?>js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="<?= base_url() ?>vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="<?= base_url() ?>vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="<?= base_url() ?>js/demo/datatables-demo.js"></script>
+    <script src="<?= base_url() ?>/js/demo/chart-area-demo.js"></script>
+    <script src="<?= base_url() ?>/js/demo/chart-pie-demo.js"></script>
     <?= $this->renderSection('script') ?>
 </body>
 

@@ -17,7 +17,7 @@ class LamaranController extends BaseController
             'title' => 'Lamaran',
             'lamaran' => $lamaran
         ];
-        return view('dashboard/datalamaran', $data);
+        return view('dashboard/lamaran/datalamaran', $data);
     }
 
     public function tambahdata()

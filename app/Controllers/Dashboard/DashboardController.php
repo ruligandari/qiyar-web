@@ -11,6 +11,7 @@ class DashboardController extends BaseController
     {
         $this->pemasukanadv = new \App\Models\PemasukanAdvertiserModel();
         $this->pengeluaranadv = new \App\Models\PengeluaranAdvertiserModel();
+        $this->pengeluarankantor = new \App\Models\PengeluaranKantorModel();
         $this->laba = new \App\Models\DashboardModel();
     }
     public function index()
@@ -18,6 +19,7 @@ class DashboardController extends BaseController
         // count data from pemasukan adv and sum jumlah
         $totalPemasukan =  $this->pemasukanadv->selectSum('jumlah')->get()->getRowArray();
         $totalPengeluaran =  $this->pengeluaranadv->selectSum('jumlah')->get()->getRowArray();
+        $totalPengeluaranKantor =  $this->pengeluarankantor->selectSum('jumlah')->get()->getRowArray();
 
         // select daru data laba kemudia pilih field tanggal
         $bulan = $this->laba->select('tanggal')->get()->getResultArray();
@@ -36,6 +38,7 @@ class DashboardController extends BaseController
             'title' => 'Dashboard',
             'totalPemasukan' => $totalPemasukan['jumlah'] ?? '0',
             'totalPengeluaran' => $totalPengeluaran['jumlah'] ?? '0',
+            'totalPengeluaranKantor' => $totalPengeluaranKantor['jumlah'] ?? '0',
             'bulan' => $bulanconv,
             'total' => $totalconv,
         ];

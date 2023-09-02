@@ -19,7 +19,7 @@ class KaryawanAdvertiserController extends BaseController
             'title' => 'Karyawan Advertiser',
             'karyawan' => $karyawan
         ];
-        return view('dashboard/karyawanadvertiser', $data);
+        return view('dashboard/karyawan-advertiser/karyawanadvertiser', $data);
     }
 
     public function tambah()
@@ -27,7 +27,7 @@ class KaryawanAdvertiserController extends BaseController
         $data = [
             'title' => 'Karyawan Advertiser'
         ];
-        return view('dashboard/tambahdatakaryawanadvertiser', $data);
+        return view('dashboard/karyawan-advertiser/tambahdatakaryawanadvertiser', $data);
     }
 
     public function add()
@@ -48,10 +48,10 @@ class KaryawanAdvertiserController extends BaseController
         $inputdata = $this->karyawan->insert($data);
         if ($inputdata) {
             session()->setFlashdata('success', 'Data Karyawan Advertiser berhasil ditambahkan!');
-            return redirect()->to(base_url('dashboard/karyawan-advertiser'));
+            return redirect()->to(base_url('dashboard/karyawan-advertiser/karyawan-advertiser'));
         } else {
             session()->setFlashdata('error', 'Data Karyawan Advertiser Gagal ditambahkan!');
-            return redirect()->to(base_url('dashboard/karyawan-advertiser'));
+            return redirect()->to(base_url('dashboard/karyawan-advertiser/karyawan-advertiser'));
         }
     }
 
@@ -62,7 +62,7 @@ class KaryawanAdvertiserController extends BaseController
             'title' => 'Karyawan Advertiser',
             'data' => $karyawan
         ];
-        return view('dashboard/editdatakaryawanadvertiser', $data);
+        return view('dashboard/karyawan-advertiser/editdatakaryawanadvertiser', $data);
     }
 
     public function update()
@@ -84,10 +84,10 @@ class KaryawanAdvertiserController extends BaseController
         $updatedata = $this->karyawan->update($id, $data);
         if ($updatedata) {
             session()->setFlashdata('success', 'Data Karyawan Advertiser berhasil diupdate!');
-            return redirect()->to(base_url('dashboard/karyawan-advertiser'));
+            return redirect()->to(base_url('dashboard/karyawan-advertiser/karyawan-advertiser'));
         } else {
             session()->setFlashdata('error', 'Data Karyawan Advertiser Gagal diupdate!');
-            return redirect()->to(base_url('dashboard/karyawan-advertiser'));
+            return redirect()->to(base_url('dashboard/karyawan-advertiser/karyawan-advertiser'));
         }
     }
 
