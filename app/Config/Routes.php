@@ -102,7 +102,11 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('tutup-buku/delete', 'dashboard\TutupBukuController::delete');
 
 
-    $routes->get('warehouse-kuningan', 'dashboard\TutupBukuController::index');
+    $routes->get('warehouse-kuningan', 'dashboard\WarehouseController::index');
+
+
+
+    $routes->get('warehouse-jakarta', 'dashboard\WarehouseController::index');
 });
 
 // restricted page

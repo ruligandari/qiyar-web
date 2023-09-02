@@ -84,32 +84,20 @@
                             <th>Tanggal</th>
                             <th>Nama Advertiser</th>
                             <th>Pengeluaran</th>
-                            <?php if (session()->get('role') == '1') : ?>
-                                <th>Aksi</th>
-                            <?php endif; ?>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        $no = 1;
-                        foreach ($advertiser as $data) :
-                        ?>
-                            <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= $data['tanggal_pembelian'] ?></td>
-                                <td><?= $data['nama_advertiser'] ?></td>
-                                <td><?= number_format($data['total_harga'], 0, ',', '.') ?>
-                                </td>
-                                <?php if (session()->get('role') == '1') : ?>
-                                    <td class="text-center">
-                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/data-advertiser/edit/') . $data['id_advertiser'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                        <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_advertiser'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                    </td>
-                                <?php endif; ?>
-                            </tr>
-                        <?php
-                        endforeach
-                        ?>
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center">
+                            </td>
+                        </tr>
+
                     </tbody>
                     <tfoot>
                         <tr>
