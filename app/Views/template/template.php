@@ -72,12 +72,12 @@
                     Warehouse
                 </div>
 
-                <li class="nav-item active">
+                <li class="nav-item <?= $title == 'Warehouse' ? 'active' : '' ?>">
                     <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                         <i class="fas fa-fw fa-warehouse"></i>
                         <span>Warehouse</span>
                     </a>
-                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Daftar Gudang :</h6>
                             <a class="collapse-item" href="<?= base_url('dashboard/warehouse-kuningan') ?>">Kuningan</a>
@@ -139,10 +139,10 @@
                         <i class="fas fa-fw fa-file"></i>
                         <span>Karyawan Broadcast</span></a>
                 </li>
-                <li class="nav-item <?= $title == 'Lamaran' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/lamaran') ?>">
+                <li class="nav-item <?= $title == 'Pemasukan Broadcast' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/pemasukan-broadcast') ?>">
                         <i class="fas fa-fw fa-file"></i>
-                        <span>Pengeluaran Broadcast</span></a>
+                        <span>Pemasukan</span></a>
                 </li>
                 <hr class="sidebar-divider">
                 <!-- Heading -->
