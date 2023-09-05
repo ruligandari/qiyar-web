@@ -102,7 +102,10 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('tutup-buku/delete', 'dashboard\TutupBukuController::delete');
 
 
-    $routes->get('warehouse-kuningan', 'dashboard\WarehouseController::index');
+    $routes->get('warehouse-kuningan', 'dashboard\WarehouseKuninganController::index');
+    $routes->get('warehouse-kuningan/edit/$1', 'dashboard\WarehouseKuninganController::editBarangMasuk/$1');
+    $routes->post('warehouse-kuningan/delete', 'dashboard\WarehouseKuninganController::deleteBarangMasuk');
+    $routes->get('warehouse-kuningan/tambah', 'dashboard\WarehouseKuninganController::tambahBarangMasuk');
 
 
 
