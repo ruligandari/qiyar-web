@@ -107,12 +107,12 @@ $(document).ready(function() {
     // sumColumn(table1);
 
     // Call sumColumn when searching/filtering is applied for example2
-    table2.on('search.dt', function() {
-        sumColumn(table2);
-    });
+    // table2.on('search.dt', function() {
+    //     sumColumn(table2);
+    // });
 
-    // Initial sum when the page loads for example2
-    sumColumn(table2);
+    // // Initial sum when the page loads for example2
+    // sumColumn(table2);
 
     // Move buttons container for example1
     table1.buttons().container()
@@ -126,7 +126,7 @@ $(document).ready(function() {
     document.querySelectorAll('#min, #max').forEach((el) => {
         el.addEventListener('change', () => {
             table1.draw();
-            sumColumn(table1);
+            // sumColumn(table1);
         });
     });
 
@@ -134,7 +134,7 @@ $(document).ready(function() {
     document.querySelectorAll('#min, #max').forEach((el) => {
         el.addEventListener('change', () => {
             table2.draw();
-            sumColumn(table2);
+            // sumColumn(table2);
         });
     });
 

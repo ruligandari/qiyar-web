@@ -14,10 +14,12 @@ class WarehouseKuninganController extends BaseController
     public function index()
     {
         $barangMasuk = $this->barang_masuk->findAll();
+        $barangKeluar = $this->barang_keluar->findAll();
         $data = [
             'title' => 'Warehouse - Kuningan',
             'active' => 'warehouse',
-            'barangmasuk' => $barangMasuk
+            'barangmasuk' => $barangMasuk,
+            'barangkeluar' => $barangKeluar,
         ];
         return view('dashboard/warehouse/warehouse', $data);
     }

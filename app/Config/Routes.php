@@ -103,10 +103,14 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
 
 
     $routes->get('warehouse-kuningan', 'dashboard\WarehouseKuninganController::index');
-    $routes->get('warehouse-kuningan/edit/$1', 'dashboard\WarehouseKuninganController::editBarangMasuk/$1');
+    $routes->get('warehouse-kuningan/edit/(:any)', 'dashboard\WarehouseKuninganController::editBarangMasuk/$1');
     $routes->post('warehouse-kuningan/delete', 'dashboard\WarehouseKuninganController::deleteBarangMasuk');
     $routes->get('warehouse-kuningan/tambah', 'dashboard\WarehouseKuninganController::tambahBarangMasuk');
+    $routes->post('warehouse-kuningan/update', 'dashboard\WarehouseKuninganController::updateBarangMasuk');
+    $routes->post('warehouse-kuningan/stok', 'dashboard\WarehouseKuninganController::tambahQtyBarangMasuk');
+    $routes->post('warehouse-kuningan/add', 'dashboard\WarehouseKuninganController::addBarangMasuk');
 
+    $routes->get('warehouse-kuningan-keluar/tambah', 'dashboard\WarehouseKuninganController::tambahBarangKeluar');
 
 
     $routes->get('warehouse-jakarta', 'dashboard\WarehouseController::index');
