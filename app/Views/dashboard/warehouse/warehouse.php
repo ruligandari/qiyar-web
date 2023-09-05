@@ -34,7 +34,7 @@
         <div class="card-header py-3">
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
-                    <h6 class=" font-weight-bold text-primary">Data Advertiser</h6>
+                    <h6 class=" font-weight-bold text-primary">Data Warehouse</h6>
                     <?php if (session()->get('role') == '1') : ?>
                         <a href="<?= base_url('dashboard/tambah-data-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                     <?php endif; ?>
