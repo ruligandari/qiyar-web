@@ -122,8 +122,25 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('warehouse-kuningan-keluar/update', 'dashboard\WarehouseKuninganController::updateBarangKeluar');
     $routes->post('warehouse-kuningan-keluar/delete', 'dashboard\WarehouseKuninganController::deleteBarangKeluar');
 
+    $routes->get('warehouse-jakarta', 'dashboard\WarehouseJakartaController::index');
+    $routes->get('warehouse-jakarta/edit/(:any)', 'dashboard\WarehouseJakartaController::editBarangMasuk/$1');
+    $routes->post('warehouse-jakarta/delete', 'dashboard\WarehouseJakartaController::deleteBarangMasuk');
+    $routes->get('warehouse-jakarta/tambah', 'dashboard\WarehouseJakartaController::tambahBarangMasuk');
+    $routes->post('warehouse-jakarta/update', 'dashboard\WarehouseJakartaController::updateBarangMasuk');
+    $routes->post('warehouse-jakarta/add', 'dashboard\WarehouseJakartaController::addBarangMasuk');
 
-    $routes->get('warehouse-jakarta', 'dashboard\WarehouseController::index');
+    $routes->get('warehouse-jakarta-keluar/tambah', 'dashboard\WarehouseJakartaController::tambahBarangKeluar');
+    $routes->post('warehouse-jakarta-keluar/add', 'dashboard\WarehouseJakartaController::addBarangKeluar');
+    $routes->get('warehouse-jakarta-keluar/edit/(:any)', 'dashboard\WarehouseJakartaController::editBarangKeluar/$1');
+    $routes->post('warehouse-jakarta-keluar/update', 'dashboard\WarehouseJakartaController::updateBarangKeluar');
+    $routes->post('warehouse-jakarta-keluar/delete', 'dashboard\WarehouseJakartaController::deleteBarangKeluar');
+
+    $routes->get('warehouse-jakarta/stok', 'dashboard\WarehouseJakartaController::stokBarang');
+    $routes->get('warehouse-jakarta/stok/tambah', 'dashboard\WarehouseJakartaController::tambahStokBarang');
+    $routes->post('warehouse-jakarta/stok/add', 'dashboard\WarehouseJakartaController::addStokBarang');
+    $routes->post('warehouse-jakarta/stok/delete', 'dashboard\WarehouseJakartaController::deleteStokBarang');
+    $routes->post('warehouse-jakarta/stok/update', 'dashboard\WarehouseJakartaController::updateStokBarang');
+    $routes->get('warehouse-jakarta/stok/edit/(:any)', 'dashboard\WarehouseJakartaController::editStokBarang/$1');
 
     $routes->get('uang-transfer-broadcast', 'dashboard\UangTransferBroadcastController::index');
     $routes->get('uang-transfer-broadcast/tambah', 'dashboard\UangTransferBroadcastController::tambahdatauangtransferbc');
