@@ -178,7 +178,7 @@
                                         <td><a href="<?= base_url('bukti-barang-masuk-kng/') . $data['bukti_pickup'] ?>" target="_blank">
                                                 <img src="<?= base_url('bukti-barang-masuk-kng/') . $data['bukti_pickup'] ?>" alt="" style="height:50px; width:50px"></a></td>
                                         <td class="text-center">
-                                            <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/warehouse-kuningan/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                            <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/warehouse-kuningan-keluar/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                             <button class="btn btn-danger delete-button-kng-keluar" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/warehouse-kuningan-keluar/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                         </td>
                                     </tr>

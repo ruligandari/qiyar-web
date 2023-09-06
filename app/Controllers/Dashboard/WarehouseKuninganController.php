@@ -22,7 +22,7 @@ class WarehouseKuninganController extends BaseController
             'barangmasuk' => $barangMasuk,
             'barangkeluar' => $barangKeluar,
         ];
-        return view('dashboard/warehouse/warehouse', $data);
+        return view('dashboard/warehouse/kuningan/warehouse', $data);
     }
     public function tambahBarangMasuk()
     {
@@ -31,7 +31,7 @@ class WarehouseKuninganController extends BaseController
             'title' => 'Warehouse - Kuningan',
 
         ];
-        return view('dashboard/warehouse/tambahbarangmasuk-kuningan', $data);
+        return view('dashboard/warehouse/kuningan/tambahbarangmasuk-kuningan', $data);
     }
 
     public function addBarangMasuk()
@@ -94,7 +94,7 @@ class WarehouseKuninganController extends BaseController
             'data' => $barangMasuk
 
         ];
-        return view('dashboard/warehouse/editbarangmasuk-kuningan', $data);
+        return view('dashboard/warehouse/kuningan/editbarangmasuk-kuningan', $data);
     }
 
     public function updateBarangMasuk()
@@ -140,7 +140,7 @@ class WarehouseKuninganController extends BaseController
             'barangmasuk' => $barang_masuk
 
         ];
-        return view('dashboard/warehouse/tambahbarangkeluar-kuningan', $data);
+        return view('dashboard/warehouse/kuningan/tambahbarangkeluar-kuningan', $data);
     }
 
     public function addBarangKeluar()
@@ -207,6 +207,71 @@ class WarehouseKuninganController extends BaseController
         }
     }
 
+    public function editBarangKeluar($id)
+    {
+        $barangkeluar = $this->barang_keluar->find($id);
+        $id = $this->barang_masuk->where('nama_barang', $barangkeluar['nama_barang'])->first();
+        $barang_masuk = $this->barang_masuk->where('nama_barang !=', $barangkeluar['nama_barang'])->findAll();
+
+        $data = [
+            'title' => 'Warehouse - Kuningan',
+            'data' => $barangkeluar,
+            'barang' => $barang_masuk,
+            'id_barang_masuk' => $id['id']
+
+        ];
+        return view('dashboard/warehouse/kuningan/editbarangkeluar-kuningan', $data);
+    }
+
+    public function updateBarangKeluar()
+    {
+        $id = $this->request->getPost('id');
+        $nama_barang = $this->request->getPost('nama_barang');
+        $qty = $this->request->getPost('qty');
+        $qty_lama = $this->request->getPost('qty_lama');
+        $total_resi = $this->request->getPost('total_resi');
+        $upload_bukti = $this->request->getFile('bukti_pickup');
+        $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
+
+        // cek apakah ada file yang diupload
+        if (!$upload_bukti->getError() == 4) {
+            // generate nama file random
+            $namaFile = $upload_bukti->getRandomName();
+            // pindahkan file ke folder img
+            $upload_bukti->move('bukti-barang-masuk-kng', $namaFile);
+            // hapus file lama
+            unlink('bukti-barang-masuk-kng/' . $bukti_transfer_lama);
+        } else {
+            $namaFile = $bukti_transfer_lama;
+        }
+
+        $barang_masuk = $this->barang_masuk->find($nama_barang);
+
+        if ($qty != $qty_lama) {
+            // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
+            $kurangQty = $barang_masuk['qty'] - $qty_lama;
+            $tambahQty = $kurangQty + $qty;
+            $this->barang_masuk->update($nama_barang, [
+                'qty' => $tambahQty
+            ]);
+        }
+
+        $data = [
+            'nama_barang' => $barang_masuk['nama_barang'],
+            'total_resi' => $total_resi,
+            'qty' => $qty,
+            'bukti_pickup' => $namaFile
+        ];
+
+        if ($data) {
+            // insert data 
+            $this->barang_keluar->update($id, $data);
+            return redirect()->to('/dashboard/warehouse-kuningan')->with('success', 'Data Berhasil Diupdate!');
+        } else {
+            return redirect()->to('/dashboard/warehouse-kuningan-keluar/edit/' . $id)->withInput()->with('error', 'Data Gagal Diupdate!, Silahkan Periksa Kembali');
+        }
+    }
+
     public function deleteBarangKeluar()
     {
         $id = $this->request->getPost('id');
@@ -236,7 +301,7 @@ class WarehouseKuninganController extends BaseController
             'stok' => $stok
         ];
 
-        return view('dashboard/warehouse/stokbarang-kuningan', $data);
+        return view('dashboard/warehouse/kuningan/stokbarang-kuningan', $data);
     }
     public function tambahStokBarang()
     {
@@ -246,7 +311,7 @@ class WarehouseKuninganController extends BaseController
             'barang_masuk' => $barang_masuk
         ];
 
-        return view('dashboard/warehouse/updatestokbarang-kuningan', $data);
+        return view('dashboard/warehouse/kuningan/updatestokbarang-kuningan', $data);
     }
 
     public function addStokBarang()
@@ -324,7 +389,7 @@ class WarehouseKuninganController extends BaseController
             'id' => $idNamaBarang['id']
 
         ];
-        return view('dashboard/warehouse/editstokbarang-kuningan', $data);
+        return view('dashboard/warehouse/kuningan/editstokbarang-kuningan', $data);
     }
 
     public function updateStokBarang()

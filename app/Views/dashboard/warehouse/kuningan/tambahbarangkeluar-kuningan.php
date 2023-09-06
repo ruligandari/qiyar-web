@@ -58,6 +58,7 @@
                                 <option value="<?= $data['id'] ?>"><?= $data['nama_barang'] ?></option>
                             <?php endforeach ?>
                         </select>
+                        <span class="text-disable md-1"> <i class="fas fa-info-circle fa-sm text-danger"></i> Jika barang keluar berupa bundle, harap klik tambah item</span>
                     </div>
                     <div id="formTambahBarang"></div>
                     <button type="button" class="btn btn-link" id="tambahBarang">+ Tambah Item </button>
@@ -89,7 +90,7 @@
             // Fungsi untuk menambahkan input baru
             $("#tambahBarang").click(function() {
                 var newInput = '<div class="form-group">' +
-                    '<label for="exampleInputEmail1">Nama Barang</label>' +
+                    '<label for="exampleInputEmail1">Nama Barang Bundle</label>' +
                     '<select class="custom-select" name="nama_barang[]">' +
                     '<option selected>Pilih Barang</option>' +
                     '<?php foreach ($barangmasuk as $data) : ?>' +

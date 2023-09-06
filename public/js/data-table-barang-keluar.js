@@ -34,7 +34,16 @@ $(document).ready(function() {
                 footer: true,
                 title: 'Data Pengeluaran Advertiser',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5],
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Jika kolom adalah gambar, return elemen img
+                            if (column === 5) {
+                                return $('img', data).attr('src');
+                            }
+                            return data;
+                        }
+                    }
                 },
                 className: 'mb-2',
                 // ubah nama file ketika di download
@@ -44,7 +53,16 @@ $(document).ready(function() {
                 footer: true,
                 title: 'Data Pengeluaran Advertiser',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5],
+                    format: {
+                        body: function (data, row, column, node) {
+                            // Jika kolom adalah gambar, return elemen img
+                            if (column === 5) {
+                                return $('img', data).attr('src');
+                            }
+                            return data;
+                        }
+                    }
                 },
                 className: 'mb-2',
             }
