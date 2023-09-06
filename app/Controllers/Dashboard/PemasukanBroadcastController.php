@@ -85,75 +85,75 @@ class PemasukanBroadcastController extends BaseController
         return redirect()->to('/dashboard/pemasukan-broadcast/');
     }
 
-    // public  function edit($id)
-    // {
-    //     $pemasukanadv = $this->pemasukanadv->find($id);
-    //     $data = [
-    //         'title' => 'Pemasukan Advertiser',
-    //         'data' => $pemasukanadv,
-    //     ];
-    //     return view('dashboard/pemasukan-advertiser/editdatapemasukanadv', $data);
-    // }
+    public  function edit($id)
+    {
+        $pemasukanbroadcast = $this->pemasukanbroadcast->find($id);
+        $data = [
+            'title' => 'Pemasukan Broadcast',
+            'data' => $pemasukanbroadcast,
+        ];
+        return view('dashboard/pemasukan-broadcast/editdatapemasukanbroadcast', $data);
+    }
 
-    // public function update()
-    // {
-    //     $id = $this->request->getPost('id');
-    //     $expedisi = $this->request->getPost('expedisi');
-    //     $jumlah = $this->request->getPost('jumlah');
-    //     $penerima = $this->request->getPost('penerima');
-    //     $bank_tujuan = $this->request->getPost('bank_tujuan');
-    //     $upload_bukti = $this->request->getFile('upload_bukti');
-    //     $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
+    public function update()
+    {
+        $id = $this->request->getPost('id');
+        $expedisi = $this->request->getPost('expedisi');
+        $jumlah = $this->request->getPost('jumlah');
+        $penerima = $this->request->getPost('penerima');
+        $bank_tujuan = $this->request->getPost('bank_tujuan');
+        $upload_bukti = $this->request->getFile('upload_bukti');
+        $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
-    //     // convert 140,000 or 140.000 to 140000
-    //     if (strpos($jumlah, ',') !== false) {
-    //         $jumlah = str_replace(',', '', $jumlah);
-    //     } else if (strpos($jumlah, '.') !== false) {
-    //         $jumlah = str_replace('.', '', $jumlah);
-    //     }
+        // convert 140,000 or 140.000 to 140000
+        if (strpos($jumlah, ',') !== false) {
+            $jumlah = str_replace(',', '', $jumlah);
+        } else if (strpos($jumlah, '.') !== false) {
+            $jumlah = str_replace('.', '', $jumlah);
+        }
 
-    //     $data = [
-    //         'expedisi' => $expedisi,
-    //         'jumlah' => $jumlah,
-    //         'penerima' => $penerima,
-    //         'bank_tujuan' => $bank_tujuan,
-    //         'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
-    //     ];
+        $data = [
+            'expedisi' => $expedisi,
+            'jumlah' => $jumlah,
+            'penerima' => $penerima,
+            'bank_tujuan' => $bank_tujuan,
+            'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
+        ];
 
-    //     // hapus file lama
-    //     if ($upload_bukti->getName() != null) {
-    //         unlink('bukti_pemasukan_advertiser/' . $bukti_transfer_lama);
-    //         // upload file baru
-    //         $upload_bukti->move('bukti_pemasukan_advertiser');
-    //     }
+        // hapus file lama
+        if ($upload_bukti->getName() != null) {
+            unlink('bukti_pemasukan_broadcast/' . $bukti_transfer_lama);
+            // upload file baru
+            $upload_bukti->move('bukti_pemasukan_broadcast');
+        }
 
 
-    //     // update data
-    //     $pengeluaranadv = $this->pemasukanadv->update($id, $data);
-    //     if ($pengeluaranadv) {
-    //         session()->setFlashdata('success', 'Data berhasil diupdate');
-    //         return redirect()->to('/dashboard/pemasukan-advertiser/pemasukan-advertiser');
-    //     } else {
-    //         session()->setFlashdata('error', 'Data gagal diupdate');
-    //         return redirect()->to('/dashboard/pemasukan-advertiser/pemasukan-advertiser');
-    //     }
-    // }
+        // update data
+        $pemasukanbroadcast = $this->pemasukanbroadcast->update($id, $data);
+        if ($pemasukanbroadcast) {
+            session()->setFlashdata('success', 'Data berhasil diupdate');
+            return redirect()->to('/dashboard/pemasukan-broadcast');
+        } else {
+            session()->setFlashdata('error', 'Data gagal diupdate');
+            return redirect()->to('/dashboard/pemasukan-broadcast/edit/' . $id);
+        }
+    }
 
-    // public function delete()
-    // {
-    //     $id = $this->request->getPost('id');
-    //     $pemasukanadv = $this->pemasukanadv->delete($id);
-    //     if ($pemasukanadv) {
-    //         $data = [
-    //             'success' => true,
-    //             'msg' => 'Data berhasil dihapus nih!'
-    //         ];
-    //     } else {
-    //         $data = [
-    //             'success' => false,
-    //             'msg' => 'Data Gagal dihapus nih!'
-    //         ];
-    //     }
-    //     echo json_encode($data);
-    // }
+    public function delete()
+    {
+        $id = $this->request->getPost('id');
+        $pemasukanbroadcast = $this->pemasukanbroadcast->delete($id);
+        if ($pemasukanbroadcast) {
+            $data = [
+                'success' => true,
+                'msg' => 'Data berhasil dihapus nih!'
+            ];
+        } else {
+            $data = [
+                'success' => false,
+                'msg' => 'Data Gagal dihapus nih!'
+            ];
+        }
+        echo json_encode($data);
+    }
 }

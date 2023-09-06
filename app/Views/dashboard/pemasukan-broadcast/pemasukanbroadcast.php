@@ -105,8 +105,8 @@
                                 <td><img src="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></td>
                                 </td>
                                 <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
+                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/pemasukan-broadcast/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                 </td>
                             </tr>
                         <?php
@@ -253,7 +253,7 @@
     deleteButtons.forEach((button) => {
         button.addEventListener("click", function() {
             const id = this.getAttribute("data-id");
-
+            const url = this.getAttribute("data-url");
             Swal.fire({
                 title: "Apakah Anda yakin akan menghapus produk ini?",
                 icon: "warning",
@@ -267,7 +267,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pemasukan-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: url, // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },

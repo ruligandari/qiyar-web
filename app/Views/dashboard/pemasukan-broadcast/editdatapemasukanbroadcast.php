@@ -11,7 +11,7 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Edit Data Pemasukan Advertiser</h1>
+    <h1 class="h3 mb-0 text-gray-800">Edit Data Pemasukan Broadcast</h1>
   </div>
 
   <!-- DataTales Example -->
@@ -21,7 +21,7 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/pemasukan-advertiser/update') ?>" enctype="multipart/form-data">
+        <form method="POST" action="<?= base_url('dashboard/pemasukan-broadcast/update') ?>" enctype="multipart/form-data">
           <input type="hidden" name="id" value="<?= $data['id'] ?>">
           <div class="form-group">
             <label for="formGroupExampleInput">Expedisi</label>

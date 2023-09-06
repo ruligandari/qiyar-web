@@ -160,7 +160,10 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
 
     $routes->get('pemasukan-broadcast', 'dashboard\PemasukanBroadcastController::index');
     $routes->get('pemasukan-broadcast/tambah', 'dashboard\PemasukanBroadcastController::tambahdatapemasukanbroadcast');
+    $routes->get('pemasukan-broadcast/edit/(:any)', 'dashboard\PemasukanBroadcastController::edit/$1');
+    $routes->post('pemasukan-broadcast/update', 'dashboard\PemasukanBroadcastController::update');
     $routes->post('pemasukan-broadcast/add', 'dashboard\PemasukanBroadcastController::add');
+    $routes->post('pemasukan-broadcast/delete', 'dashboard\PemasukanBroadcastController::delete');
 });
 
 // restricted page
