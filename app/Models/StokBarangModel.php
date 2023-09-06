@@ -4,10 +4,10 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class BarangKeluarModel extends Model
+class StokBarangModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'barang_keluar';
+    protected $table            = 'stok_barang';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';

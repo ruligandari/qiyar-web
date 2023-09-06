@@ -107,10 +107,20 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('warehouse-kuningan/delete', 'dashboard\WarehouseKuninganController::deleteBarangMasuk');
     $routes->get('warehouse-kuningan/tambah', 'dashboard\WarehouseKuninganController::tambahBarangMasuk');
     $routes->post('warehouse-kuningan/update', 'dashboard\WarehouseKuninganController::updateBarangMasuk');
-    $routes->post('warehouse-kuningan/stok', 'dashboard\WarehouseKuninganController::tambahQtyBarangMasuk');
     $routes->post('warehouse-kuningan/add', 'dashboard\WarehouseKuninganController::addBarangMasuk');
 
+    $routes->get('warehouse-kuningan/stok', 'dashboard\WarehouseKuninganController::stokBarang');
+    $routes->get('warehouse-kuningan/stok/tambah', 'dashboard\WarehouseKuninganController::tambahStokBarang');
+    $routes->post('warehouse-kuningan/stok/add', 'dashboard\WarehouseKuninganController::addStokBarang');
+    $routes->post('warehouse-kuningan/stok/delete', 'dashboard\WarehouseKuninganController::deleteStokBarang');
+    $routes->post('warehouse-kuningan/stok/update', 'dashboard\WarehouseKuninganController::updateStokBarang');
+    $routes->get('warehouse-kuningan/stok/edit/(:any)', 'dashboard\WarehouseKuninganController::editStokBarang/$1');
+
     $routes->get('warehouse-kuningan-keluar/tambah', 'dashboard\WarehouseKuninganController::tambahBarangKeluar');
+    $routes->post('warehouse-kuningan-keluar/add', 'dashboard\WarehouseKuninganController::addBarangKeluar');
+    $routes->get('warehouse-kuningan-keluar/edit/(:any)', 'dashboard\WarehouseKuninganController::editBarangKeluar/$1');
+    $routes->post('warehouse-kuningan-keluar/update', 'dashboard\WarehouseKuninganController::updateBarangKeluar');
+    $routes->post('warehouse-kuningan-keluar/delete', 'dashboard\WarehouseKuninganController::deleteBarangKeluar');
 
 
     $routes->get('warehouse-jakarta', 'dashboard\WarehouseController::index');

@@ -60,7 +60,7 @@
                         </select>
                     </div>
                     <div id="formTambahBarang"></div>
-                    <button type="button" class="btn btn-link" id="tambahBarang">+ Tambah Barang Lain</button>
+                    <button type="button" class="btn btn-link" id="tambahBarang">+ Tambah Item </button>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Qty</label>
                         <input type="text" class="form-control" id="harga" name="qty" placeholder="Masukan Qty">

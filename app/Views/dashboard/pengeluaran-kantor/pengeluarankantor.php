@@ -111,7 +111,8 @@
                                 <td><?= $data['jenis_pengeluaran'] ?></td>
                                 <td><?= $data['bank_tujuan'] ?></td>
                                 <td><?= $data['nama_penerima'] ?></td>
-                                <td><img src="<?= base_url('bukti_pengeluaran_kantor/') . $data['bukti_transfer'] ?>" alt="" style="width:50px; height:50px;"></td>
+                                <td><a href="<?= base_url('bukti_pengeluaran_kantor/') . $data['bukti_transfer'] ?>" target="_blank">
+                                        <img src="<?= base_url('bukti_pengeluaran_kantor/') . $data['bukti_transfer'] ?>" alt="" style="height:50px; width:50px"></a></td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?></td>
                                 <td class="text-center">
                                     <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pengeluaran-kantor/edit/') . $data['id_pengeluaran_kantor'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>

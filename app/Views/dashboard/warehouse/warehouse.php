@@ -55,11 +55,17 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <div class="">
-                        <div class="d-sm-flex align-items-center justify-content-between">
-                            <h6 class=" font-weight-bold text-primary">Data Warehouse</h6>
-                            <?php if (session()->get('role') == '1') : ?>
-                                <a href="<?= base_url('dashboard/warehouse-kuningan/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
-                            <?php endif; ?>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <h6 class=" font-weight-bold text-primary">Data Warehouse</h6>
+                            </div>
+                            <div class="col-xl-6 d-flex justify-content-end">
+                                <?php if (session()->get('role') == '1') : ?>
+                                    <a href="<?= base_url('dashboard/warehouse-kuningan/stok') ?>" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Stok Produk</a>
+                                    <div class="col-xl-1"></div>
+                                    <a href="<?= base_url('dashboard/warehouse-kuningan/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Produk Baru</a>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -85,7 +91,6 @@
                                     <th>Tanggal</th>
                                     <th>Nama Barang</th>
                                     <th>Qty</th>
-                                    <th>Upload Bukti</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -97,27 +102,36 @@
                                         <td><?= $no++ ?></td>
                                         <td><?= $data['tanggal'] ?></td>
                                         <td><?= $data['nama_barang'] ?></td>
-                                        <td><?= $data['qty'] ?></td>
-                                        <td><img src="<?= base_url('bukti-barang-masuk-kng/') . $data['upload_bukti'] ?>" alt="" style="height: 50px; width: 50px;"></td>
+                                        <td><?= number_format($data['qty'], 0, ',', '.') ?></td>
                                         <td class="text-center">
                                             <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/warehouse-kuningan/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                             <button class="btn btn-danger delete-button-kng" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/warehouse-kuningan/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                            <button class="btn btn-primary update-button-kng" title="Tambah Stok" data-url="<?= base_url('dashboard/warehouse-kuningan/stok') ?>" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-sync"></i></i></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><b>Total Qty :</b></td>
+                                    <td id="totalSum"></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-xl-12">
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Data Barang Keluar</h1>
+            </div>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <div class="">
                         <div class="d-sm-flex align-items-center justify-content-between">
-                            <h6 class=" font-weight-bold text-primary">Data Warehouse</h6>
+                            <h6 class=" font-weight-bold text-primary">Barang Keluar</h6>
                             <?php if (session()->get('role') == '1') : ?>
                                 <a href="<?= base_url('dashboard/warehouse-kuningan-keluar/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                             <?php endif; ?>
@@ -130,11 +144,11 @@
                             <tbody>
                                 <tr>
                                     <td>Dari :</td>
-                                    <td><input type="text" id="min" name="min"></td>
+                                    <td><input type="text" id="minKeluar" name="min"></td>
                                 </tr>
                                 <tr>
                                     <td>Sampai :</td>
-                                    <td><input type="text" id="max" name="max"></td>
+                                    <td><input type="text" id="maxKeluar" name="max"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -161,14 +175,24 @@
                                         <td><?= $data['nama_barang'] ?></td>
                                         <td><?= $data['qty'] ?></td>
                                         <td><?= $data['total_resi'] ?></td>
-                                        <td><img src="<?= base_url('bukti-barang-masuk-kng/') . $data['bukti_pickup'] ?>" alt="" style="height: 50px; width: 50px;"></td>
+                                        <td><a href="<?= base_url('bukti-barang-masuk-kng/') . $data['bukti_pickup'] ?>" target="_blank">
+                                                <img src="<?= base_url('bukti-barang-masuk-kng/') . $data['bukti_pickup'] ?>" alt="" style="height:50px; width:50px"></a></td>
                                         <td class="text-center">
                                             <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/warehouse-kuningan/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                            <button class="btn btn-danger delete-button-kng" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/warehouse-kuningan/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
+                                            <button class="btn btn-danger delete-button-kng-keluar" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/warehouse-kuningan-keluar/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><b>Total :</b></td>
+                                    <td id="totalQty"></td>
+                                    <td id="totalResi"></td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -200,6 +224,7 @@
 
 
 <script src="<?= base_url('js/sweet-alert.js') ?>"></script>
-<script src="<?= base_url('js/data-table.js') ?>"></script>
+<script src="<?= base_url('js/data-table-barang-masuk.js') ?>"></script>
+<script src="<?= base_url('js/data-table-barang-keluar.js') ?>"></script>
 
 <?= $this->endsection(); ?>

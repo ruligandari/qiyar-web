@@ -102,7 +102,8 @@
                                 <td><?= $data['bank_tujuan'] ?></td>
                                 <td><?= $data['penerima'] ?></td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
-                                <td><img src="<?= base_url('bukti_pemasukan_advertiser/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></td>
+                                <td><a href="<?= base_url('bukti_pemasukan_advertiser/') . $data['upload_bukti'] ?>" target="_blank">
+                                        <img src="<?= base_url('bukti_pemasukan_advertiser/') . $data['upload_bukti'] ?>" alt="" style="height:50px; width:50px"></a></td>
                                 </td>
                                 <td class="text-center">
                                     <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
