@@ -4,10 +4,10 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class BroadcastModel extends Model
+class PengeluaranBroadcastModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'uang_transfer_broadcast';
+    protected $table            = 'pengeluaran_broadcast';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
@@ -18,7 +18,7 @@ class BroadcastModel extends Model
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_    at';
+    protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 

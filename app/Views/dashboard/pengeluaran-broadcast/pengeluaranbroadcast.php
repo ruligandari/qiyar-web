@@ -48,15 +48,17 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Pemasukan Broadcast</h1>
+        <h1 class="h3 mb-0 text-gray-800">Jenis Pengeluaran</h1>
     </div>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
-                    <h6 class=" font-weight-bold text-primary">Data Pemasukan Broadcast</h6>
-                    <a href="<?= base_url('dashboard/pemasukan-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <h6 class=" font-weight-bold text-primary">Data Jenis Pengeluaran</h6>
+                    <?php if (session()->get('role') == '1') : ?>
+                        <a href="<?= base_url('dashboard/pengeluaran-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -81,33 +83,38 @@
                             <th>No</th>
                             <th>Tanggal</th>
                             <th>Waktu</th>
-                            <th>Expedisi</th>
+                            <th>Jenis Pengeluaran</th>
                             <th>Bank Tujuan</th>
-                            <th>Nama Bank Penerima</th>
+                            <th>Nama Penerima</th>
+                            <th>Bukti</th>
                             <th>Jumlah</th>
-                            <th>Bukti Upload</th>
-                            <th>Aksi</th>
+                            <?php if (session()->get('role') == '1') : ?>
+                                <th>Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         $no = 1;
-                        foreach ($pemasukanbroadcast as $data) :
+                        foreach ($pengeluaranbroadcast as $data) :
                         ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= $data['tanggal'] ?></td>
                                 <td><?= $data['waktu'] ?></td>
-                                <td><?= $data['expedisi'] ?></td>
+                                <td><?= $data['jenis_pengeluaran'] ?></td>
                                 <td><?= $data['bank_tujuan'] ?></td>
-                                <td><?= $data['penerima'] ?></td>
+                                <td><?= $data['nama_penerima'] ?></td>
+                                <td><img src="<?= base_url('bukti_pengeluaran_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></td>
+                                </td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
-                                <td><img src="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></td>
                                 </td>
-                                <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                </td>
+                                <?php if (session()->get('role') == '1') : ?>
+                                    <td class="text-center">
+                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pengeluaran-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                        <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
+                                    </td>
+                                <?php endif ?>
                             </tr>
                         <?php
                         endforeach
@@ -115,9 +122,16 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7"></td>
-                            <td><b>Total</b></td>
-                            <td id="totalSum"></td>
+                            <?php if (session()->get('role') == '1') : ?>
+                                <td colspan="7"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                            <?php endif; ?>
+                            <?php if (session()->get('role') != '1') : ?>
+                                <td colspan="7"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                            <?php endif; ?>
                         </tr>
                     </tfoot>
                 </table>
@@ -205,7 +219,7 @@
 
         // Sum the "jumlah" column
         function sumColumn() {
-            let sum = table.column(6, {
+            let sum = table.column(7, {
                 search: 'applied'
             }).data().reduce(function(acc, curr) {
                 let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
@@ -267,17 +281,16 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pemasukan-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/pengeluaran-broadcast/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },
                         success: function(response) {
                             var data = JSON.parse(response);
-                            console.log(data);
                             if (data.success) {
                                 Swal.fire(
                                     "Dihapus!",
-                                    data.msg,
+                                    "Data Pengeluaran Broadcast Berhasil Dihapus",
                                     "success"
                                 ).then(() => {
                                     // Muat ulang halaman setelah penghapusan
@@ -286,7 +299,7 @@
                             } else {
                                 Swal.fire(
                                     "Error!",
-                                    data.msg,
+                                    "Failed to delete the item.",
                                     "error"
                                 );
                             }

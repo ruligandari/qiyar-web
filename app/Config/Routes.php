@@ -108,12 +108,25 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
 
     $routes->get('warehouse-jakarta', 'dashboard\WarehouseController::index');
 
+    $routes->get('uang-transfer-broadcast', 'dashboard\UangTransferBroadcastController::index');
+    $routes->get('uang-transfer-broadcast/tambah', 'dashboard\UangTransferBroadcastController::tambahdatauangtransferbc');
+    $routes->post('uang-transfer-broadcast/add', 'dashboard\UangTransferBroadcastController::add');
+    $routes->get('uang-transfer-broadcast/edit/(:any)', 'dashboard\UangTransferBroadcastController::edit/$1');
+    $routes->post('uang-transfer-broadcast/update', 'dashboard\UangTransferBroadcastController::update');
+    $routes->post('uang-transfer-broadcast/delete', 'dashboard\UangTransferBroadcastController::delete');
+
+    $routes->get('pengeluaran-broadcast', 'dashboard\PengeluaranBroadcastController::index');
+    $routes->get('pengeluaran-broadcast/tambah', 'dashboard\PengeluaranBroadcastController::tambahdatapengeluaranbroadcast');
+    $routes->post('pengeluaran-broadcast/add', 'dashboard\PengeluaranBroadcastController::add');
+    $routes->get('pengeluaran-broadcast/edit/(:any)', 'dashboard\PengeluaranBroadcastController::edit/$1');
+    $routes->post('pengeluaran-broadcast/update', 'dashboard\PengeluaranBroadcastController::update');
+    $routes->post('pengeluaran-broadcast/delete', 'dashboard\PengeluaranBroadcastController::delete');
+
+    $routes->get('uang-transfer-advertiser', 'dashboard\UangTransferBroadcastController::uangmasukadvertiser');
+
     $routes->get('pemasukan-broadcast', 'dashboard\PemasukanBroadcastController::index');
-    $routes->get('pemasukan-broadcast/tambah', 'dashboard\PemasukanBroadcastController::tambahdatapemasukanbc');
+    $routes->get('pemasukan-broadcast/tambah', 'dashboard\PemasukanBroadcastController::tambahdatapemasukanbroadcast');
     $routes->post('pemasukan-broadcast/add', 'dashboard\PemasukanBroadcastController::add');
-    $routes->get('pemasukan-broadcast/edit/(:any)', 'dashboard\PemasukanBroadcastController::edit/$1');
-    $routes->post('pemasukan-broadcast/update', 'dashboard\PemasukanBroadcastController::update');
-    $routes->post('pemasukan-broadcast/delete', 'dashboard\PemasukanBroadcastController::delete');
 });
 
 // restricted page

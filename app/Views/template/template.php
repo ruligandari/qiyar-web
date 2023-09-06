@@ -60,15 +60,6 @@
                 <!-- Divider -->
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading text-white">
-                    Kantor
-                </div>
-                <li class="nav-item <?= $title == 'Pengeluaran Kantor' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-kantor') ?>">
-                        <i class="fas fa-fw fa-file"></i>
-                        <span>Jenis Pengeluaran</span></a>
-                </li>
-                <hr class="sidebar-divider">
-                <div class="sidebar-heading text-white">
                     Warehouse
                 </div>
 
@@ -102,8 +93,6 @@
                         <i class="fas fa-fw fa-file"></i>
                         <span>Karyawan Advertiser</span></a>
                 </li>
-
-
                 <!-- <li class="nav-item <?= $title == 'Data Advertiser' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
@@ -123,6 +112,16 @@
                         <i class="fas fa-fw fa-file"></i>
                         <span>Pemasukan Advertiser</span></a>
                 </li>
+                <li class="nav-item <?= $title == 'Pengeluaran Kantor' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-kantor') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Jenis Pengeluaran</span></a>
+                </li>
+                <li class="nav-item <?= $title == 'Uang Transfer' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/uang-transfer-advertiser') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Uang Transfer</span></a>
+                </li>
                 <!-- <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
@@ -134,15 +133,20 @@
                 <div class="sidebar-heading text-white">
                     Broadcast
                 </div>
-                <li class="nav-item <?= $title == 'Karyawan Broadcast' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/lamaran') ?>">
-                        <i class="fas fa-fw fa-file"></i>
-                        <span>Karyawan Broadcast</span></a>
-                </li>
                 <li class="nav-item <?= $title == 'Pemasukan Broadcast' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard/pemasukan-broadcast') ?>">
                         <i class="fas fa-fw fa-file"></i>
-                        <span>Pemasukan</span></a>
+                        <span>Pemasukan Broadcast</span></a>
+                </li>
+                <li class="nav-item <?= $title == 'Uang Transfer Broadcast' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/uang-transfer-broadcast') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Uang Transfer</span></a>
+                </li>
+                <li class="nav-item <?= $title == 'Pengeluaran Broadcast' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-broadcast') ?>">
+                        <i class="fas fa-fw fa-file"></i>
+                        <span>Jenis Pengeluaran</span></a>
                 </li>
                 <hr class="sidebar-divider">
                 <!-- Heading -->

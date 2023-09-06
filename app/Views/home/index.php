@@ -90,17 +90,17 @@
             <div class="container-fluid" data-aos="fade-up">
                 <div class="row gy-4 justify-content-center">
                     <div class="col-xl-2 col-md-3 col-6 client-logo">
-                        <img src="<?= base_url('front/')?>assets/img/sicepat.png" class="img-fluid" alt="" />
+                        <img src="<?= base_url('front/') ?>assets/img/sicepat.png" class="img-fluid" alt="" />
                     </div>
                     <!-- End Client Item -->
 
                     <div class="col-xl-2 col-md-3 col-6 client-logo">
-                        <img src="<?= base_url('front/')?>assets/img/ninjaexpress.png" class="img-fluid" alt="" />
+                        <img src="<?= base_url('front/') ?>assets/img/ninjaexpress.png" class="img-fluid" alt="" />
                     </div>
                     <!-- End Client Item -->
 
                     <div class="col-xl-2 col-md-3 col-6 client-logo">
-                        <img src="<?= base_url('front/')?>assets/img/oexpress.png" class="img-fluid" alt="" />
+                        <img src="<?= base_url('front/') ?>assets/img/oexpress.png" class="img-fluid" alt="" />
                     </div>
                     <!-- End Client Item -->
                 </div>

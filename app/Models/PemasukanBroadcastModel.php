@@ -4,10 +4,10 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class BroadcastModel extends Model
+class PemasukanBroadcastModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'uang_transfer_broadcast';
+    protected $table            = 'pemasukan_broadcast';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';

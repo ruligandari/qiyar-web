@@ -3,7 +3,6 @@
 
 <?= $this->section('header'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 <?= $this->endSection(); ?>
 
 <!-- menambahkan section -->
@@ -12,7 +11,7 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Data Pemasukan Broadcast</h1>
+    <h1 class="h3 mb-0 text-gray-800">Data Pengeluaran Broadcast</h1>
   </div>
 
   <?php if (session()->getFlashdata('success')) : ?>
@@ -20,11 +19,11 @@
       Swal.fire({
         position: 'center',
         icon: 'success',
-        text: 'Data Pemasukan Broadcast berhasil ditambahkan!',
+        text: 'Data Pengeluaran Advertiser berhasil ditambahkan!',
         showConfirmButton: false,
         timer: 2000
       }).then(function() {
-        window.location = "<?= base_url('dashboard/pemasukan-broadcast/pemasukanbroadcast') ?>";
+        window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
       });
     </script>
   <?php endif ?>
@@ -46,18 +45,25 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/pemasukan-broadcast/add')  ?> " enctype="multipart/form-data">
+        <form method="POST" action="<?= base_url('dashboard/pengeluaran-broadcast/add') ?>" enctype="multipart/form-data">
           <div class="form-group">
             <label for="formGroupExampleInput">Tanggal Input</label>
             <input type="date" class="form-control tanggal" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input">
           </div>
           <div class="form-group">
-            <label for="formGroupExampleInput">Nama Konsumen</label>
-            <input type="text" class="form-control" id="formGroupExampleInput" name="nama_konsumen" placeholder="Masukan Nama Konsumen" required>
+            <label for="formGroupExampleInput">Waktu</label>
+            <input type="time" class="form-control" name="waktu" id="formGroupExampleInput">
           </div>
           <div class="form-group">
-            <label for="formGroupExampleInput">Bank Penerima</label>
-            <select name="bank_penerima" class="form-control" id="formGroupExampleInput">
+            <label for="formGroupExampleInput">Jenis Pengeluaran</label>
+            <select name="jenis_pengeluaran" class="form-control" id="formGroupExampleInput">
+              <option value="Barang">Barang</option>
+              <option value="Wifi">Wifi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Bank Tujuan</label>
+            <select name="bank_tujuan" class="form-control" id="formGroupExampleInput">
               <option value="Mandiri">Mandiri</option>
               <option value="BCA">BCA</option>
               <option value="BRI">BRI</option>
@@ -65,21 +71,18 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="formGroupExampleInput">Jenis Transfer</label>
-            <select name="jenis_transfer" class="form-control" id="formGroupExampleInput">
-              <option value="Iklan">Iklan</option>
-              <option value="Broadcast">Broadcast</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Harga Total</label>
-            <input type="text" class="form-control formatted-input" id="harga" name="harga_total" placeholder="Masukan Jumlah" required>
+            <label for="formGroupExampleInput">Nama Penerima</label>
+            <textarea class="form-control" id="formGroupExampleInput" name="nama_penerima" placeholder="Masukan Penerima"></textarea>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
             <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" name="upload_bukti">
             <br>
             <img id="previewImage" src="" style="max-width: 100%; max-height: 200px;">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Jumlah</label>
+            <input type="text" class="form-control formatted-input" id="harga" name="jumlah" placeholder="Masukan Jumlah">
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -90,9 +93,6 @@
   <?= $this->endSection(); ?>
 
   <?= $this->section('script'); ?>
-
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
   <script>
     // Ambil semua elemen input dengan kelas "tanggal"
     const dateInputs = document.querySelector(".tanggal");
@@ -115,7 +115,6 @@
       });
     });
   </script>
-
   <script>
     function addThousandSeparator(input) {
       // Menambahkan pemisah ribuan ke input
