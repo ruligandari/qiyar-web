@@ -9,9 +9,8 @@ class PemasukanBroadcastController extends BaseController
 {
     function __construct()
     {
-        $this->pemasukanbroadcast = new \App\Models\BroadcastModel();
+        $this->pemasukanbroadcast = new \App\Models\PemasukanBroadcastModel();
     }
-
     public function index()
     {
         $pemasukanbroadcast = $this->pemasukanbroadcast->findAll();
@@ -21,14 +20,15 @@ class PemasukanBroadcastController extends BaseController
         ];
         return view('dashboard/pemasukan-broadcast/pemasukanbroadcast', $data);
     }
-    public function tambahdatapemasukanbc()
+
+    public function tambahdatapemasukanbroadcast()
     {
         $pemasukanbroadcast = $this->pemasukanbroadcast->findAll();
         $data = [
             'title' => 'Pemasukan Broadcast',
             'pemasukanbroadcast' => $pemasukanbroadcast
         ];
-        return view('dashboard/pemasukan-broadcast/tambahdatapemasukanbc', $data);
+        return view('dashboard/pemasukan-broadcast/tambahdatapemasukanbroadcast', $data);
     }
     // public function pengeluaranadvertiser()
     // {
@@ -60,97 +60,100 @@ class PemasukanBroadcastController extends BaseController
     public function add()
     {
         $tanggal = $this->request->getPost('tanggal');
-        $nama_konsumen = $this->request->getPost('nama_konsumen');
-        $bank_penerima = $this->request->getPost('bank_penerima');
-        $jenis_transfer = $this->request->getPost('jenis_transfer');
-        $harga_total = $this->request->getPost('harga_total');
+        $waktu = $this->request->getPost('waktu');
+        $expedisi = $this->request->getPost('expedisi');
+        $bank_tujuan = $this->request->getPost('bank_tujuan');
+        $penerima = $this->request->getPost('penerima');
+        $jumlah = $this->request->getPost('jumlah');
         $upload_bukti = $this->request->getFile('upload_bukti');
 
         // convert 140,000 to 140000
-        $harga_total = str_replace(',', '', $harga_total);
+        $jumlah = str_replace(',', '', $jumlah);
+
         $data = [
             'tanggal' => $tanggal,
-            'nama_konsumen' => $nama_konsumen,
-            'bank_penerima' => $bank_penerima,
-            'jenis_transfer' => $jenis_transfer,
-            'harga_total' => $harga_total,
+            'waktu' => $waktu,
+            'expedisi' => $expedisi,
+            'bank_tujuan' => $bank_tujuan,
+            'penerima' => $penerima,
+            'jumlah' => $jumlah,
             'upload_bukti' => $upload_bukti->getName()
         ];
         $this->pemasukanbroadcast->insert($data);
         $upload_bukti->move('bukti_pemasukan_broadcast');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/pemasukan-broadcast');
+        return redirect()->to('/dashboard/pemasukan-broadcast/');
     }
 
-    public  function edit($id)
-    {
-        $pemasukanbroadcast = $this->pemasukanbroadcast->find($id);
-        $data = [
-            'title' => 'Pemasukan Broadcast',
-            'data' => $pemasukanbroadcast,
-        ];
-        return view('dashboard/pemasukan-broadcast/editdatapemasukanbroadcast', $data);
-    }
+    // public  function edit($id)
+    // {
+    //     $pemasukanadv = $this->pemasukanadv->find($id);
+    //     $data = [
+    //         'title' => 'Pemasukan Advertiser',
+    //         'data' => $pemasukanadv,
+    //     ];
+    //     return view('dashboard/pemasukan-advertiser/editdatapemasukanadv', $data);
+    // }
 
-    public function update()
-    {
-        $id = $this->request->getPost('id');
-        $nama_konsumen = $this->request->getPost('nama_konsumen');
-        $bank_penerima = $this->request->getPost('bank_penerima');
-        $jenis_transfer = $this->request->getPost('jenis_transfer');
-        $harga_total = $this->request->getPost('harga_total');
-        $upload_bukti = $this->request->getFile('upload_bukti');
-        $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
+    // public function update()
+    // {
+    //     $id = $this->request->getPost('id');
+    //     $expedisi = $this->request->getPost('expedisi');
+    //     $jumlah = $this->request->getPost('jumlah');
+    //     $penerima = $this->request->getPost('penerima');
+    //     $bank_tujuan = $this->request->getPost('bank_tujuan');
+    //     $upload_bukti = $this->request->getFile('upload_bukti');
+    //     $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
-        // convert 140,000 or 140.000 to 140000
-        if (strpos($harga_total, ',') !== false) {
-            $harga_total = str_replace(',', '', $harga_total);
-        } else if (strpos($harga_total, '.') !== false) {
-            $harga_total = str_replace('.', '', $harga_total);
-        }
+    //     // convert 140,000 or 140.000 to 140000
+    //     if (strpos($jumlah, ',') !== false) {
+    //         $jumlah = str_replace(',', '', $jumlah);
+    //     } else if (strpos($jumlah, '.') !== false) {
+    //         $jumlah = str_replace('.', '', $jumlah);
+    //     }
 
-        $data = [
-            'nama_konsumen' => $nama_konsumen,
-            'bank_penerima' => $bank_penerima,
-            'jenis_transfer' => $jenis_transfer,
-            'harga_total' => $harga_total,
-            'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
-        ];
+    //     $data = [
+    //         'expedisi' => $expedisi,
+    //         'jumlah' => $jumlah,
+    //         'penerima' => $penerima,
+    //         'bank_tujuan' => $bank_tujuan,
+    //         'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
+    //     ];
 
-        // hapus file lama
-        if ($upload_bukti->getName() != null) {
-            unlink('bukti_pemasukan_broadcast/' . $bukti_transfer_lama);
-            // upload file baru
-            $upload_bukti->move('bukti_pemasukan_broadcast');
-        }
+    //     // hapus file lama
+    //     if ($upload_bukti->getName() != null) {
+    //         unlink('bukti_pemasukan_advertiser/' . $bukti_transfer_lama);
+    //         // upload file baru
+    //         $upload_bukti->move('bukti_pemasukan_advertiser');
+    //     }
 
 
-        // update data
-        $pemasukanbroadcast = $this->pemasukanbroadcast->update($id, $data);
-        if ($pemasukanbroadcast) {
-            session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pemasukan-broadcast');
-        } else {
-            session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pemasukan-broadcast');
-        }
-    }
+    //     // update data
+    //     $pengeluaranadv = $this->pemasukanadv->update($id, $data);
+    //     if ($pengeluaranadv) {
+    //         session()->setFlashdata('success', 'Data berhasil diupdate');
+    //         return redirect()->to('/dashboard/pemasukan-advertiser/pemasukan-advertiser');
+    //     } else {
+    //         session()->setFlashdata('error', 'Data gagal diupdate');
+    //         return redirect()->to('/dashboard/pemasukan-advertiser/pemasukan-advertiser');
+    //     }
+    // }
 
-    public function delete()
-    {
-        $id = $this->request->getPost('id');
-        $pemasukanbroadcast = $this->pemasukanbroadcast->delete($id);
-        if ($pemasukanbroadcast) {
-            $data = [
-                'success' => true,
-                'msg' => 'Data berhasil dihapus nih!'
-            ];
-        } else {
-            $data = [
-                'success' => false,
-                'msg' => 'Data Gagal dihapus nih!'
-            ];
-        }
-        echo json_encode($data);
-    }
+    // public function delete()
+    // {
+    //     $id = $this->request->getPost('id');
+    //     $pemasukanadv = $this->pemasukanadv->delete($id);
+    //     if ($pemasukanadv) {
+    //         $data = [
+    //             'success' => true,
+    //             'msg' => 'Data berhasil dihapus nih!'
+    //         ];
+    //     } else {
+    //         $data = [
+    //             'success' => false,
+    //             'msg' => 'Data Gagal dihapus nih!'
+    //         ];
+    //     }
+    //     echo json_encode($data);
+    // }
 }

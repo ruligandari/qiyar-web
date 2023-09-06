@@ -48,15 +48,14 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Pemasukan Broadcast</h1>
+        <h1 class="h3 mb-0 text-gray-800">Uang Transfer </h1>
     </div>
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
-                    <h6 class=" font-weight-bold text-primary">Data Pemasukan Broadcast</h6>
-                    <a href="<?= base_url('dashboard/pemasukan-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <h6 class=" font-weight-bold text-primary">Data Uang Transfer</h6>
                 </div>
             </div>
         </div>
@@ -80,13 +79,11 @@
                         <tr>
                             <th>No</th>
                             <th>Tanggal</th>
-                            <th>Waktu</th>
-                            <th>Expedisi</th>
-                            <th>Bank Tujuan</th>
-                            <th>Nama Bank Penerima</th>
-                            <th>Jumlah</th>
+                            <th>Nama Konsumen</th>
+                            <th>Bank Penerima</th>
+                            <th>Jenis Transfer</th>
                             <th>Bukti Upload</th>
-                            <th>Aksi</th>
+                            <th>Harga total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,17 +94,12 @@
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= $data['tanggal'] ?></td>
-                                <td><?= $data['waktu'] ?></td>
-                                <td><?= $data['expedisi'] ?></td>
-                                <td><?= $data['bank_tujuan'] ?></td>
-                                <td><?= $data['penerima'] ?></td>
-                                <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
+                                <td><?= $data['nama_konsumen'] ?></td>
+                                <td><?= $data['bank_penerima'] ?></td>
+                                <td><?= $data['jenis_transfer'] ?></td>
                                 <td><img src="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></td>
                                 </td>
-                                <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                </td>
+                                <td><?= number_format($data['harga_total'], 0, ',', '.') ?></td>
                             </tr>
                         <?php
                         endforeach
@@ -115,7 +107,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7"></td>
+                            <td colspan="5"></td>
                             <td><b>Total</b></td>
                             <td id="totalSum"></td>
                         </tr>
@@ -267,7 +259,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pemasukan-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/pemasukan-broadcast/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },

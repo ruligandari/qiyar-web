@@ -10,6 +10,8 @@ class DashboardController extends BaseController
     function __construct()
     {
         $this->pemasukanadv = new \App\Models\PemasukanAdvertiserModel();
+        $this->uangtransferadvertiser = new \App\Models\BroadcastModel();
+        $this->pengeluaranbroadcast = new \App\Models\PengeluaranBroadcastModel();
         $this->pengeluaranadv = new \App\Models\PengeluaranAdvertiserModel();
         $this->pengeluarankantor = new \App\Models\PengeluaranKantorModel();
         $this->laba = new \App\Models\DashboardModel();
@@ -18,7 +20,11 @@ class DashboardController extends BaseController
     {
         // count data from pemasukan adv and sum jumlah
         $totalPemasukan =  $this->pemasukanadv->selectSum('jumlah')->get()->getRowArray();
+        $totalPemasukan =  $this->pemasukanadv->selectSum('jumlah')->get()->getRowArray();
+        $uangtransferAdvertiser =  $this->uangtransferadvertiser->WHERE('jenis_transfer', 'Iklan')->selectSum('harga_total')->get()->getRowArray();
+        $uangtransferBroadcast =  $this->uangtransferadvertiser->WHERE('jenis_transfer', 'Broadcast')->selectSum('harga_total')->get()->getRowArray();
         $totalPengeluaran =  $this->pengeluaranadv->selectSum('jumlah')->get()->getRowArray();
+        $totalPengeluaranBC =  $this->pengeluaranbroadcast->selectSum('jumlah')->get()->getRowArray();
         $totalPengeluaranKantor =  $this->pengeluarankantor->selectSum('jumlah')->get()->getRowArray();
 
         // select daru data laba kemudia pilih field tanggal
@@ -37,7 +43,10 @@ class DashboardController extends BaseController
         $data = [
             'title' => 'Dashboard',
             'totalPemasukan' => $totalPemasukan['jumlah'] ?? '0',
+            'uangtransferAdvertiser' => $uangtransferAdvertiser['harga_total'] ?? '0',
+            'uangtransferBroadcast' => $uangtransferBroadcast['harga_total'] ?? '0',
             'totalPengeluaran' => $totalPengeluaran['jumlah'] ?? '0',
+            'totalPengeluaranBC' => $totalPengeluaranBC['jumlah'] ?? '0',
             'totalPengeluaranKantor' => $totalPengeluaranKantor['jumlah'] ?? '0',
             'bulan' => $bulanconv,
             'total' => $totalconv,

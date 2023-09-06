@@ -31,6 +31,22 @@
             </div>
         </div>
 
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Uang Transfer Advertiser</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <?= number_format($uangtransferAdvertiser, 0, ',', '.') ?></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-danger shadow h-100 py-2">
@@ -66,14 +82,17 @@
         </div>
 
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-12 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Laba Advertiser</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <?= number_format(($totalPemasukan - $totalPengeluaran - $totalPengeluaranKantor), 0, ',', '.')  ?></div>
+                                <center>Laba Advertiser</center>
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <center>Rp. <?= number_format(($totalPemasukan + $uangtransferAdvertiser - $totalPengeluaran - $totalPengeluaranKantor), 0, ',', '.')  ?></center>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -105,7 +124,7 @@
     <div class="row d-sm-flex justify-content-between">
 
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -121,16 +140,47 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Uang Transfer Broadcast</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <?= number_format($uangtransferBroadcast, 0, ',', '.') ?></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Uang Transfer Advertiser</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <?= number_format($uangtransferAdvertiser, 0, ',', '.') ?></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-danger shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Pengeluaran Broadcast</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <?= number_format($totalPengeluaran, 0, ',', '.') ?></div>
+                                Jenis Pengeluaran</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <?= number_format($totalPengeluaranBC, 0, ',', '.') ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -141,14 +191,17 @@
         </div>
 
         <!-- Earnings (Monthly) Card Example -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-xl-12 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Laba Broadcast</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <?= number_format(($totalPemasukan - $totalPengeluaran), 0, ',', '.')  ?></div>
+                                <center>Laba Broadcast</center>
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <center>Rp. <?= number_format(($totalPemasukan - $totalPengeluaran), 0, ',', '.')  ?></center>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
