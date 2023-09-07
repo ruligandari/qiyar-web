@@ -119,11 +119,18 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="5"></td>
-                            <td><b>Total</b></td>
-                            <td id="totalSum"></td>
-                            <td></td>
-
+                            <?php if (session()->get('role') == '1') : ?>
+                                <td colspan="5"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                                <td></td>
+                            <?php endif; ?>
+                            <?php if (session()->get('role') != '1') : ?>
+                                <td colspan="4"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                                <td></td>
+                            <?php endif; ?>
                         </tr>
                     </tfoot>
                 </table>

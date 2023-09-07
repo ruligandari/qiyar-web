@@ -27,8 +27,8 @@ class RoleFilter implements FilterInterface
     {
         $roleUser = session()->get('role');
 
-        if ($roleUser != '1' && $roleUser != '3') {
-            return redirect()->to('restrictedpage');
+        if ($roleUser != '1' && $roleUser != '5') {
+            return redirect()->back();
         }
     }
 

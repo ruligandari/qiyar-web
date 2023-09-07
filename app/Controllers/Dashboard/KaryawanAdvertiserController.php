@@ -14,7 +14,7 @@ class KaryawanAdvertiserController extends BaseController
 
     public function index()
     {
-        $karyawan = $this->karyawan->where('role', '3')->findAll();
+        $karyawan = $this->karyawan->where('role', '5')->findAll();
         $data = [
             'title' => 'Karyawan Advertiser',
             'karyawan' => $karyawan
@@ -35,7 +35,7 @@ class KaryawanAdvertiserController extends BaseController
         $nama = $this->request->getPost('nama');
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');
-        $role = '3';
+        $role = '5';
 
         $password = password_hash($password, PASSWORD_DEFAULT);
         $data = [
@@ -78,7 +78,7 @@ class KaryawanAdvertiserController extends BaseController
             'nama' => $nama,
             'email' => $email,
             'password' => $password,
-            'role' => '3'
+            'role' => '5'
         ];
 
         $updatedata = $this->karyawan->update($id, $data);

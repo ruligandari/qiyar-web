@@ -39,9 +39,9 @@
         showConfirmButton: false,
         timer: 2000
       }).then(function() {
-        if (<?= session()->get('role') ?> == '1') {
+        if (<?= session()->get('role') ?> == '1' || <?= session()->get('role') ?> == '2') {
           window.location = "<?= base_url('dashboard') ?>";
-        } else {
+        } else if (<?= session()->get('role') ?> == '5') {
           window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
         }
       });

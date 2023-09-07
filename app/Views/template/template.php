@@ -37,28 +37,20 @@
                 <div class="sidebar-brand-text mx-3">Qiyar Media</div>
             </a>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
+            <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard -->
-            <?php if (session()->get('role') == '1') : ?>
+                <!-- Nav Item - Dashboard -->
                 <li class="nav-item <?= $title == 'Dashboard' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard') ?>">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard</span></a>
                 </li>
-                <!-- Divider -->
-                <!-- <hr class="sidebar-divider"> -->
-                <!-- <div class="sidebar-heading">
-                    Produk
-                </div>
-                <li class="nav-item <?= $title == 'Data Produk' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/data-produk') ?>">
-                        <i class="fas fa-fw fa-file"></i>
-                        <span>Data Produk</span></a>
-                </li> -->
-                <!-- Divider -->
-                <hr class="sidebar-divider">
+            <?php endif ?>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
                 <div class="sidebar-heading text-white">
                     Warehouse
                 </div>
@@ -76,13 +68,8 @@
                         </div>
                     </div>
                 </li>
-
-
-                <!-- <li class="nav-item <?= $title == 'Tutup Buku' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/tutup-buku') ?>">
-                        <i class="fas fa-fw fa-file"></i>
-                        <span>Tutup Buku</span></a>
-                </li> -->
+            <?php endif; ?>
+            <?php if (session()->get('role') == '1') : ?>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading text-white">
@@ -99,7 +86,7 @@
                         <span>Data Advertiser</span></a>
                 </li> -->
             <?php endif; ?>
-            <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '5') : ?>
                 <li class="nav-item <?= $title == 'Pengeluaran Advertiser' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
@@ -130,6 +117,8 @@
                 <!-- Divider -->
                 <hr class="sidebar-divider">
                 <!-- Heading -->
+            <?php endif; ?>
+            <?php if (session()->get('role') == '2' || session()->get('role') == '1') : ?>
                 <div class="sidebar-heading text-white">
                     Broadcast
                 </div>
@@ -149,6 +138,8 @@
                         <span>Jenis Pengeluaran</span></a>
                 </li>
                 <hr class="sidebar-divider">
+            <?php endif; ?>
+            <?php if (session()->get('role') == 1) : ?>
                 <!-- Heading -->
                 <div class="sidebar-heading text-white">
                     Requitment
@@ -161,6 +152,8 @@
                 <!-- Divider -->
                 <hr class="sidebar-divider">
             <?php endif; ?>
+            <?php //endif; 
+            ?>
             <!-- Heading -->
             <div class="sidebar-heading text-white">
                 Logout
