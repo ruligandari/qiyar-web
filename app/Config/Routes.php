@@ -43,36 +43,23 @@ $routes->get('logout', 'Admin\LoginController::logout');
 
 // dashboard group dengan filter auth
 
-
-
 $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
+    // dashboard
     $routes->get('/', 'dashboard\DashboardController::index', ['filter' => 'advFilter']);
-    $routes->get('data-advertiser', 'dashboard\AdvertiserController::index', ['filter' => 'roleFilter']);
-    $routes->post('data-advertiser/delete', 'dashboard\AdvertiserController::delete', ['filter' => 'advFilter']);
-    $routes->get('data-advertiser/edit/(:any)', 'dashboard\AdvertiserController::edit/$1', ['filter' => 'advFilter']);
-    $routes->post('data-advertiser/update', 'dashboard\AdvertiserController::update', ['filter' => 'advFilter']);
-    $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata', ['filter' => 'advFilter']);
-    $routes->post('tambah-data-advertiser/add', 'dashboard\AdvertiserController::add', ['filter' => 'advFilter']);
 
+    // profile
+    $routes->get('profile', 'dashboard\ProfileController::index');
+    $routes->post('profile/update', 'dashboard\ProfileController::update');
+
+    // pengeluaran adv
     $routes->get('pengeluaran-advertiser', 'dashboard\AdvertiserController::pengeluaranadv', ['filter' => 'roleFilter']);
     $routes->get('pengeluaran-advertiser/edit/(:any)', 'dashboard\AdvertiserController::editpengeluaran/$1', ['filter' => 'advFilter']);
     $routes->post('pengeluaran-advertiser/update', 'dashboard\AdvertiserController::updatepengeluaran', ['filter' => 'advFilter']);
     $routes->post('pengeluaran-advertiser/delete', 'dashboard\AdvertiserController::deletepengeluaran', ['filter' => 'advFilter']);
     $routes->get('tambah-data-pengeluaran-advertiser', 'dashboard\AdvertiserController::tambahdatapengeluaranadv', ['filter' => 'advFilter']);
     $routes->post('tambah-data-pengeluaran-advertiser/add', 'dashboard\AdvertiserController::addpengeluaranadv', ['filter' => 'advFilter']);
-    $routes->post('data-advertiser', 'dashboard\AdvertiserController::filterTanggal');
 
-    $routes->get('data-produk', 'dashboard\ProdukController::index');
-    $routes->get('tambah-data-produk', 'dashboard\ProdukController::tambahdata');
-    $routes->post('tambah-data-produk/add', 'dashboard\ProdukController::add');
-    $routes->get('edit-data-produk/(:any)', 'dashboard\ProdukController::edit/$1');
-    $routes->post('edit-data-produk/update', 'dashboard\ProdukController::update');
-    $routes->post('data-produk/delete', 'dashboard\ProdukController::delete');
-
-    $routes->get('lamaran', 'dashboard\LamaranController::index');
-    $routes->post('lamaran/delete', 'dashboard\LamaranController::delete');
-    $routes->post('tambah-lamaran', 'dashboard\LamaranController::tambahdata');
-
+    // pemasukan adv
     $routes->get('pemasukan-advertiser', 'dashboard\PemasukanAdvertiserController::index');
     $routes->get('tambah-data-pemasukan-advertiser', 'dashboard\PemasukanAdvertiserController::tambahdatapemasukanadv');
     $routes->post('tambah-data-pemasukan-advertiser/add', 'dashboard\PemasukanAdvertiserController::add');
@@ -80,6 +67,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->get('pemasukan-advertiser/edit/(:any)', 'dashboard\PemasukanAdvertiserController::edit/$1');
     $routes->post('pemasukan-advertiser/update', 'dashboard\PemasukanAdvertiserController::update');
 
+    // jenis pengeluaran
     $routes->get('pengeluaran-kantor', 'dashboard\PengeluaranKantorController::index');
     $routes->get('tambah-data-pengeluaran-kantor', 'dashboard\PengeluaranKantorController::tambahdatapengeluarankantor');
     $routes->post('pengeluaran-kantor/add', 'dashboard\PengeluaranKantorController::add');
@@ -87,6 +75,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->get('pengeluaran-kantor/edit/(:any)', 'dashboard\PengeluaranKantorController::edit/$1');
     $routes->post('pengeluaran-kantor/update', 'dashboard\PengeluaranKantorController::update');
 
+    // karyawan adv
     $routes->get('karyawan-advertiser', 'dashboard\KaryawanAdvertiserController::index');
     $routes->get('karyawan-advertiser/tambah', 'dashboard\KaryawanAdvertiserController::tambah');
     $routes->post('karyawan-advertiser/add', 'dashboard\KaryawanAdvertiserController::add');
@@ -94,14 +83,15 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('karyawan-advertiser/delete', 'dashboard\KaryawanAdvertiserController::delete');
     $routes->get('karyawan-advertiser/edit/(:any)', 'dashboard\KaryawanAdvertiserController::edit/$1');
 
-    $routes->get('tutup-buku', 'dashboard\TutupBukuController::index');
-    $routes->get('tutup-buku/tambah', 'dashboard\TutupBukuController::tambah');
-    $routes->post('tutup-buku/add', 'dashboard\TutupBukuController::add');
-    $routes->get('tutup-buku/edit/(:any)', 'dashboard\TutupBukuController::edit/$1');
-    $routes->post('tutup-buku/update', 'dashboard\TutupBukuController::update');
-    $routes->post('tutup-buku/delete', 'dashboard\TutupBukuController::delete');
+    // uang transfer adv
+    $routes->get('uang-transfer-advertiser', 'dashboard\UangTransferBroadcastController::uangtransferadvertiser');
 
+    // lamaran
+    $routes->get('lamaran', 'dashboard\LamaranController::index');
+    $routes->post('lamaran/delete', 'dashboard\LamaranController::delete');
+    $routes->post('tambah-lamaran', 'dashboard\LamaranController::tambahdata');
 
+    // warehouse kuningan
     $routes->get('warehouse-kuningan', 'dashboard\WarehouseKuninganController::index');
     $routes->get('warehouse-kuningan/edit/(:any)', 'dashboard\WarehouseKuninganController::editBarangMasuk/$1');
     $routes->post('warehouse-kuningan/delete', 'dashboard\WarehouseKuninganController::deleteBarangMasuk');
@@ -122,6 +112,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('warehouse-kuningan-keluar/update', 'dashboard\WarehouseKuninganController::updateBarangKeluar');
     $routes->post('warehouse-kuningan-keluar/delete', 'dashboard\WarehouseKuninganController::deleteBarangKeluar');
 
+    // warehouse jakarta
     $routes->get('warehouse-jakarta', 'dashboard\WarehouseJakartaController::index');
     $routes->get('warehouse-jakarta/edit/(:any)', 'dashboard\WarehouseJakartaController::editBarangMasuk/$1');
     $routes->post('warehouse-jakarta/delete', 'dashboard\WarehouseJakartaController::deleteBarangMasuk');
@@ -142,6 +133,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('warehouse-jakarta/stok/update', 'dashboard\WarehouseJakartaController::updateStokBarang');
     $routes->get('warehouse-jakarta/stok/edit/(:any)', 'dashboard\WarehouseJakartaController::editStokBarang/$1');
 
+    // uang transfer bc
     $routes->get('uang-transfer-broadcast', 'dashboard\UangTransferBroadcastController::index');
     $routes->get('uang-transfer-broadcast/tambah', 'dashboard\UangTransferBroadcastController::tambahdatauangtransferbc');
     $routes->post('uang-transfer-broadcast/add', 'dashboard\UangTransferBroadcastController::add');
@@ -149,6 +141,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('uang-transfer-broadcast/update', 'dashboard\UangTransferBroadcastController::update');
     $routes->post('uang-transfer-broadcast/delete', 'dashboard\UangTransferBroadcastController::delete');
 
+    // pengeluaran bc
     $routes->get('pengeluaran-broadcast', 'dashboard\PengeluaranBroadcastController::index');
     $routes->get('pengeluaran-broadcast/tambah', 'dashboard\PengeluaranBroadcastController::tambahdatapengeluaranbroadcast');
     $routes->post('pengeluaran-broadcast/add', 'dashboard\PengeluaranBroadcastController::add');
@@ -156,8 +149,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('pengeluaran-broadcast/update', 'dashboard\PengeluaranBroadcastController::update');
     $routes->post('pengeluaran-broadcast/delete', 'dashboard\PengeluaranBroadcastController::delete');
 
-    $routes->get('uang-transfer-advertiser', 'dashboard\UangTransferBroadcastController::uangtransferadvertiser');
-
+    // pemasukan bc
     $routes->get('pemasukan-broadcast', 'dashboard\PemasukanBroadcastController::index');
     $routes->get('pemasukan-broadcast/tambah', 'dashboard\PemasukanBroadcastController::tambahdatapemasukanbroadcast');
     $routes->get('pemasukan-broadcast/edit/(:any)', 'dashboard\PemasukanBroadcastController::edit/$1');
@@ -168,6 +160,29 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
 
 // restricted page
 $routes->get('restrictedpage', 'Admin\LoginController::restrictedpage');
+
+// $routes->get('tutup-buku', 'dashboard\TutupBukuController::index');
+// $routes->get('tutup-buku/tambah', 'dashboard\TutupBukuController::tambah');
+// $routes->post('tutup-buku/add', 'dashboard\TutupBukuController::add');
+// $routes->get('tutup-buku/edit/(:any)', 'dashboard\TutupBukuController::edit/$1');
+// $routes->post('tutup-buku/update', 'dashboard\TutupBukuController::update');
+// $routes->post('tutup-buku/delete', 'dashboard\TutupBukuController::delete');
+
+// $routes->get('data-advertiser', 'dashboard\AdvertiserController::index', ['filter' => 'roleFilter']);
+// $routes->post('data-advertiser/delete', 'dashboard\AdvertiserController::delete', ['filter' => 'advFilter']);
+// $routes->get('data-advertiser/edit/(:any)', 'dashboard\AdvertiserController::edit/$1', ['filter' => 'advFilter']);
+// $routes->post('data-advertiser/update', 'dashboard\AdvertiserController::update', ['filter' => 'advFilter']);
+// $routes->get('tambah-data-advertiser', 'dashboard\AdvertiserController::tambahdata', ['filter' => 'advFilter']);
+// $routes->post('tambah-data-advertiser/add', 'dashboard\AdvertiserController::add', ['filter' => 'advFilter']);
+
+// $routes->get('data-produk', 'dashboard\ProdukController::index');
+// $routes->get('tambah-data-produk', 'dashboard\ProdukController::tambahdata');
+// $routes->post('tambah-data-produk/add', 'dashboard\ProdukController::add');
+// $routes->get('edit-data-produk/(:any)', 'dashboard\ProdukController::edit/$1');
+// $routes->post('edit-data-produk/update', 'dashboard\ProdukController::update');
+// $routes->post('data-produk/delete', 'dashboard\ProdukController::delete');
+
+
 
 
 /*
