@@ -102,7 +102,8 @@
                                 <td><?= $data['bank_tujuan'] ?></td>
                                 <td><?= $data['penerima'] ?></td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
-                                <td><img src="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></td>
+                                <td><a href="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" target="_blank">
+                                        <img src="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></a></td>
                                 </td>
                                 <td class="text-center">
                                     <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
@@ -115,9 +116,10 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7"></td>
+                            <td colspan="5"></td>
                             <td><b>Total</b></td>
                             <td id="totalSum"></td>
+                            <td colspan="2"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -176,6 +178,9 @@
         format: 'MMMM Do YYYY'
     });
 
+    let currentDate = new Date();
+    let formattedDate = currentDate.toISOString().split('T')[0];
+
     $(document).ready(function() {
         // DataTables initialisation
         let table = $('#example1').DataTable({
@@ -183,9 +188,18 @@
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Advertiser',
+                    title: 'Data Pemasukan Broadcast - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 7) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
                     },
                     className: 'mb-2',
                     // ubah nama file ketika di download
@@ -194,9 +208,18 @@
                 {
                     extend: 'pdfHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Advertiser',
+                    title: 'Data Pemasukan Broadcast - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 7) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
                     },
                     className: 'mb-2',
                 }

@@ -177,6 +177,8 @@
         format: 'MMMM Do YYYY'
     });
 
+    let currentDate = new Date();
+    let formattedDate = currentDate.toISOString().split('T')[0];
     $(document).ready(function() {
         // DataTables initialisation
         let table = $('#example1').DataTable({
@@ -184,9 +186,18 @@
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Advertiser',
+                    title: 'Data Pemasukan Advertiser -' + ' ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 6) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
                     },
                     className: 'mb-2',
                     // ubah nama file ketika di download
@@ -195,9 +206,18 @@
                 {
                     extend: 'pdfHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Advertiser',
+                    title: 'Data Pemasukan Advertiser  - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 6) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
                     },
                     className: 'mb-2',
                 }

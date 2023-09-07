@@ -125,9 +125,10 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7"></td>
+                            <td colspan="6"></td>
                             <td><b>Total</b></td>
                             <td id="totalSum"></td>
+                            <td></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -186,6 +187,9 @@
         format: 'MMMM Do YYYY'
     });
 
+    let currentDate = new Date();
+    let formattedDate = currentDate.toISOString().split('T')[0];
+
     $(document).ready(function() {
         // DataTables initialisation
         let table = $('#example1').DataTable({
@@ -193,9 +197,18 @@
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Advertiser',
+                    title: 'Data Pengeluaran Kantor - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 6) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
                     },
                     className: 'mb-2',
                     // ubah nama file ketika di download
@@ -204,9 +217,18 @@
                 {
                     extend: 'pdfHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Advertiser',
+                    title: 'Data Pengeluaran Kantor - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 6) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
                     },
                     className: 'mb-2',
                 }
