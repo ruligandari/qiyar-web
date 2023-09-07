@@ -156,7 +156,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     $routes->post('pengeluaran-broadcast/update', 'dashboard\PengeluaranBroadcastController::update');
     $routes->post('pengeluaran-broadcast/delete', 'dashboard\PengeluaranBroadcastController::delete');
 
-    $routes->get('uang-transfer-advertiser', 'dashboard\UangTransferBroadcastController::uangmasukadvertiser');
+    $routes->get('uang-transfer-advertiser', 'dashboard\UangTransferBroadcastController::uangtransferadvertiser');
 
     $routes->get('pemasukan-broadcast', 'dashboard\PemasukanBroadcastController::index');
     $routes->get('pemasukan-broadcast/tambah', 'dashboard\PemasukanBroadcastController::tambahdatapemasukanbroadcast');

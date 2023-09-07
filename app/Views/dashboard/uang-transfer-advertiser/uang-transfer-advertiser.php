@@ -89,7 +89,7 @@
                     <tbody>
                         <?php
                         $no = 1;
-                        foreach ($pemasukanbroadcast as $data) :
+                        foreach ($uangtransferbroadcast as $data) :
                         ?>
                             <tr>
                                 <td><?= $no++ ?></td>
