@@ -50,7 +50,7 @@
             <?php endif ?>
             <!-- Divider -->
             <hr class="sidebar-divider">
-            <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '6') : ?>
                 <div class="sidebar-heading text-white">
                     Warehouse
                 </div>
@@ -63,8 +63,8 @@
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Daftar Gudang :</h6>
-                            <a class="collapse-item" href="<?= base_url('dashboard/warehouse-kuningan') ?>">Kuningan</a>
-                            <a class="collapse-item" href="<?= base_url('dashboard/warehouse-jakarta') ?>">Jakarta</a>
+                            <a class="collapse-item" href="<?= base_url('dashboard/warehouse-kuningan') ?>" <?= session()->get('role') == '7' ? 'hidden' : '' ?>>Kuningan</a>
+                            <a class="collapse-item" href="<?= base_url('dashboard/warehouse-jakarta') ?>" <?= session()->get('role') == '6' ? 'hidden' : '' ?>>Jakarta</a>
                         </div>
                     </div>
                 </li>

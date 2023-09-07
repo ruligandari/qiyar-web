@@ -45,6 +45,8 @@
           window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
         } else if (<?= session()->get('role') ?> == '4') {
           window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
+        } else if (<?= session()->get('role') ?> == '6') {
+          window.location = "<?= base_url('dashboard/warehouse-kuningan') ?>";
         }
       });
     </script>
