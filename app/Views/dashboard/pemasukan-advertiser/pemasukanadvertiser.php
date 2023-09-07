@@ -186,7 +186,7 @@
                     footer: true,
                     title: 'Data Pengeluaran Advertiser',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
                     },
                     className: 'mb-2',
                     // ubah nama file ketika di download
@@ -197,7 +197,7 @@
                     footer: true,
                     title: 'Data Pengeluaran Advertiser',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
                     },
                     className: 'mb-2',
                 }

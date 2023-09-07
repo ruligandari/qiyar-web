@@ -154,9 +154,9 @@
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Advertiser',
+                    title: 'Data Karyawan Advertiser',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3]
                     },
                     className: 'mb-2',
                     // ubah nama file ketika di download
@@ -165,9 +165,9 @@
                 {
                     extend: 'pdfHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Advertiser',
+                    title: 'Data Karyawan Ad',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6]
+                        columns: [0, 1, 2, 3]
                     },
                     className: 'mb-2',
                 }
