@@ -116,9 +116,10 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7"></td>
+                            <td colspan="5"></td>
                             <td><b>Total</b></td>
                             <td id="totalSum"></td>
+                            <td colspan="2"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -192,7 +193,7 @@
                         format: {
                             body: function(data, row, column, node) {
                                 // Jika kolom adalah gambar, return elemen img
-                                if (column === 6) {
+                                if (column === 7) {
                                     return $('img', data).attr('src');
                                 }
                                 return data;
@@ -212,7 +213,7 @@
                         format: {
                             body: function(data, row, column, node) {
                                 // Jika kolom adalah gambar, return elemen img
-                                if (column === 6) {
+                                if (column === 7) {
                                     return $('img', data).attr('src');
                                 }
                                 return data;
