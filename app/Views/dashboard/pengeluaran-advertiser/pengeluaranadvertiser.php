@@ -126,10 +126,9 @@
                                 <td></td>
                             <?php endif; ?>
                             <?php if (session()->get('role') == '5') : ?>
-                                <td colspan="4"></td>
+                                <td colspan="5"></td>
                                 <td><b>Total</b></td>
                                 <td id="totalSum"></td>
-                                <td></td>
                             <?php endif; ?>
                         </tr>
                     </tfoot>
@@ -192,93 +191,149 @@
     let currentDate = new Date();
     let formattedDate = currentDate.toISOString().split('T')[0];
 
-    $(document).ready(function() {
-        // DataTables initialisation
-        let table = $('#example1').DataTable({
-            dom: 'Bfrtip',
-            buttons: [{
-                    extend: 'excelHtml5',
-                    footer: true,
-                    title: 'Data Pengeluaran Advertiser - ' + formattedDate,
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
-                        format: {
-                            body: function(data, row, column, node) {
-                                // Jika kolom adalah gambar, return elemen img
-                                if (column === 6) {
-                                    return $('img', data).attr('src');
-                                }
-                                return data;
-                            }
-                        }
+    <?php if (session()->get('role') != '5') : ?>
+
+        $(document).ready(function() {
+            // DataTables initialisation
+            let table = $('#example1').DataTable({
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'excelHtml5',
+                        footer: true,
+                        title: 'Data Pengeluaran Advertiser - ' + formattedDate,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6],
+                        },
+                        className: 'mb-2',
+                        // ubah nama file ketika di download
+
                     },
-                    className: 'mb-2',
-                    // ubah nama file ketika di download
-
-                },
-                {
-                    extend: 'pdfHtml5',
-                    footer: true,
-                    title: 'Data Pengeluaran Advertiser - ' + formattedDate,
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                        format: {
-                            body: function(data, row, column, node) {
-                                // Jika kolom adalah gambar, return elemen img
-                                if (column === 6) {
-                                    return $('img', data).attr('src');
-                                }
-                                return data;
-                            }
-                        }
-                    },
-                    className: 'mb-2',
-                }
-            ],
-        });
-
-        // Sum the "jumlah" column
-        function sumColumn() {
-            let sum = table.column(6, {
-                search: 'applied'
-            }).data().reduce(function(acc, curr) {
-                let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
-                return acc + numericValue;
-            }, 0);
-
-            // Format the sum as Indonesian currency
-            let formattedSum = sum.toLocaleString('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
-                maximumFractionDigits: 2
+                    {
+                        extend: 'pdfHtml5',
+                        footer: true,
+                        title: 'Data Pengeluaran Advertiser - ' + formattedDate,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6],
+                        },
+                        className: 'mb-2',
+                    }
+                ],
             });
 
-            // Display the formatted sum
-            $('#totalSum').html(formattedSum);
-        }
+            // Sum the "jumlah" column
+            function sumColumn() {
+                let sum = table.column(6, {
+                    search: 'applied'
+                }).data().reduce(function(acc, curr) {
+                    let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
+                    return acc + numericValue;
+                }, 0);
 
-        // Call sumColumn when searching/filtering is applied
-        table.on('search.dt', function() {
-            sumColumn();
-        });
+                // Format the sum as Indonesian currency
+                let formattedSum = sum.toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
+                    maximumFractionDigits: 2
+                });
 
-        // Initial sum when the page loads
-        sumColumn();
+                // Display the formatted sum
+                $('#totalSum').html(formattedSum);
+            }
 
-        table.buttons().container()
-            .appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-        // Refilter the table
-        document.querySelectorAll('#min, #max').forEach((el) => {
-            el.addEventListener('change', () => {
-                table.draw();
+            // Call sumColumn when searching/filtering is applied
+            table.on('search.dt', function() {
                 sumColumn();
             });
+
+            // Initial sum when the page loads
+            sumColumn();
+
+            table.buttons().container()
+                .appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            // Refilter the table
+            document.querySelectorAll('#min, #max').forEach((el) => {
+                el.addEventListener('change', () => {
+                    table.draw();
+                    sumColumn();
+                });
+            });
+
+
         });
+    <?php endif ?>
+    <?php if (session()->get('role') == '5') : ?>
+        $(document).ready(function() {
+            // DataTables initialisation
+            let table = $('#example1').DataTable({
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'excelHtml5',
+                        footer: true,
+                        title: 'Data Pengeluaran  <?= session()->get('nama') ?> - ' + formattedDate,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6],
+                        },
+                        className: 'mb-2',
+                        // ubah nama file ketika di download
+
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        footer: true,
+                        title: 'Data Pengeluaran  <?= session()->get('nama') ?> - ' + formattedDate,
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6],
+                        },
+                        className: 'mb-2',
+                    }
+                ],
+            });
+
+            // Sum the "jumlah" column
+            function sumColumn() {
+                let sum = table.column(6, {
+                    search: 'applied'
+                }).data().reduce(function(acc, curr) {
+                    let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
+                    return acc + numericValue;
+                }, 0);
+
+                // Format the sum as Indonesian currency
+                let formattedSum = sum.toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
+                    maximumFractionDigits: 2
+                });
+
+                // Display the formatted sum
+                $('#totalSum').html(formattedSum);
+            }
+
+            // Call sumColumn when searching/filtering is applied
+            table.on('search.dt', function() {
+                sumColumn();
+            });
+
+            // Initial sum when the page loads
+            sumColumn();
+
+            table.buttons().container()
+                .appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            // Refilter the table
+            document.querySelectorAll('#min, #max').forEach((el) => {
+                el.addEventListener('change', () => {
+                    table.draw();
+                    sumColumn();
+                });
+            });
 
 
-    });
+        });
+    <?php endif ?>
 </script>
 <script>
     // Tangkap semua elemen dengan class delete-button
