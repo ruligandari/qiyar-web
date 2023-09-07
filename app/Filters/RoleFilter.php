@@ -27,7 +27,7 @@ class RoleFilter implements FilterInterface
     {
         $roleUser = session()->get('role');
 
-        if ($roleUser != '1' && $roleUser != '5') {
+        if ($roleUser != '1' && $roleUser != '5' && $roleUser != '4') {
             return redirect()->back();
         }
     }

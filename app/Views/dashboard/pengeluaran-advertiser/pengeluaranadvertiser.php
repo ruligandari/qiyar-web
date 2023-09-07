@@ -87,7 +87,7 @@
                             <th>Bank Tujuan</th>
                             <th>Keterangan</th>
                             <th>Jumlah (Rp)</th>
-                            <?php if (session()->get('role') == '1') : ?>
+                            <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
                                 <th>Aksi</th>
                             <?php endif; ?>
                         </tr>
@@ -106,7 +106,7 @@
                                 <td><?= $data['keterangan'] ?></td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
                                 </td>
-                                <?php if (session()->get('role') == '1') : ?>
+                                <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
                                     <td class="text-center">
                                         <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pengeluaran-advertiser/edit/') . $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                         <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
@@ -119,13 +119,13 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <?php if (session()->get('role') == '1') : ?>
+                            <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
                                 <td colspan="5"></td>
                                 <td><b>Total</b></td>
                                 <td id="totalSum"></td>
                                 <td></td>
                             <?php endif; ?>
-                            <?php if (session()->get('role') != '1') : ?>
+                            <?php if (session()->get('role') == '5') : ?>
                                 <td colspan="4"></td>
                                 <td><b>Total</b></td>
                                 <td id="totalSum"></td>

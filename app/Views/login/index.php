@@ -43,6 +43,8 @@
           window.location = "<?= base_url('dashboard') ?>";
         } else if (<?= session()->get('role') ?> == '5') {
           window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
+        } else if (<?= session()->get('role') ?> == '4') {
+          window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
         }
       });
     </script>

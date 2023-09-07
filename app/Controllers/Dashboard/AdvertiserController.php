@@ -30,7 +30,7 @@ class AdvertiserController extends BaseController
     }
     public function pengeluaranadv()
     {
-        if (session()->get('role') == 1) {
+        if (session()->get('role') == 1 || session()->get('role') == 4) {
 
             $pengeluaranadv = $this->pengeluaranadv->findAll();
         } else {
