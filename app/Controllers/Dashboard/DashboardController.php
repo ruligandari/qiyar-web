@@ -13,7 +13,7 @@ class DashboardController extends BaseController
         $this->pemasukanbc = new \App\Models\PemasukanBroadcastModel();
 
         $this->pengeluaranbroadcast = new \App\Models\PengeluaranBroadcastModel();
-        $this->pengeluaranadv = new \App\Models\PengeluaranAdvertiserModel();
+        $this->pengeluaranadv = new \App\Models\PengeluaranadvertiserModel();
 
         $this->uangtransferadvertiser = new \App\Models\BroadcastModel();
 
