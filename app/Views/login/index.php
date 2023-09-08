@@ -42,9 +42,9 @@
         if (<?= session()->get('role') ?> == '1' || <?= session()->get('role') ?> == '2') {
           window.location = "<?= base_url('dashboard') ?>";
         } else if (<?= session()->get('role') ?> == '5') {
-          window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
+          window.location = "<?= base_url('dashboard/advertiser/pengeluaran-advertiser') ?>";
         } else if (<?= session()->get('role') ?> == '4') {
-          window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
+          window.location = "<?= base_url('dashboard/advertiser/pengeluaran-advertiser') ?>";
         } else if (<?= session()->get('role') ?> == '6') {
           window.location = "<?= base_url('dashboard/warehouse-kuningan') ?>";
         } else if (<?= session()->get('role') ?> == '7') {
