@@ -66,7 +66,7 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Pengeluaran Kantor</h6>
-                    <a href="<?= base_url('dashboard/tambah-data-pengeluaran-kantor') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <a href="<?= base_url('dashboard/advertiser/tambah-data-pengeluaran-kantor') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                 </div>
             </div>
         </div>
@@ -115,7 +115,7 @@
                                         <img src="<?= base_url('bukti_pengeluaran_kantor/') . $data['bukti_transfer'] ?>" alt="" style="height:50px; width:50px"></a></td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?></td>
                                 <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pengeluaran-kantor/edit/') . $data['id_pengeluaran_kantor'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/advertiser/pengeluaran-kantor/edit/') . $data['id_pengeluaran_kantor'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                     <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_pengeluaran_kantor'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                 </td>
                             </tr>
@@ -299,7 +299,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pengeluaran-kantor/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/advertiser/pengeluaran-kantor/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },

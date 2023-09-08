@@ -21,7 +21,7 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/pemasukan-advertiser/update') ?>" enctype="multipart/form-data">
+        <form method="POST" action="<?= base_url('dashboard/advertiser/pemasukan-advertiser/update') ?>" enctype="multipart/form-data">
           <input type="hidden" name="id" value="<?= $data['id'] ?>">
           <div class="form-group">
             <label for="formGroupExampleInput">Expedisi</label>

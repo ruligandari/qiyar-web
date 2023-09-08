@@ -55,7 +55,7 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/pengeluaran-kantor/add')  ?> " enctype="multipart/form-data">
+        <form method="POST" action="<?= base_url('dashboard/advertiser/pengeluaran-kantor/add')  ?> " enctype="multipart/form-data">
           <div class="form-group">
             <label for="formGroupExampleInput">Tanggal Input</label>
             <input type="text" class="form-control" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input" readonly>

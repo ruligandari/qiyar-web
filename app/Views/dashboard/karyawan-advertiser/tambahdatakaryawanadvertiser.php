@@ -55,7 +55,7 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/karyawan-advertiser/add')  ?> " enctype="multipart/form-data">
+        <form method="POST" action="<?= base_url('dashboard/advertiser/karyawan-advertiser/add')  ?> " enctype="multipart/form-data">
           <div class="form-group">
             <label for="formGroupExampleInput">Nama</label>
             <input type="text" class="form-control" id="formGroupExampleInput" name="nama" placeholder="Masukan Nama" required>

@@ -76,7 +76,7 @@
                     Advertiser
                 </div>
                 <li class="nav-item <?= $title == 'Karyawan Advertiser' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/karyawan-advertiser') ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/advertiser/karyawan-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Karyawan Advertiser</span></a>
                 </li>
@@ -88,24 +88,24 @@
             <?php endif; ?>
             <?php if (session()->get('role') == '1' || session()->get('role') == '5' || session()->get('role') == '4') : ?>
                 <li class="nav-item <?= $title == 'Pengeluaran Advertiser' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-advertiser') ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/advertiser/pengeluaran-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Pengeluaran Advertiser</span></a>
                 </li>
             <?php endif; ?>
             <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
                 <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/pemasukan-advertiser') ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/advertiser/pemasukan-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Pemasukan Advertiser</span></a>
                 </li>
                 <li class="nav-item <?= $title == 'Pengeluaran Kantor' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-kantor') ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/advertiser/pengeluaran-kantor') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Jenis Pengeluaran</span></a>
                 </li>
                 <li class="nav-item <?= $title == 'Uang Transfer' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/uang-transfer-advertiser') ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/advertiser/uang-transfer-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Uang Transfer</span></a>
                 </li>

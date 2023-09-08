@@ -57,7 +57,7 @@
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Pengeluaran Advertiser</h6>
                     <?php if (session()->get('role') == '1') : ?>
-                        <a href="<?= base_url('dashboard/tambah-data-pengeluaran-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                        <a href="<?= base_url('dashboard/advertiser/tambah-data-pengeluaran-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                                 </td>
                                 <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
                                     <td class="text-center">
-                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pengeluaran-advertiser/edit/') . $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/advertiser/pengeluaran-advertiser/edit/') . $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                         <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                     </td>
                                 <?php endif ?>
@@ -356,7 +356,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/pengeluaran-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: "<?= base_url('dashboard/advertiser/pengeluaran-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },

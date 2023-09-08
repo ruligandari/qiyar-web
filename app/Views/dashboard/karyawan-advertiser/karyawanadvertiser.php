@@ -11,14 +11,6 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" type="text/css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css" type="text/css">
 
-<!-- css adminlte -->
-
-<!-- <link rel="stylesheet" href="<?= base_url('table') ?>/plugins/fontawesome-free/css/all.min.css">
-
-<link rel="stylesheet" href="<?= base_url('table') ?>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="<?= base_url('table') ?>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="<?= base_url('table') ?>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css"> -->
-
 <?= $this->endSection(); ?>
 
 <!-- menambahkan section -->
@@ -56,7 +48,7 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Karyawan Advertiser</h6>
-                    <a href="<?= base_url('dashboard/karyawan-advertiser/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <a href="<?= base_url('dashboard/advertiser/karyawan-advertiser/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                 </div>
             </div>
         </div>
@@ -83,8 +75,8 @@
                                 <td><?= $data['email'] ?></td>
                                 <td><?= $data['role'] ?></td>
                                 <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/karyawan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
+                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/advertiser/karyawan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/advertiser/karyawan-advertiser/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                 </td>
                             </tr>
                         <?php
@@ -224,6 +216,7 @@
     deleteButtons.forEach((button) => {
         button.addEventListener("click", function() {
             const id = this.getAttribute("data-id");
+            const url = this.getAttribute("data-url");
 
             Swal.fire({
                 title: "Apakah Anda yakin akan menghapus produk ini?",
@@ -238,7 +231,7 @@
                     // Kirim permintaan hapus menggunakan Ajax
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('dashboard/karyawan-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+                        url: url, // Ganti dengan URL tindakan penghapusan di Controller Anda
                         data: {
                             id: id
                         },

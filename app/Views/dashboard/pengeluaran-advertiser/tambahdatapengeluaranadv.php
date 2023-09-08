@@ -23,7 +23,7 @@
         showConfirmButton: false,
         timer: 2000
       }).then(function() {
-        window.location = "<?= base_url('dashboard/pengeluaran-advertiser') ?>";
+        window.location = "<?= base_url('dashboard/advertiser/pengeluaran-advertiser') ?>";
       });
     </script>
   <?php endif ?>
@@ -45,7 +45,7 @@
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
       <div class="card-body">
-        <form method="POST" action="<?= base_url('dashboard/tambah-data-pengeluaran-advertiser/add') ?>">
+        <form method="POST" action="<?= base_url('dashboard/advertiser/tambah-data-pengeluaran-advertiser/add') ?>">
           <div class="form-group">
             <label for="formGroupExampleInput">Tanggal Input</label>
             <input type="date" class="form-control tanggal" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input">
