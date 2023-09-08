@@ -83,7 +83,7 @@ class PemasukanAdvertiserController extends BaseController
         $this->pemasukanadv->insert($data);
         $upload_bukti->move('bukti_pemasukan_advertiser');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/pemasukan-advertiser/tambah-data-pemasukan-advertiser');
+        return redirect()->to('/dashboard/advertiser/pemasukan-advertiser/tambah-data-pemasukan-advertiser');
     }
 
     public  function edit($id)
@@ -133,10 +133,10 @@ class PemasukanAdvertiserController extends BaseController
         $pengeluaranadv = $this->pemasukanadv->update($id, $data);
         if ($pengeluaranadv) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pemasukan-advertiser/pemasukan-advertiser');
+            return redirect()->to('/dashboard/advertiser/pemasukan-advertiser/pemasukan-advertiser');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pemasukan-advertiser/pemasukan-advertiser');
+            return redirect()->to('/dashboard/advertiser/pemasukan-advertiser/pemasukan-advertiser');
         }
     }
 

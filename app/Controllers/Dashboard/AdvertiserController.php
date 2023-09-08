@@ -100,7 +100,7 @@ class AdvertiserController extends BaseController
         $total_harga = str_replace(',', '', $total_harga);
         if (!$validate) {
             session()->setFlashdata('error', 'error nih');
-            return redirect()->to('/dashboard/tambah-data-advertiser')->withInput();
+            return redirect()->to('/dashboard/advertiser/tambah-data-advertiser')->withInput();
         } else {
             $data = [
                 'tanggal_pembelian' => $tanggal,
@@ -109,7 +109,7 @@ class AdvertiserController extends BaseController
             ];
             $this->advertiser->insert($data);
             session()->setFlashdata('success', 'Data berhasil ditambahkan');
-            return redirect()->to('/dashboard/data-advertiser');
+            return redirect()->to('/dashboard/advertiser/data-advertiser');
         }
     }
 
@@ -144,10 +144,10 @@ class AdvertiserController extends BaseController
         $advertiser = $this->advertiser->update($id_advertiser, $data);
         if ($advertiser) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/data-advertiser');
+            return redirect()->to('/dashboard/advertiser/data-advertiser');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/data-advertiser/edit/' . $id_advertiser);
+            return redirect()->to('/dashboard/advertiser/data-advertiser/edit/' . $id_advertiser);
         }
     }
 
@@ -214,7 +214,7 @@ class AdvertiserController extends BaseController
         $jumlah = str_replace(',', '', $jumlah);
         if (!$validate) {
             session()->setFlashdata('error', 'error nih');
-            return redirect()->to('/dashboard/pengeluaran-advertiser/tambah-data-pengeluaran-advertiser')->withInput();
+            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser/tambah-data-pengeluaran-advertiser')->withInput();
         } else {
             $data = [
                 'tanggal' => $tanggal,
@@ -226,7 +226,7 @@ class AdvertiserController extends BaseController
             ];
             $this->pengeluaranadv->insert($data);
             session()->setFlashdata('success', 'Data berhasil ditambahkan');
-            return redirect()->to('/dashboard/pengeluaran-advertiser/tambah-data-pengeluaran-advertiser');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser/tambah-data-pengeluaran-advertiser');
         }
     }
     public  function editpengeluaran($id)
@@ -264,10 +264,10 @@ class AdvertiserController extends BaseController
         $pengeluaranadv = $this->pengeluaranadv->update($id_pengeluaran, $data);
         if ($pengeluaranadv) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pengeluaran-advertiser/pengeluaran-advertiser');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser/pengeluaran-advertiser');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pengeluaran-advertiser/pengeluaran-advertiser');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser/pengeluaran-advertiser');
         }
     }
 

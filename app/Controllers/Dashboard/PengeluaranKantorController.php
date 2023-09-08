@@ -62,7 +62,7 @@ class PengeluaranKantorController extends BaseController
         // Jika validasi gagal
         if (!$validate) {
             session()->setFlashdata('error', $validation->getErrors());
-            return redirect()->to('/dashboard/pengeluaran-kantor/tambah-data-pengeluaran-kantor')->withInput();
+            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/tambah-data-pengeluaran-kantor')->withInput();
         }
 
         // Jika validasi berhasil
@@ -81,7 +81,7 @@ class PengeluaranKantorController extends BaseController
         $upload_bukti->move('bukti_pengeluaran_kantor');
 
         session()->setFlashdata('success', 'Data Pengeluaran berhasil ditambahkan');
-        return redirect()->to('/dashboard/pengeluaran-kantor/pengeluaran-kantor');
+        return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/pengeluaran-kantor');
     }
 
     public  function edit($id)
@@ -128,10 +128,10 @@ class PengeluaranKantorController extends BaseController
         $pengeluarankantor = $this->pengeluarankantor->update($id_pengeluaran, $data);
         if ($pengeluarankantor) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pengeluaran-kantor/pengeluaran-kantor');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/pengeluaran-kantor');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pengeluaran-kantor/pengeluaran-kantor');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/pengeluaran-kantor');
         }
     }
 
