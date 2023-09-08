@@ -22,7 +22,7 @@
 </head>
 <style>
   body {
-    background-image: url('<?= base_url('front/assets/img/backgroundlogin.jpg') ?>');
+    background-image: url('<?= base_url('/') . 'front/assets/img/backgroundlogin.jpg' ?>');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100% 100%;
