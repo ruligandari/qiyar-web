@@ -21,15 +21,15 @@
 
 </head>
 <style>
-  body {
-    background-image: url('<?= base_url('/') . 'front/assets/img/backgroundlogin.jpg' ?>');
+  .body {
+    background-image: url('<?= base_url('/') . 'front/assets/img/backgroundlogin.JPG' ?>');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100% 100%;
   }
 </style>
 
-<body>
+<body class="body">
   <?php if (session()->getFlashdata('success')) : ?>
     <script>
       Swal.fire({
