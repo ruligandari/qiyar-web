@@ -10,10 +10,15 @@ class DashboardController extends BaseController
     function __construct()
     {
         $this->pemasukanadv = new \App\Models\PemasukanAdvertiserModel();
-        $this->uangtransferadvertiser = new \App\Models\BroadcastModel();
+        $this->pemasukanbc = new \App\Models\PemasukanBroadcastModel();
+
         $this->pengeluaranbroadcast = new \App\Models\PengeluaranBroadcastModel();
         $this->pengeluaranadv = new \App\Models\PengeluaranAdvertiserModel();
+
+        $this->uangtransferadvertiser = new \App\Models\BroadcastModel();
+
         $this->pengeluarankantor = new \App\Models\PengeluaranKantorModel();
+
         $this->laba = new \App\Models\DashboardModel();
         $this->laba_bc = new \App\Models\LabaBroadcastModel();
     }

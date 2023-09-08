@@ -351,7 +351,7 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-pie pt-4 pb-2">
-                        <canvas data-id="[<?= $totalPemasukan ?>, <?= $totalPengeluaran ?>, <?= $totalPemasukan - $totalPengeluaran ?> ]" id="myPieChart"></canvas>
+                        <canvas data-id="[<?= $totalPemasukan ?>, <?= $totalPengeluaran ?>, <?= $totalPemasukan - $totalPengeluaran ?> ]" id="pieChartBroadcast"></canvas>
                     </div>
                     <div class="mt-4 text-center small">
                         <span class="mr-2">
@@ -385,4 +385,5 @@
 <?= $this->endSection(); ?>
 <?= $this->section('script'); ?>
 <script src="<?= base_url('js/demo/chart-area-broadcast.js') ?>"></script>
+<script src="<?= base_url('js/demo/chart-pie-broadcast.js') ?>"></script>
 <?= $this->endSection(); ?>
