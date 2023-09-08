@@ -325,7 +325,7 @@
                 <div class="card-body">
 
                     <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
+                        <canvas id="chartBroadcast"></canvas>
                     </div>
                 </div>
             </div>
@@ -378,5 +378,11 @@
 <script>
     var bulan = <?= $bulan ?>;
     var total = <?= $total ?>;
+
+    var bulan_bc = <?= $bulan_bc ?>;
+    var total_bc = <?= $total_bc ?>;
 </script>
+<?= $this->endSection(); ?>
+<?= $this->section('script'); ?>
+<script src="<?= base_url('js/demo/chart-area-broadcast.js') ?>"></script>
 <?= $this->endSection(); ?>

@@ -15,6 +15,7 @@ class DashboardController extends BaseController
         $this->pengeluaranadv = new \App\Models\PengeluaranAdvertiserModel();
         $this->pengeluarankantor = new \App\Models\PengeluaranKantorModel();
         $this->laba = new \App\Models\DashboardModel();
+        $this->laba_bc = new \App\Models\LabaBroadcastModel();
     }
     public function index()
     {
@@ -40,6 +41,15 @@ class DashboardController extends BaseController
         $total = $this->laba->select('total')->get()->getResultArray();
         $totalconv = json_encode(array_column($total, 'total'));
 
+        // chart laba broadcast
+        $bulan_bc = $this->laba_bc->select('tanggal')->get()->getResultArray();
+        foreach ($bulan_bc as $key => $value) {
+            $bulan_bc[$key]['tanggal'] = date('F', strtotime($value['tanggal']));
+        }
+        $bulan_bc_conv = json_encode(array_column($bulan_bc, 'tanggal'));
+        $total_bc = $this->laba_bc->select('total')->get()->getResultArray();
+        $total_bc_conv = json_encode(array_column($total_bc, 'total'));
+
         $data = [
             'title' => 'Dashboard',
             'totalPemasukan' => $totalPemasukan['jumlah'] ?? '0',
@@ -50,6 +60,8 @@ class DashboardController extends BaseController
             'totalPengeluaranKantor' => $totalPengeluaranKantor['jumlah'] ?? '0',
             'bulan' => $bulanconv,
             'total' => $totalconv,
+            'bulan_bc' => $bulan_bc_conv,
+            'total_bc' => $total_bc_conv,
         ];
         return view('dashboard/index', $data);
     }
