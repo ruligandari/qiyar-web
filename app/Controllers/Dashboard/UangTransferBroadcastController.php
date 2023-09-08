@@ -79,7 +79,7 @@ class UangTransferBroadcastController extends BaseController
         $this->uangtransferbroadcast->insert($data);
         $upload_bukti->move('bukti_pemasukan_broadcast');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/uang-transfer-broadcast');
+        return redirect()->to('/dashboard/broadcast/uang-transfer-broadcast');
     }
 
     public  function edit($id)
@@ -89,7 +89,7 @@ class UangTransferBroadcastController extends BaseController
             'title' => 'Uang Transfer Broadcast',
             'data' => $uangtransferbroadcast,
         ];
-        return view('dashboard/uang-transfer-broadcast/editdatauangtransferbroadcast', $data);
+        return view('dashboard/broadcast/uang-transfer-broadcast/editdatauangtransferbroadcast', $data);
     }
 
     public function update()
@@ -129,10 +129,10 @@ class UangTransferBroadcastController extends BaseController
         $uangtransferbroadcast = $this->uangtransferbroadcast->update($id, $data);
         if ($uangtransferbroadcast) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pemasukan-broadcast');
+            return redirect()->to('/dashboard/broadcast/pemasukan-broadcast');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pemasukan-broadcast');
+            return redirect()->to('/dashboard/broadcast/pemasukan-broadcast');
         }
     }
 

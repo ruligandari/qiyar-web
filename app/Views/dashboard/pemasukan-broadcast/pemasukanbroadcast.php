@@ -56,7 +56,7 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Pemasukan Broadcast</h6>
-                    <a href="<?= base_url('dashboard/pemasukan-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <a href="<?= base_url('dashboard/broadcast/pemasukan-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                 </div>
             </div>
         </div>
@@ -106,8 +106,8 @@
                                         <img src="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></a></td>
                                 </td>
                                 <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pemasukan-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/pemasukan-broadcast/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
+                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/broadcast/pemasukan-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/broadcast/pemasukan-broadcast/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                 </td>
                             </tr>
                         <?php

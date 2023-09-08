@@ -123,17 +123,17 @@
                     Broadcast
                 </div>
                 <li class="nav-item <?= $title == 'Pemasukan Broadcast' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/pemasukan-broadcast') ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/broadcast/pemasukan-broadcast') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Pemasukan Broadcast</span></a>
                 </li>
                 <li class="nav-item <?= $title == 'Uang Transfer Broadcast' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/uang-transfer-broadcast') ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/broadcast/uang-transfer-broadcast') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Uang Transfer</span></a>
                 </li>
                 <li class="nav-item <?= $title == 'Pengeluaran Broadcast' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/pengeluaran-broadcast') ?>">
+                    <a class="nav-link" href="<?= base_url('dashboard/broadcast/pengeluaran-broadcast') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Jenis Pengeluaran</span></a>
                 </li>
