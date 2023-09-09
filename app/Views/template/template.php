@@ -37,7 +37,7 @@
                 <div class="sidebar-brand-text mx-3">Qiyar Media</div>
             </a>
 
-            <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '3') : ?>
                 <!-- Divider -->
                 <hr class="sidebar-divider my-0">
 
@@ -49,8 +49,8 @@
                 </li>
             <?php endif ?>
             <!-- Divider -->
-            <hr class="sidebar-divider">
             <?php if (session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '6' || session()->get('role') == '7') : ?>
+                <hr class="sidebar-divider">
                 <div class="sidebar-heading text-white">
                     Warehouse
                 </div>

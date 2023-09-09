@@ -24,6 +24,10 @@ class Filters extends BaseConfig
         'authFilter' => \App\Filters\UserFilter::class,
         'roleFilter' => \App\Filters\RoleFilter::class,
         'advFilter' => \App\Filters\AdvFilter::class,
+        'AdvertiserFilter' => \App\Filters\AdvertiserFilter::class,
+        'BroadcastFilter' => \App\Filters\BroadcastFilter::class,
+        'WarehouseKuninganFilter' => \App\Filters\WarehouseKuninganFilter::class,
+        'WarehouseJakartaFilter' => \App\Filters\WarehouseJakartaFilter::class,
     ];
 
     /**
@@ -35,11 +39,17 @@ class Filters extends BaseConfig
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
+            // 'authFilter' => ['except' => ['auth', 'auth/*']],
+            // 'roleFilter' => ['except' => ['auth', 'auth/*']],
+            // 'advFilter' => ['except' => ['auth', 'auth/*']],
         ],
         'after' => [
             'toolbar',
             // 'honeypot',
             // 'secureheaders',
+            // 'AdvertiserFilter' => ['except' => ['advertiser', 'advertiser/*']],
+            'BroadcastFilter' => ['except' => ['dashboard/lamaran', 'dashboard/advertiser/*', 'warehouse-kuningan/*', 'warehouse-jakarta/*']],
+            'WarehouseKuninganFilter' => ['except' => ['dashboard/lamaran', 'dashboard/advertiser/*', 'warehouse-kuningan/*', 'warehouse-jakarta/*']],
         ],
     ];
 

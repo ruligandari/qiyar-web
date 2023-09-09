@@ -39,17 +39,9 @@
         showConfirmButton: false,
         timer: 2000
       }).then(function() {
-        if (<?= session()->get('role') ?> == '1' || <?= session()->get('role') ?> == '2') {
-          window.location = "<?= base_url('dashboard') ?>";
-        } else if (<?= session()->get('role') ?> == '5') {
-          window.location = "<?= base_url('dashboard/advertiser/pengeluaran-advertiser') ?>";
-        } else if (<?= session()->get('role') ?> == '4') {
-          window.location = "<?= base_url('dashboard/advertiser/pengeluaran-advertiser') ?>";
-        } else if (<?= session()->get('role') ?> == '6') {
-          window.location = "<?= base_url('dashboard/warehouse-kuningan') ?>";
-        } else if (<?= session()->get('role') ?> == '7') {
-          window.location = "<?= base_url('dashboard/warehouse-jakarta') ?>";
-        }
+
+        window.location = "<?= base_url('dashboard') ?>";
+
       });
     </script>
   <?php endif ?>
@@ -64,14 +56,49 @@
       });
     </script>
   <?php endif ?>
-  <?php if (session()->getFlashdata('success-logout')) : ?>
+  <?php if (session()->getFlashdata('loged')) : ?>
     <script>
       Swal.fire({
-        position: 'center',
-        icon: 'success',
-        text: 'Logout Berhasil',
-        showConfirmButton: false,
-        timer: 2000
+        title: "Anda Sudah Login, Login Kembali Untuk Memulai",
+        icon: "warning",
+        showCancelButton: false,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Kirim permintaan hapus menggunakan Ajax
+          $.ajax({
+            type: "POST",
+            url: "<?= base_url('logout-session') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
+            success: function(response) {
+              var data = JSON.parse(response);
+              if (data.success) {
+                Swal.fire(
+                  "Sukses!",
+                  'Silahkan Login Kembali !',
+                  "success"
+                ).then(() => {
+                  // Muat ulang halaman setelah penghapusan
+                  location.reload();
+                });
+              } else {
+                Swal.fire(
+                  "Error!",
+                  data.msg,
+                  "error"
+                );
+              }
+            },
+            error: function() {
+              Swal.fire(
+                "Error!",
+                "An error occurred while deleting the item.",
+                "error"
+              );
+            },
+          });
+        }
       });
     </script>
   <?php endif ?>

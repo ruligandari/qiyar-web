@@ -20,6 +20,12 @@ class LoginController extends BaseController
         $password = $this->request->getVar('password');
         $user = $UserModel->where('email', $email)->first();
 
+        // cek apakah ada sesi
+        if (session()->get('isLogin')) {
+            session()->setFlashdata('loged', 'Anda sudah login');
+            return redirect()->to('/login');
+        }
+
         if ($user) {
             if (password_verify($password, $user['password'])) {
 
@@ -49,6 +55,12 @@ class LoginController extends BaseController
         session()->destroy();
         session()->setFlashdata('success-logout', 'Logout Berhasil');
         return redirect()->to('/login');
+    }
+    public function logout_session()
+    {
+        // logout
+        session()->destroy();
+        return json_encode(array("success" => true,));
     }
 
     public function restrictedpage()

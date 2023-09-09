@@ -6,7 +6,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class RoleFilter implements FilterInterface
+class WarehouseJakartaFilter implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -25,9 +25,10 @@ class RoleFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $roleUser = session()->get('role');
-
-        if ($roleUser != '1' && $roleUser != '5' && $roleUser != '4' && $roleUser != '3') {
+        if (session()->get('role') == '7') {
+            // buka saja
+        } else if (session()->get('role') == '1') {
+        } else {
             return redirect()->back();
         }
     }
