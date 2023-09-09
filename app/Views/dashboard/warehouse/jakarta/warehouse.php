@@ -60,7 +60,7 @@
                                 <h6 class=" font-weight-bold text-primary">Data Warehouse</h6>
                             </div>
                             <div class="col-xl-6 d-flex justify-content-end">
-                                <?php if (session()->get('role') == '1') : ?>
+                                <?php if (session()->get('role') == '1' || session()->get('role') == '7') : ?>
                                     <a href="<?= base_url('dashboard/warehouse-jakarta/stok') ?>" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Stok Produk</a>
                                     <div class="col-xl-1"></div>
                                     <a href="<?= base_url('dashboard/warehouse-jakarta/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Produk Baru</a>
@@ -132,7 +132,7 @@
                     <div class="">
                         <div class="d-sm-flex align-items-center justify-content-between">
                             <h6 class=" font-weight-bold text-primary">Barang Keluar</h6>
-                            <?php if (session()->get('role') == '1') : ?>
+                            <?php if (session()->get('role') == '1' || session()->get('role') == '7') : ?>
                                 <a href="<?= base_url('dashboard/warehouse-jakarta/keluar/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                             <?php endif; ?>
                         </div>

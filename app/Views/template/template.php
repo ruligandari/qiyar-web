@@ -47,10 +47,10 @@
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard</span></a>
                 </li>
-            <?php endif ?>
-            <!-- Divider -->
-            <?php if (session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '6' || session()->get('role') == '7') : ?>
+                <!-- Divider -->
                 <hr class="sidebar-divider">
+            <?php endif ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '7') : ?>
                 <div class="sidebar-heading text-white">
                     Warehouse
                 </div>

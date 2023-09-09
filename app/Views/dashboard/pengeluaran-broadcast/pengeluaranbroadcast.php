@@ -56,8 +56,8 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Jenis Pengeluaran</h6>
-                    <?php if (session()->get('role') == '1') : ?>
-                        <a href="<?= base_url('dashboard/pengeluaran-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
+                        <a href="<?= base_url('dashboard/broadcast/pengeluaran-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                             <th>Nama Penerima</th>
                             <th>Bukti</th>
                             <th>Jumlah</th>
-                            <?php if (session()->get('role') == '1') : ?>
+                            <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
                                 <th>Aksi</th>
                             <?php endif; ?>
                         </tr>
@@ -110,9 +110,9 @@
                                 </td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
                                 </td>
-                                <?php if (session()->get('role') == '1') : ?>
+                                <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
                                     <td class="text-center">
-                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/pengeluaran-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/broadcast/pengeluaran-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                         <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
                                     </td>
                                 <?php endif ?>
