@@ -87,15 +87,7 @@
     </main>
 
     <!-- ======= Footer ======= -->
-    <footer id="footer" class="footer">
-        <div class="container copyright text-center mt-">
-            <p>
-                &copy; <span>Copyright</span>
-                <strong class="px-1">Qiyar Media</strong>
-                <span>All Rights Reserved</span>
-            </p>
-        </div>
-    </footer>
+
     <!-- End Footer -->
 
     <!-- Scroll Top Button -->
