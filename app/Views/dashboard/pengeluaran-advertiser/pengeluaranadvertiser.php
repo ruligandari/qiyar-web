@@ -56,7 +56,7 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Pengeluaran Advertiser</h6>
-                    <?php if (session()->get('role') == '1') : ?>
+                    <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
                         <a href="<?= base_url('dashboard/advertiser/tambah-data-pengeluaran-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                     <?php endif; ?>
                 </div>
@@ -87,7 +87,7 @@
                             <th>Bank Tujuan</th>
                             <th>Keterangan</th>
                             <th>Jumlah (Rp)</th>
-                            <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
+                            <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
                                 <th>Aksi</th>
                             <?php endif; ?>
                         </tr>
@@ -106,7 +106,7 @@
                                 <td><?= $data['keterangan'] ?></td>
                                 <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
                                 </td>
-                                <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
+                                <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
                                     <td class="text-center">
                                         <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/advertiser/pengeluaran-advertiser/edit/') . $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
                                         <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
@@ -119,7 +119,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
+                            <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
                                 <td colspan="5"></td>
                                 <td><b>Total</b></td>
                                 <td id="totalSum"></td>
