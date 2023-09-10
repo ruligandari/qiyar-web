@@ -32,6 +32,7 @@ $routes->set404Override();
 
 // homepage
 $routes->get('/', 'Home::index');
+$routes->get('cekongkir', 'Home::cekongkir');
 $routes->get('lamaran', 'Home::lamaran');
 
 

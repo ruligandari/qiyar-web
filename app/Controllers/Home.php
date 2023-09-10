@@ -16,4 +16,12 @@ class Home extends BaseController
         ];
         return view('home/lamaran', $data);
     }
+
+    public function cekongkir()
+    {
+        $data = [
+            'title' => 'Cek Ongkir',
+        ];
+        return view('home/cekongkir', $data);
+    }
 }
