@@ -53,6 +53,12 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->get('/', 'Dashboard\ProfileController::index');
         $routes->post('update', 'Dashboard\ProfileController::update');
     });
+    // setting
+    $routes->group('setting', function ($routes) {
+        $routes->get('/', 'Dashboard\SettingController::index');
+        $routes->post('add', 'Dashboard\SettingController::add');
+        $routes->post('delete', 'Dashboard\SettingController::delete');
+    });
 
 
     $routes->group('advertiser', ['filter' => 'AdvertiserFilter'],  function ($routes) {

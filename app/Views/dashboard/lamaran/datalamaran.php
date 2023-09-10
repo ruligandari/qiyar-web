@@ -94,7 +94,7 @@
                             if (data.success) {
                                 Swal.fire(
                                     "Dihapus!",
-                                    "Data Lamaran Berhasil Dihapus",
+                                    "lamaran Berhasil Dihapus",
                                     "success"
                                 ).then(() => {
                                     // Muat ulang halaman setelah penghapusan

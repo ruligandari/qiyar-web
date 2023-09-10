@@ -37,20 +37,20 @@
                 <div class="sidebar-brand-text mx-3">Qiyar Media</div>
             </a>
 
-            <?php if (session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '3') : ?>
-                <!-- Divider -->
-                <hr class="sidebar-divider my-0">
 
-                <!-- Nav Item - Dashboard -->
-                <li class="nav-item <?= $title == 'Dashboard' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard') ?>">
-                        <i class="fas fa-fw fa-tachometer-alt"></i>
-                        <span>Dashboard</span></a>
-                </li>
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-            <?php endif ?>
-            <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '7') : ?>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item <?= $title == 'Dashboard' ? 'active' : '' ?>">
+                <a class="nav-link" href="<?= base_url('dashboard') ?>">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '7' || session()->get('role') == '3') : ?>
                 <div class="sidebar-heading text-white">
                     Warehouse
                 </div>
@@ -69,7 +69,7 @@
                     </div>
                 </li>
             <?php endif; ?>
-            <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading text-white">
@@ -86,14 +86,14 @@
                         <span>Data Advertiser</span></a>
                 </li> -->
             <?php endif; ?>
-            <?php if (session()->get('role') == '1' || session()->get('role') == '5' || session()->get('role') == '4') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '5' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
                 <li class="nav-item <?= $title == 'Pengeluaran Advertiser' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard/advertiser/pengeluaran-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
                         <span>Pengeluaran Advertiser</span></a>
                 </li>
             <?php endif; ?>
-            <?php if (session()->get('role') == '1' || session()->get('role') == '4') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
                 <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('dashboard/advertiser/pemasukan-advertiser') ?>">
                         <i class="fas fa-fw fa-file"></i>
@@ -226,6 +226,12 @@
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
+                                <?php if (session()->get('role') == '3') : ?>
+                                    <a class="dropdown-item" href="<?= base_url('dashboard/setting') ?>">
+                                        <i class="fas fa-cog fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Pengaturan Akun
+                                    </a>
+                                <?php endif ?>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
