@@ -71,6 +71,8 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->get('tambah-data-pengeluaran-advertiser', 'Dashboard\AdvertiserController::tambahdatapengeluaranadv');
         $routes->post('tambah-data-pengeluaran-advertiser/add', 'Dashboard\AdvertiserController::addpengeluaranadv');
 
+        $routes->post('pengeluaran-advertiser/list-pengeluaran', 'Dashboard\AdvertiserController::listPengeluaranAdv');
+
         // pemasukan adv
         $routes->get('pemasukan-advertiser', 'Dashboard\PemasukanAdvertiserController::index');
         $routes->get('tambah-data-pemasukan-advertiser', 'Dashboard\PemasukanAdvertiserController::tambahdatapemasukanadv');

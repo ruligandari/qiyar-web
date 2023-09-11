@@ -77,7 +77,8 @@
                     </tbody>
                 </table>
                 <br>
-                <table class="table table-bordered" id="example1" width="100%" cellspacing="0">
+
+                <table id="table" class="table table-sm table-bordered" width="100%">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -86,52 +87,10 @@
                             <th>Nama Advertiser</th>
                             <th>Bank Tujuan</th>
                             <th>Keterangan</th>
-                            <th>Jumlah (Rp)</th>
-                            <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
-                                <th>Aksi</th>
-                            <?php endif; ?>
+                            <th>Jumlah</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php
-                        $no = 1;
-                        foreach ($pengeluaranadv as $data) :
-                        ?>
-                            <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= $data['tanggal'] ?></td>
-                                <td><?= $data['waktu'] ?></td>
-                                <td><?= $data['nama_advertiser'] ?></td>
-                                <td><?= $data['bank_tujuan'] ?></td>
-                                <td><?= $data['keterangan'] ?></td>
-                                <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
-                                </td>
-                                <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
-                                    <td class="text-center">
-                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/advertiser/pengeluaran-advertiser/edit/') . $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                        <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id_pengeluaran'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                    </td>
-                                <?php endif ?>
-                            </tr>
-                        <?php
-                        endforeach
-                        ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
-                                <td colspan="5"></td>
-                                <td><b>Total</b></td>
-                                <td id="totalSum"></td>
-                                <td></td>
-                            <?php endif; ?>
-                            <?php if (session()->get('role') == '5') : ?>
-                                <td colspan="5"></td>
-                                <td><b>Total</b></td>
-                                <td id="totalSum"></td>
-                            <?php endif; ?>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -142,7 +101,7 @@
 
 <?= $this->section('script'); ?>
 
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
 <script src="https://cdn.datatables.net/datetime/1.5.1/js/dataTables.dateTime.min.js"></script>
@@ -157,6 +116,123 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '<?= base_url('dashboard/advertiser/pengeluaran-advertiser/list-pengeluaran') ?>',
+                method: 'POST'
+            },
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'excelHtml5',
+                    footer: true,
+                    title: 'Data Pengeluaran Advertiser - ' + formattedDate,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6],
+                    },
+                    className: 'mb-2',
+                    // ubah nama file ketika di download
+
+                },
+                {
+                    extend: 'pdfHtml5',
+                    footer: true,
+                    title: 'Data Pengeluaran Advertiser - ' + formattedDate,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6],
+                    },
+                    className: 'mb-2',
+                }
+            ],
+            columns: [{
+                    data: 'no',
+                    orderable: false
+                },
+                {
+                    data: 'tanggal'
+                },
+                {
+                    data: 'waktu'
+                },
+                {
+                    data: 'nama_advertiser'
+                },
+                {
+                    data: 'bank_tujuan'
+                },
+                {
+                    data: 'keterangan'
+                },
+                {
+                    data: 'jumlah'
+                },
+
+                {
+                    data: 'action',
+                    orderable: false
+                },
+            ],
+            order: [],
+            columnDefs: [{
+                targets: -1,
+                orderable: false
+            }, ]
+        });
+    });
+
+    function deleteRecord(id) {
+        Swal.fire({
+            title: "Apakah Anda yakin akan menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Tidak, batalkan!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kirim permintaan hapus menggunakan Ajax
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('dashboard/advertiser/pengeluaran-advertiser/delete') ?>",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        if (data.success) {
+                            Swal.fire(
+                                "Dihapus!",
+                                "Data Berhasil Dihapus",
+                                "success"
+                            ).then(() => {
+                                // Muat ulang halaman setelah penghapusan
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                "Error!",
+                                "Gagal menghapus data.",
+                                "error"
+                            );
+                        }
+                    },
+                    error: function() {
+                        Swal.fire(
+                            "Error!",
+                            "Terjadi kesalahan saat menghapus data.",
+                            "error"
+                        );
+                    },
+                });
+            }
+        });
+    }
+</script>
 
 <script>
     let minDate, maxDate;
@@ -334,62 +410,5 @@
 
         });
     <?php endif ?>
-</script>
-<script>
-    // Tangkap semua elemen dengan class delete-button
-    const deleteButtons = document.querySelectorAll(".delete-button");
-
-    deleteButtons.forEach((button) => {
-        button.addEventListener("click", function() {
-            const id = this.getAttribute("data-id");
-
-            Swal.fire({
-                title: "Apakah Anda yakin akan menghapus produk ini?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, hapus!",
-                cancelButtonText: "Gak Jadi Ah!",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Kirim permintaan hapus menggunakan Ajax
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url('dashboard/advertiser/pengeluaran-advertiser/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
-                        data: {
-                            id: id
-                        },
-                        success: function(response) {
-                            var data = JSON.parse(response);
-                            if (data.success) {
-                                Swal.fire(
-                                    "Dihapus!",
-                                    "Data Lamaran Berhasil Dihapus",
-                                    "success"
-                                ).then(() => {
-                                    // Muat ulang halaman setelah penghapusan
-                                    location.reload();
-                                });
-                            } else {
-                                Swal.fire(
-                                    "Error!",
-                                    "Failed to delete the item.",
-                                    "error"
-                                );
-                            }
-                        },
-                        error: function() {
-                            Swal.fire(
-                                "Error!",
-                                "An error occurred while deleting the item.",
-                                "error"
-                            );
-                        },
-                    });
-                }
-            });
-        });
-    });
 </script>
 <?= $this->endSection(); ?>

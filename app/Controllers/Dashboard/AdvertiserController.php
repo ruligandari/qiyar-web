@@ -4,6 +4,8 @@ namespace App\Controllers\Dashboard;
 
 use App\Controllers\BaseController;
 use DateTime;
+use \Hermawan\DataTables\DataTable;
+
 
 class AdvertiserController extends BaseController
 {
@@ -43,6 +45,19 @@ class AdvertiserController extends BaseController
         ];
         return view('dashboard/pengeluaran-advertiser/pengeluaranadvertiser', $data);
     }
+
+    public function listPengeluaranAdv()
+    {
+        $db = db_connect();
+
+        $builder =  $db->table('pengeluaran_advertiser')->select('id_pengeluaran, tanggal, waktu, nama_advertiser, bank_tujuan, jumlah, keterangan');
+
+        return DataTable::of($builder)->addNumbering('no')->add('action', function ($row) {
+            return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/advertiser/pengeluaran-advertiser/edit/') . $row->id_pengeluaran . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
+            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id_pengeluaran . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
+        }, 'last')->toJson(true);
+    }
+
     public function pengeluaranadvertiser()
     {
         $advertiser = $this->advertiser->findAll();
@@ -64,7 +79,7 @@ class AdvertiserController extends BaseController
             'pengeluaranadv' => $pengeluaranadv,
             'karyawan' => $karyawan,
         ];
-        return view('dashboard/pengeluaran-advertiser/tambahdatapengeluaranadv', $data);
+        return view('dashboard/advertiser/pengeluaran-advertiser/tambahdatapengeluaranadv', $data);
     }
     public function tambahdata()
     {
