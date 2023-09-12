@@ -4,6 +4,7 @@ namespace App\Controllers\Dashboard;
 
 use App\Controllers\BaseController;
 use DateTime;
+use \Hermawan\DataTables\DataTable;
 
 class PengeluaranKantorController extends BaseController
 {
@@ -81,7 +82,7 @@ class PengeluaranKantorController extends BaseController
         $upload_bukti->move('bukti_pengeluaran_kantor');
 
         session()->setFlashdata('success', 'Data Pengeluaran berhasil ditambahkan');
-        return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/pengeluaran-kantor');
+        return redirect()->to('/dashboard/advertiser/pengeluaran-kantor');
     }
 
     public  function edit($id)
@@ -128,10 +129,10 @@ class PengeluaranKantorController extends BaseController
         $pengeluarankantor = $this->pengeluarankantor->update($id_pengeluaran, $data);
         if ($pengeluarankantor) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/pengeluaran-kantor');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/pengeluaran-kantor');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/edit/' . $id_pengeluaran)->withInput();
         }
     }
 
@@ -150,33 +151,27 @@ class PengeluaranKantorController extends BaseController
         }
         echo json_encode($data);
     }
-
-    // public function generateReport()
-    // {
-    //     $min = $this->request->getVar('min');
-    //     $max = $this->request->getVar('max');
-
-    //     // mengubah data ke format tanggal Tue Aug 01 2023 07:00:00 GMT+0700 (Indochina Time) ke 2023-08-01
-    //     $min = substr($min, 0, 33);
-    //     $max = substr($max, 0, 33);
-    //     $date_awal = new DateTime($min);
-    //     $date_akhir = new DateTime($max);
-    //     $min = $date_awal->format('Y-m-d');
-    //     $max = $date_akhir->format('Y-m-d');
-
-    //     dd($min, $max);
-
-    //     if ($min && $max == null) {
-    //         $pengeluaranadv = $this->pengeluaranadv->findAll();
-    //         dd($pengeluaranadv);
-    //     }
-
-    //     $pengeluaranadv = $this->pengeluaranadv->where('tanggal >=', $min)->where('tanggal <=', $max)->findAll();
-    //     $data = [
-    //         'title' => 'Pengeluaran Advertiser',
-    //         'pengeluaranadv' => $pengeluaranadv
-    //     ];
-    //     dd($data);
-    //     return view('dashboard/pengeluaranadvertiser', $data);
-    // }
+    public function listPengeluaranKantor()
+    {
+        $db = db_connect();
+        $builder = $db->table('pengeluaran_kantor')->select('id_pengeluaran_kantor, tanggal, waktu, jenis_pengeluaran, bank_tujuan, nama_penerima, jumlah, bukti_transfer');
+        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+            // cek data diterima atau tidak
+            if ($request->dates) {
+                // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                $dates = explode(' - ', $request->dates);
+                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+            }
+        })->add('action', function ($row) {
+            return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/advertiser/pengeluaran-kantor/edit/') . $row->id_pengeluaran_kantor . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
+            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id_pengeluaran_kantor . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
+        }, 'last')->format('jumlah', function ($value) {
+            return number_format($value, 0, ',', '.');
+        })->format('bukti_transfer', function ($value) {
+            return '<a href="' . base_url('bukti_pengeluaran_kantor/') . $value . '" target="_blank">
+            <img src="' . base_url('bukti_pengeluaran_kantor/') . $value . '" alt="" style="height:50px; width:50px"></a>';
+        })->toJson(true);
+    }
 }

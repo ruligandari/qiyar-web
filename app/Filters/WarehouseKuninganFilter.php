@@ -25,6 +25,8 @@ class WarehouseKuninganFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+        if (session()->get('isLogin') == false) {
+        }
         if (session()->get('role') == '6' || session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '3') {
         } else {
             return redirect()->back();

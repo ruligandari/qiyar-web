@@ -25,7 +25,9 @@ class AdvertiserFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (session()->get('role') == '2') {
+        if (session()->get('isLogin') == false) {
+            return redirect()->to('/login');
+        } else if (session()->get('role') == '2') {
             // 
         }
     }

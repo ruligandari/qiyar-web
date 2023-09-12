@@ -25,7 +25,8 @@ class BroadcastFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (session()->get('role') == '3') {
+        if (session()->get('isLogin' == false)) {
+        } else if (session()->get('role') == '3') {
             return redirect()->to('/dashboard/broadcast/pemasukan-broadcast');
         }
     }

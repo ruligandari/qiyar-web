@@ -162,13 +162,22 @@
                     d.dates = $('input[name="dates"]').val();
                 },
             },
-            dom: 'Bfrtip',
+            dom: '<"button-container"lBfrtip>',
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
                     title: 'Data Pemasukan Advertiser - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 7) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
                     },
                     className: 'mb-2',
                     // ubah nama file ketika di download
@@ -179,7 +188,16 @@
                     footer: true,
                     title: 'Data Pemasukan Advertiser - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 7) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
                     },
                     className: 'mb-2',
                 }
@@ -219,7 +237,7 @@
                 [10, 25, 50, -1],
                 [10, 25, 50, 'Semua']
             ], // Pilihan jumlah data per halaman, termasuk "Semua"
-            pageLength: -1,
+            pageLength: 10,
             order: [],
             columnDefs: [{
                 targets: -1,

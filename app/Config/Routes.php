@@ -90,6 +90,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->get('pengeluaran-kantor/edit/(:any)', 'Dashboard\PengeluaranKantorController::edit/$1');
         $routes->post('pengeluaran-kantor/update', 'Dashboard\PengeluaranKantorController::update');
 
+        $routes->post('pengeluaran-kantor/list-pengeluaran-kantor', 'Dashboard\PengeluaranKantorController::listPengeluaranKantor');
         // karyawan adv
         $routes->get('karyawan-advertiser', 'Dashboard\KaryawanAdvertiserController::index');
         $routes->get('karyawan-advertiser/tambah', 'Dashboard\KaryawanAdvertiserController::tambah');

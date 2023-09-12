@@ -178,8 +178,8 @@ class PemasukanAdvertiserController extends BaseController
         }, 'last')->format('jumlah', function ($value) {
             return number_format($value, 0, ',', '.');
         })->format('upload_bukti', function ($value) {
-            return '<a href="' . base_url('bukti_pengeluaran_kantor/') . $value . '" target="_blank">
-            <img src="' . base_url('bukti_pengeluaran_kantor/') . $value . '" alt="" style="height:50px; width:50px"></a>';
+            return '<a href="' . base_url('bukti_pemasukan_advertiser/') . $value . '" target="_blank">
+            <img src="' . base_url('bukti_pemasukan_advertiser/') . $value . '" alt="" style="height:50px; width:50px"></a>';
         })->toJson(true);
     }
 }

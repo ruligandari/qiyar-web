@@ -102,7 +102,6 @@
             </div>
         </div>
     </div>
-
 </div>
 <?= $this->endSection(); ?>
 
@@ -166,7 +165,7 @@
                     d.dates = $('input[name="dates"]').val();
                 },
             },
-            dom: 'Bfrtip',
+            dom: '<"button-container"lBfrtip>',
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
@@ -220,7 +219,7 @@
                 [10, 25, 50, -1],
                 [10, 25, 50, 'Semua']
             ], // Pilihan jumlah data per halaman, termasuk "Semua"
-            pageLength: -1,
+            pageLength: 10,
             order: [],
             columnDefs: [{
                 targets: -1,
