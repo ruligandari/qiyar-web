@@ -65,7 +65,7 @@
         </div>
         <div class="card-body">
             <div class="form-group">
-                <label class="form-label">Filter Berdasarkan Tanggal:</label>
+                <label class="form-label"><b>Filter Data :</b></label>
                 <div class="input-group" style="width: 16rem;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -142,7 +142,7 @@
             startDate: start,
             endDate: end,
             ranges: {
-                'Semua': [moment().subtract(100, 'years'), moment()],
+                'Semua': [moment().subtract(1, 'years'), moment()],
                 'Hari Ini': [moment(), moment()],
                 'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                 '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],

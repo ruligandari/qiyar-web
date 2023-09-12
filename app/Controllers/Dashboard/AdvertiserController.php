@@ -83,7 +83,7 @@ class AdvertiserController extends BaseController
 
     public function tambahdatapengeluaranadv()
     {
-        $karyawan = $this->karyawan->where('role', 3)->findAll();
+        $karyawan = $this->karyawan->where('role', 5)->findAll();
 
         $pengeluaranadv = $this->pengeluaranadv->findAll();
         $data = [
