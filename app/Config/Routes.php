@@ -81,6 +81,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->get('pemasukan-advertiser/edit/(:any)', 'Dashboard\PemasukanAdvertiserController::edit/$1');
         $routes->post('pemasukan-advertiser/update', 'Dashboard\PemasukanAdvertiserController::update');
 
+        $routes->post('pemasukan-advertiser/list-pemasukan', 'Dashboard\PemasukanAdvertiserController::listPemasukanAdv');
         // jenis pengeluaran
         $routes->get('pengeluaran-kantor', 'Dashboard\PengeluaranKantorController::index');
         $routes->get('tambah-data-pengeluaran-kantor', 'Dashboard\PengeluaranKantorController::tambahdatapengeluarankantor');

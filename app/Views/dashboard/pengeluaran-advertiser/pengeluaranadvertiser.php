@@ -4,7 +4,6 @@
 <?= $this->section('header'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" type="text/css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" type="text/css">
 <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.1/css/dataTables.dateTime.min.css" type="text/css">
@@ -263,6 +262,9 @@
 
     });
 
+    let currentDate = new Date();
+    let formattedDate = currentDate.toISOString().split('T')[0];
+
     function deleteRecord(id) {
         Swal.fire({
             title: "Apakah Anda yakin akan menghapus data ini?",
@@ -311,185 +313,6 @@
             }
         });
     }
-</script>
-
-
-<script>
-    let minDate, maxDate;
-
-
-    // Custom filtering function which will search data in column four between two values
-    DataTable.ext.search.push(function(settings, data, dataIndex) {
-        let min = minDate.val();
-        let max = maxDate.val();
-        let date = new Date(data[1]);
-
-        if (
-            (min === null && max === null) ||
-            (min === null && date <= max) ||
-            (min <= date && max === null) ||
-            (min <= date && date <= max)
-        ) {
-            // Jika data sesuai dengan kriteria filter
-            return true;
-        }
-        return false;
-    });
-
-    // Create date inputs
-    minDate = new DateTime('#min', {
-        format: 'MMMM Do YYYY'
-    });
-    maxDate = new DateTime('#max', {
-        format: 'MMMM Do YYYY'
-    });
-
-    let currentDate = new Date();
-    let formattedDate = currentDate.toISOString().split('T')[0];
-
-    <?php if (session()->get('role') != '5') : ?>
-
-        $(document).ready(function() {
-            // DataTables initialisation
-            let table = $('#example1').DataTable({
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'excelHtml5',
-                        footer: true,
-                        title: 'Data Pengeluaran Advertiser - ' + formattedDate,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6],
-                        },
-                        className: 'mb-2',
-                        // ubah nama file ketika di download
-
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        footer: true,
-                        title: 'Data Pengeluaran Advertiser - ' + formattedDate,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6],
-                        },
-                        className: 'mb-2',
-                    }
-                ],
-            });
-
-            // Sum the "jumlah" column
-            function sumColumn() {
-                let sum = table.column(6, {
-                    search: 'applied'
-                }).data().reduce(function(acc, curr) {
-                    let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
-                    return acc + numericValue;
-                }, 0);
-
-                // Format the sum as Indonesian currency
-                let formattedSum = sum.toLocaleString('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
-                    maximumFractionDigits: 2
-                });
-
-                // Display the formatted sum
-                $('#totalSum').html(formattedSum);
-            }
-
-            // Call sumColumn when searching/filtering is applied
-            table.on('search.dt', function() {
-                sumColumn();
-            });
-
-            // Initial sum when the page loads
-            sumColumn();
-
-            table.buttons().container()
-                .appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-            // Refilter the table
-            document.querySelectorAll('#min, #max').forEach((el) => {
-                el.addEventListener('change', () => {
-                    table.draw();
-                    sumColumn();
-                });
-            });
-
-
-        });
-    <?php endif ?>
-    <?php if (session()->get('role') == '5') : ?>
-        $(document).ready(function() {
-            // DataTables initialisation
-            let table = $('#example1').DataTable({
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'excelHtml5',
-                        footer: true,
-                        title: 'Data Pengeluaran  <?= session()->get('nama') ?> - ' + formattedDate,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6],
-                        },
-                        className: 'mb-2',
-                        // ubah nama file ketika di download
-
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        footer: true,
-                        title: 'Data Pengeluaran  <?= session()->get('nama') ?> - ' + formattedDate,
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6],
-                        },
-                        className: 'mb-2',
-                    }
-                ],
-            });
-
-            // Sum the "jumlah" column
-            function sumColumn() {
-                let sum = table.column(6, {
-                    search: 'applied'
-                }).data().reduce(function(acc, curr) {
-                    let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
-                    return acc + numericValue;
-                }, 0);
-
-                // Format the sum as Indonesian currency
-                let formattedSum = sum.toLocaleString('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
-                    maximumFractionDigits: 2
-                });
-
-                // Display the formatted sum
-                $('#totalSum').html(formattedSum);
-            }
-
-            // Call sumColumn when searching/filtering is applied
-            table.on('search.dt', function() {
-                sumColumn();
-            });
-
-            // Initial sum when the page loads
-            sumColumn();
-
-            table.buttons().container()
-                .appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-            // Refilter the table
-            document.querySelectorAll('#min, #max').forEach((el) => {
-                el.addEventListener('change', () => {
-                    table.draw();
-                    sumColumn();
-                });
-            });
-
-
-        });
-    <?php endif ?>
 </script>
 
 <?= $this->endSection(); ?>
