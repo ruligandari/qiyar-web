@@ -17,6 +17,16 @@
 
     <!-- Custom styles for this template-->
     <link href="<?= base_url('/') ?>css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="<?= base_url('/') ?>css/date-range-filter.css" rel="stylesheet">
+    <link href="<?= base_url('/') ?>css/select2.min.css" rel="stylesheet">
+    <link href="<?= base_url('/') ?>css/select2-bootstrap4.min.css" rel="stylesheet">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="<?= base_url() ?>/plugins/daterangepicker/daterangepicker.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="<?= base_url() ?>/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?= base_url() ?>/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <?= $this->renderSection('header'); ?>
 
 </head>

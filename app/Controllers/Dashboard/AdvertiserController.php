@@ -52,7 +52,17 @@ class AdvertiserController extends BaseController
 
         $builder =  $db->table('pengeluaran_advertiser')->select('id_pengeluaran, tanggal, waktu, nama_advertiser, bank_tujuan, jumlah, keterangan');
 
-        return DataTable::of($builder)->addNumbering('no')->add('action', function ($row) {
+        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+            // cek data diterima atau tidak
+
+            if ($request->dates != null) {
+                // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                $dates = explode(' - ', $request->dates);
+                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+            }
+        })->add('action', function ($row) {
             return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/advertiser/pengeluaran-advertiser/edit/') . $row->id_pengeluaran . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
             <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id_pengeluaran . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
         }, 'last')->format('jumlah', function ($value) {
@@ -81,7 +91,7 @@ class AdvertiserController extends BaseController
             'pengeluaranadv' => $pengeluaranadv,
             'karyawan' => $karyawan,
         ];
-        return view('dashboard/advertiser/pengeluaran-advertiser/tambahdatapengeluaranadv', $data);
+        return view('dashboard/pengeluaran-advertiser/tambahdatapengeluaranadv', $data);
     }
     public function tambahdata()
     {
@@ -231,7 +241,7 @@ class AdvertiserController extends BaseController
         $jumlah = str_replace(',', '', $jumlah);
         if (!$validate) {
             session()->setFlashdata('error', 'error nih');
-            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser/tambah-data-pengeluaran-advertiser')->withInput();
+            return redirect()->to('/dashboard/advertiser/tambah-data-pengeluaran-advertiser')->withInput();
         } else {
             $data = [
                 'tanggal' => $tanggal,
@@ -243,7 +253,7 @@ class AdvertiserController extends BaseController
             ];
             $this->pengeluaranadv->insert($data);
             session()->setFlashdata('success', 'Data berhasil ditambahkan');
-            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser/tambah-data-pengeluaran-advertiser');
+            return redirect()->to('/dashboard/advertiser/tambah-data-pengeluaran-advertiser');
         }
     }
     public  function editpengeluaran($id)

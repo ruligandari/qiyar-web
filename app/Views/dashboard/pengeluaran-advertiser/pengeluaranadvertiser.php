@@ -4,6 +4,7 @@
 <?= $this->section('header'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" type="text/css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" type="text/css">
 <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.1/css/dataTables.dateTime.min.css" type="text/css">
@@ -63,26 +64,19 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table border="0" cellspacing="5" cellpadding="5">
-                    <tbody>
-                        <tr>
-                            <td>Dari :</td>
-                            <td><input type="text" id="min" name="min"></td>
-                        </tr>
-                        <tr>
-                            <td>Sampai :</td>
-                            <td><input type="text" id="max" name="max"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- 
-                <div class="form-group">
-                    <label for="dateRange">Rentang Tanggal:</label>
-                    <input type="text" id="dateRange" class="form-control">
+            <div class="form-group">
+                <label class="form-label">Filter Berdasarkan Tanggal:</label>
+                <div class="input-group" style="width: 16rem;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                    <input type="text" name="dates" id="dates" class="form-control form-control-sm" value="">
                 </div>
-                <br> -->
+            </div>
 
+            <div class="table-responsive">
                 <table id="table" class="table table-sm table-bordered" width="100%">
                     <thead>
                         <tr>
@@ -131,14 +125,47 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
 <script>
+    $(function() {
+
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('input[name="dates"]').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $('#dates').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Semua': [moment().subtract(100, 'years'), moment()],
+                'Hari Ini': [moment(), moment()],
+                'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
+                '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
+                'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+                'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+
     $(document).ready(function() {
         let table = $('#table').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
                 url: '<?= base_url('dashboard/advertiser/pengeluaran-advertiser/list-pengeluaran') ?>',
-                method: 'POST'
+                method: 'POST',
+                data: function(d) {
+                    d.dates = $('input[name="dates"]').val();
+                },
             },
             dom: 'Bfrtip',
             buttons: [{
@@ -190,6 +217,11 @@
                     orderable: false
                 },
             ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Semua']
+            ], // Pilihan jumlah data per halaman, termasuk "Semua"
+            pageLength: -1,
             order: [],
             columnDefs: [{
                 targets: -1,
@@ -223,6 +255,10 @@
                 // Panggil fungsi sumColumn lagi ketika tabel di-filter atau di-sort
                 table.on('search.dt draw.dt', sumColumn);
             },
+        });
+
+        $('#dates').change(function(event) {
+            table.ajax.reload();
         });
 
     });
@@ -276,6 +312,7 @@
         });
     }
 </script>
+
 
 <script>
     let minDate, maxDate;
@@ -454,4 +491,5 @@
         });
     <?php endif ?>
 </script>
+
 <?= $this->endSection(); ?>
