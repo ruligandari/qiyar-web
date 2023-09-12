@@ -72,13 +72,14 @@
                             </tbody>
                         </table>
                         <br>
-                        <table class="table table-bordered" id="table-stok" width="100%" cellspacing="0">
+                        <table class="table table-sm table-bordered" id="table-stok" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>Tanggal</th>
                                     <th>Nama Barang</th>
                                     <th>Qty</th>
+                                    <th>Jenis Barang Masuk</th>
                                     <th>Bukti Upload</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -91,6 +92,7 @@
                                         <td><?= $data['tanggal'] ?></td>
                                         <td><?= $data['nama_barang'] ?></td>
                                         <td><?= number_format($data['qty'], 0, ',', '.') ?></td>
+                                        <td><?= $data['jenis_barang_masuk'] ?></td>
                                         <td><a href="<?= base_url('bukti-barang-masuk-jkt/') . $data['upload_bukti'] ?>" target="_blank">
                                                 <img src="<?= base_url('bukti-barang-masuk-jkt/') . $data['upload_bukti'] ?>" alt="" style="height:50px; width:50px"></a></td>
                                         <td class="text-center">
@@ -105,7 +107,7 @@
                                     <td colspan="2"></td>
                                     <td><b>Total Qty :</b></td>
                                     <td id="totalSum"></td>
-                                    <td colspan="2"></td>
+                                    <td colspan="3"></td>
                                 </tr>
                             </tfoot>
                         </table>

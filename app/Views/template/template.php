@@ -50,7 +50,7 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '7' || session()->get('role') == '3') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '7' || session()->get('role') == '3' || session()->get('role') == '2') : ?>
                 <div class="sidebar-heading text-white">
                     Warehouse
                 </div>
@@ -69,7 +69,7 @@
                     </div>
                 </li>
             <?php endif; ?>
-            <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading text-white">
@@ -80,11 +80,6 @@
                         <i class="fas fa-fw fa-file"></i>
                         <span>Karyawan Advertiser</span></a>
                 </li>
-                <!-- <li class="nav-item <?= $title == 'Data Advertiser' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/data-advertiser') ?>">
-                        <i class="fas fa-fw fa-file"></i>
-                        <span>Data Advertiser</span></a>
-                </li> -->
             <?php endif; ?>
             <?php if (session()->get('role') == '1' || session()->get('role') == '5' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
                 <li class="nav-item <?= $title == 'Pengeluaran Advertiser' ? 'active' : '' ?>">

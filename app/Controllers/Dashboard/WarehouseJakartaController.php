@@ -306,6 +306,7 @@ class WarehouseJakartaController extends BaseController
         $tanggal = $this->request->getPost('tanggal');
         $nama_barang_form = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
+        $jenis_barang_masuk = $this->request->getPost('jenis_barang_masuk');
         $upload_bukti = $this->request->getFile('upload_bukti');
 
         // cek apakah ada file yang diupload
@@ -326,6 +327,7 @@ class WarehouseJakartaController extends BaseController
                 'tanggal' => $tanggal,
                 'nama_barang' => $nama_barang,
                 'qty' => $qty,
+                'jenis_barang_masuk' => $jenis_barang_masuk,
                 'upload_bukti' => $namaFile
             ];
             // update tabel barang_masuk

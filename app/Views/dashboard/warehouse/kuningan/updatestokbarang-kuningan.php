@@ -37,6 +37,14 @@
           </select>
         </div>
         <div class="form-group">
+          <label for="formGroupExampleInput">Jenis Barang Masuk</label>
+          <select class="form-control" name="jenis_barang_masuk" id="">
+            <option value="0" selected>Pilih Jenis Barang Masuk</option>
+            <option value="Barang Return">Barang Return</option>
+            <option value="Barang Baru">Barang Baru</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label for="formGroupExampleInput">Qty</label>
           <input type="text" name="qty" placeholder="Masukan Qty" class="form-control" required>
         </div>

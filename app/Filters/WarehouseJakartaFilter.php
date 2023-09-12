@@ -25,9 +25,7 @@ class WarehouseJakartaFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (session()->get('role') == '7') {
-            // buka saja
-        } else if (session()->get('role') == '1') {
+        if (session()->get('role') == '7' || session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '3') {
         } else {
             return redirect()->back();
         }
