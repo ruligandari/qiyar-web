@@ -76,7 +76,12 @@
                         </tr>
                     </tbody>
                 </table>
-                <br>
+                <!-- 
+                <div class="form-group">
+                    <label for="dateRange">Rentang Tanggal:</label>
+                    <input type="text" id="dateRange" class="form-control">
+                </div>
+                <br> -->
 
                 <table id="table" class="table table-sm table-bordered" width="100%">
                     <thead>
@@ -91,6 +96,15 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
+
+                    <tfoot>
+                        <tr>
+                            <th colspan="5"></th>
+                            <th style="text-align:right">Total:</th>
+                            <th id="totalSum"></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -101,7 +115,7 @@
 
 <?= $this->section('script'); ?>
 
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
 <script src="https://cdn.datatables.net/datetime/1.5.1/js/dataTables.dateTime.min.js"></script>
@@ -119,7 +133,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#table').DataTable({
+        let table = $('#table').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -180,8 +194,37 @@
             columnDefs: [{
                 targets: -1,
                 orderable: false
-            }, ]
+            }, ],
+            initComplete: function() {
+                // Fungsi untuk menghitung jumlah total kolom "jumlah"
+                function sumColumn() {
+                    let sum = table.column(6, {
+                        search: 'applied'
+                    }).data().reduce(function(acc, curr) {
+                        let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka
+                        return acc + numericValue;
+                    }, 0);
+
+                    // Format jumlah total sebagai mata uang Indonesia
+                    let formattedSum = sum.toLocaleString('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0, // Atur ini ke 0 untuk menghilangkan angka di belakang koma
+                        maximumFractionDigits: 2
+                    });
+
+                    // Tampilkan jumlah total di elemen HTML dengan ID "totalSum"
+                    $('#totalSum').html(formattedSum);
+                }
+
+                // Panggil fungsi sumColumn saat tabel selesai dimuat
+                sumColumn();
+
+                // Panggil fungsi sumColumn lagi ketika tabel di-filter atau di-sort
+                table.on('search.dt draw.dt', sumColumn);
+            },
         });
+
     });
 
     function deleteRecord(id) {

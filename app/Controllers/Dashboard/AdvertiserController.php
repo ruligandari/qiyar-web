@@ -55,7 +55,9 @@ class AdvertiserController extends BaseController
         return DataTable::of($builder)->addNumbering('no')->add('action', function ($row) {
             return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/advertiser/pengeluaran-advertiser/edit/') . $row->id_pengeluaran . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
             <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id_pengeluaran . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
-        }, 'last')->toJson(true);
+        }, 'last')->format('jumlah', function ($value) {
+            return number_format($value, 0, ',', '.');
+        })->toJson(true);
     }
 
     public function pengeluaranadvertiser()
