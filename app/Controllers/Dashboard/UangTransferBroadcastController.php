@@ -4,6 +4,7 @@ namespace App\Controllers\Dashboard;
 
 use App\Controllers\BaseController;
 use DateTime;
+use \Hermawan\DataTables\DataTable;
 
 class UangTransferBroadcastController extends BaseController
 {
@@ -89,7 +90,7 @@ class UangTransferBroadcastController extends BaseController
             'title' => 'Uang Transfer Broadcast',
             'data' => $uangtransferbroadcast,
         ];
-        return view('dashboard/broadcast/uang-transfer-broadcast/editdatauangtransferbroadcast', $data);
+        return view('dashboard/uang-transfer-broadcast/editdatauangtransferbroadcast', $data);
     }
 
     public function update()
@@ -162,5 +163,50 @@ class UangTransferBroadcastController extends BaseController
             'uangtransferbroadcast' => $uangtransferbroadcast
         ];
         return view('dashboard/uang-transfer-advertiser/uang-transfer-advertiser', $data);
+    }
+
+    public function listUangTransferAdv()
+    {
+        $db = db_connect();
+        $builder = $db->table('uang_transfer_broadcast')->where('jenis_transfer', 'Iklan')->select('id, tanggal, nama_konsumen, bank_penerima, jenis_transfer, harga_total, upload_bukti');
+        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+            // cek data diterima atau tidak
+            if ($request->dates) {
+                // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                $dates = explode(' - ', $request->dates);
+                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+            }
+        })->format('harga_total', function ($value) {
+            return number_format($value, 0, ',', '.');
+        })->format('upload_bukti', function ($value) {
+            return '<a href="' . base_url('bukti_pemasukan_broadcast/') . $value . '" target="_blank">
+            <img src="' . base_url('bukti_pemasukan_broadcast/') . $value . '" alt="" style="height:50px; width:50px"></a>';
+        })->toJson(true);
+    }
+
+    public function listUangTransferBc()
+    {
+        $db = db_connect();
+        $builder = $db->table('uang_transfer_broadcast')->select('id, tanggal, nama_konsumen, bank_penerima, jenis_transfer, harga_total, upload_bukti');
+        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+            // cek data diterima atau tidak
+            if ($request->dates) {
+                // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                $dates = explode(' - ', $request->dates);
+                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+            }
+        })->format('harga_total', function ($value) {
+            return number_format($value, 0, ',', '.');
+        })->add('action', function ($row) {
+            return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/broadcast/uang-transfer-broadcast/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
+            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
+        }, 'last')->format('upload_bukti', function ($value) {
+            return '<a href="' . base_url('bukti_pemasukan_broadcast/') . $value . '" target="_blank">
+            <img src="' . base_url('bukti_pemasukan_broadcast/') . $value . '" alt="" style="height:50px; width:50px"></a>';
+        })->toJson(true);
     }
 }

@@ -64,20 +64,18 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table border="0" cellspacing="5" cellpadding="5">
-                    <tbody>
-                        <tr>
-                            <td>Dari :</td>
-                            <td><input type="text" id="min" name="min"></td>
-                        </tr>
-                        <tr>
-                            <td>Sampai :</td>
-                            <td><input type="text" id="max" name="max"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br>
-                <table class="table table-bordered" id="example1" width="100%" cellspacing="0">
+                <div class="form-group">
+                    <label class="form-label"><b>Filter Data :</b></label>
+                    <div class="input-group" style="width: 16rem;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                        <input type="text" name="dates" id="dates" class="form-control form-control-sm" value="">
+                    </div>
+                </div>
+                <table class="table table-bordered" id="table" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -93,34 +91,7 @@
                             <?php endif; ?>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php
-                        $no = 1;
-                        foreach ($pengeluaranbroadcast as $data) :
-                        ?>
-                            <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= $data['tanggal'] ?></td>
-                                <td><?= $data['waktu'] ?></td>
-                                <td><?= $data['jenis_pengeluaran'] ?></td>
-                                <td><?= $data['bank_tujuan'] ?></td>
-                                <td><?= $data['nama_penerima'] ?></td>
-                                <td><a href="<?= base_url('bukti_pengeluaran_broadcast/') . $data['upload_bukti'] ?>" target="_blank">
-                                        <img src="<?= base_url('bukti_pengeluaran_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></a></td>
-                                </td>
-                                <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
-                                </td>
-                                <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
-                                    <td class="text-center">
-                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/broadcast/pengeluaran-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                        <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                    </td>
-                                <?php endif ?>
-                            </tr>
-                        <?php
-                        endforeach
-                        ?>
-                    </tbody>
+
                     <tfoot>
                         <tr>
                             <td colspan="6"></td>
@@ -155,47 +126,53 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
 <script>
-    let minDate, maxDate;
+    $(function() {
 
+        var start = moment().subtract(29, 'days');
+        var end = moment();
 
-    // Custom filtering function which will search data in column four between two values
-    DataTable.ext.search.push(function(settings, data, dataIndex) {
-        let min = minDate.val();
-        let max = maxDate.val();
-        let date = new Date(data[1]);
-
-        if (
-            (min === null && max === null) ||
-            (min === null && date <= max) ||
-            (min <= date && max === null) ||
-            (min <= date && date <= max)
-        ) {
-            // Jika data sesuai dengan kriteria filter
-            return true;
+        function cb(start, end) {
+            $('input[name="dates"]').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
-        return false;
-    });
 
-    // Create date inputs
-    minDate = new DateTime('#min', {
-        format: 'MMMM Do YYYY'
-    });
-    maxDate = new DateTime('#max', {
-        format: 'MMMM Do YYYY'
-    });
+        $('#dates').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Semua': [moment().subtract(1, 'years'), moment()],
+                'Hari Ini': [moment(), moment()],
+                'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
+                '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
+                'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+                'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
 
-    let currentDate = new Date();
-    let formattedDate = currentDate.toISOString().split('T')[0];
+        cb(start, end);
+
+    });
 
     $(document).ready(function() {
-        // DataTables initialisation
-        let table = $('#example1').DataTable({
-            dom: 'Bfrtip',
+        let table = $('#table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '<?= base_url('dashboard/broadcast/pengeluaran-broadcast/list-pengeluaran-bc') ?>',
+                method: 'POST',
+                data: function(d) {
+                    d.dates = $('input[name="dates"]').val();
+                },
+            },
+            dom: '<"button-container"lBfrtip>',
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Broadcast',
+                    title: 'Data Pemasukan Broadcast - ' + formattedDate,
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5, 6, 7],
                         format: {
@@ -215,7 +192,7 @@
                 {
                     extend: 'pdfHtml5',
                     footer: true,
-                    title: 'Data Pengeluaran Broadcast',
+                    title: 'Data Pemasukan Broadcast - ' + formattedDate,
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5, 6, 7],
                         format: {
@@ -231,106 +208,133 @@
                     className: 'mb-2',
                 }
             ],
-        });
+            columns: [{
+                    data: 'no',
+                    orderable: false
+                },
+                {
+                    data: 'tanggal'
+                },
+                {
+                    data: 'waktu'
+                },
+                {
+                    data: 'jenis_pengeluaran'
+                },
+                {
+                    data: 'bank_tujuan'
+                },
+                {
+                    data: 'nama_penerima'
+                },
+                {
+                    data: 'upload_bukti'
+                },
 
-        // Sum the "jumlah" column
-        function sumColumn() {
-            let sum = table.column(7, {
-                search: 'applied'
-            }).data().reduce(function(acc, curr) {
-                let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
-                return acc + numericValue;
-            }, 0);
+                {
+                    data: 'jumlah'
+                },
+                {
+                    data: 'action',
+                    orderable: false
+                },
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Semua']
+            ], // Pilihan jumlah data per halaman, termasuk "Semua"
+            pageLength: 10,
+            order: [],
+            columnDefs: [{
+                targets: -1,
+                orderable: false
+            }, ],
+            initComplete: function() {
+                // Fungsi untuk menghitung jumlah total kolom "jumlah"
+                function sumColumn() {
+                    let sum = table.column(7, {
+                        search: 'applied'
+                    }).data().reduce(function(acc, curr) {
+                        let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka
+                        return acc + numericValue;
+                    }, 0);
 
-            // Format the sum as Indonesian currency
-            let formattedSum = sum.toLocaleString('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
-                maximumFractionDigits: 2
-            });
+                    // Format jumlah total sebagai mata uang Indonesia
+                    let formattedSum = sum.toLocaleString('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0, // Atur ini ke 0 untuk menghilangkan angka di belakang koma
+                        maximumFractionDigits: 2
+                    });
 
-            // Display the formatted sum
-            $('#totalSum').html(formattedSum);
-        }
+                    // Tampilkan jumlah total di elemen HTML dengan ID "totalSum"
+                    $('#totalSum').html(formattedSum);
+                }
 
-        // Call sumColumn when searching/filtering is applied
-        table.on('search.dt', function() {
-            sumColumn();
-        });
-
-        // Initial sum when the page loads
-        sumColumn();
-
-        table.buttons().container()
-            .appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-        // Refilter the table
-        document.querySelectorAll('#min, #max').forEach((el) => {
-            el.addEventListener('change', () => {
-                table.draw();
+                // Panggil fungsi sumColumn saat tabel selesai dimuat
                 sumColumn();
-            });
+
+                // Panggil fungsi sumColumn lagi ketika tabel di-filter atau di-sort
+                table.on('search.dt draw.dt', sumColumn);
+            },
         });
 
+        $('#dates').change(function(event) {
+            table.ajax.reload();
+        });
 
     });
-</script>
-<script>
-    // Tangkap semua elemen dengan class delete-button
-    const deleteButtons = document.querySelectorAll(".delete-button");
 
-    deleteButtons.forEach((button) => {
-        button.addEventListener("click", function() {
-            const id = this.getAttribute("data-id");
+    let currentDate = new Date();
+    let formattedDate = currentDate.toISOString().split('T')[0];
 
-            Swal.fire({
-                title: "Apakah Anda yakin akan menghapus produk ini?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, hapus!",
-                cancelButtonText: "Gak Jadi Ah!",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Kirim permintaan hapus menggunakan Ajax
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url('dashboard/pengeluaran-broadcast/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
-                        data: {
-                            id: id
-                        },
-                        success: function(response) {
-                            var data = JSON.parse(response);
-                            if (data.success) {
-                                Swal.fire(
-                                    "Dihapus!",
-                                    "Data Pengeluaran Broadcast Berhasil Dihapus",
-                                    "success"
-                                ).then(() => {
-                                    // Muat ulang halaman setelah penghapusan
-                                    location.reload();
-                                });
-                            } else {
-                                Swal.fire(
-                                    "Error!",
-                                    "Failed to delete the item.",
-                                    "error"
-                                );
-                            }
-                        },
-                        error: function() {
+    function deleteRecord(id) {
+        Swal.fire({
+            title: "Apakah Anda yakin akan menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Tidak, batalkan!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kirim permintaan hapus menggunakan Ajax
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('dashboard/broadcast/pengeluaran-broadcast/delete') ?>",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        if (data.success) {
+                            Swal.fire(
+                                "Dihapus!",
+                                "Data Berhasil Dihapus",
+                                "success"
+                            ).then(() => {
+                                // Muat ulang halaman setelah penghapusan
+                                location.reload();
+                            });
+                        } else {
                             Swal.fire(
                                 "Error!",
-                                "An error occurred while deleting the item.",
+                                "Gagal menghapus data.",
                                 "error"
                             );
-                        },
-                    });
-                }
-            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire(
+                            "Error!",
+                            "Terjadi kesalahan saat menghapus data.",
+                            "error"
+                        );
+                    },
+                });
+            }
         });
-    });
+    }
 </script>
 <?= $this->endSection(); ?>

@@ -60,21 +60,20 @@
             </div>
         </div>
         <div class="card-body">
+            <div class="form-group">
+                <label class="form-label"><b>Filter Data :</b></label>
+                <div class="input-group" style="width: 16rem;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                    <input type="text" name="dates" id="dates" class="form-control form-control-sm" value="">
+                </div>
+            </div>
             <div class="table-responsive">
-                <table border="0" cellspacing="5" cellpadding="5">
-                    <tbody>
-                        <tr>
-                            <td>Dari :</td>
-                            <td><input type="text" id="min" name="min"></td>
-                        </tr>
-                        <tr>
-                            <td>Sampai :</td>
-                            <td><input type="text" id="max" name="max"></td>
-                        </tr>
-                    </tbody>
-                </table>
                 <br>
-                <table class="table table-bordered" id="example1" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="table" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -86,26 +85,6 @@
                             <th>Harga total</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php
-                        $no = 1;
-                        foreach ($uangtransferbroadcast as $data) :
-                        ?>
-                            <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= $data['tanggal'] ?></td>
-                                <td><?= $data['nama_konsumen'] ?></td>
-                                <td><?= $data['bank_penerima'] ?></td>
-                                <td><?= $data['jenis_transfer'] ?></td>
-                                <td><a href="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" target="_blank">
-                                        <img src="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></a></td>
-                                </td>
-                                <td><?= number_format($data['harga_total'], 0, ',', '.') ?></td>
-                            </tr>
-                        <?php
-                        endforeach
-                        ?>
-                    </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="5"></td>
@@ -139,47 +118,53 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
 <script>
-    let minDate, maxDate;
+    $(function() {
 
+        var start = moment().subtract(29, 'days');
+        var end = moment();
 
-    // Custom filtering function which will search data in column four between two values
-    DataTable.ext.search.push(function(settings, data, dataIndex) {
-        let min = minDate.val();
-        let max = maxDate.val();
-        let date = new Date(data[1]);
-
-        if (
-            (min === null && max === null) ||
-            (min === null && date <= max) ||
-            (min <= date && max === null) ||
-            (min <= date && date <= max)
-        ) {
-            // Jika data sesuai dengan kriteria filter
-            return true;
+        function cb(start, end) {
+            $('input[name="dates"]').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
-        return false;
-    });
 
-    // Create date inputs
-    minDate = new DateTime('#min', {
-        format: 'MMMM Do YYYY'
-    });
-    maxDate = new DateTime('#max', {
-        format: 'MMMM Do YYYY'
-    });
+        $('#dates').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Semua': [moment().subtract(1, 'years'), moment()],
+                'Hari Ini': [moment(), moment()],
+                'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
+                '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
+                'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+                'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
 
-    let currentDate = new Date();
-    let formattedDate = currentDate.toISOString().split('T')[0];
+        cb(start, end);
+
+    });
 
     $(document).ready(function() {
-        // DataTables initialisation
-        let table = $('#example1').DataTable({
-            dom: 'Bfrtip',
+        let table = $('#table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '<?= base_url('dashboard/advertiser/uang-transfer-advertiser/list-uang-transfer-adv') ?>',
+                method: 'POST',
+                data: function(d) {
+                    d.dates = $('input[name="dates"]').val();
+                },
+            },
+            dom: '<"button-container"lBfrtip>',
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
-                    title: 'Data Uang Transfer Advertiser - ' + formattedDate,
+                    title: 'Data Uang Advertiser - ' + formattedDate,
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5, 6],
                         format: {
@@ -215,107 +200,76 @@
                     className: 'mb-2',
                 }
             ],
-        });
+            columns: [{
+                    data: 'no',
+                    orderable: false
+                },
+                {
+                    data: 'tanggal'
+                },
+                {
+                    data: 'nama_konsumen'
+                },
+                {
+                    data: 'bank_penerima'
+                },
+                {
+                    data: 'jenis_transfer'
+                },
+                {
+                    data: 'upload_bukti'
+                },
+                {
+                    data: 'harga_total'
+                },
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Semua']
+            ], // Pilihan jumlah data per halaman, termasuk "Semua"
+            pageLength: 10,
+            order: [],
+            columnDefs: [{
+                targets: -1,
+                orderable: false
+            }, ],
+            initComplete: function() {
+                // Fungsi untuk menghitung jumlah total kolom "jumlah"
+                function sumColumn() {
+                    let sum = table.column(6, {
+                        search: 'applied'
+                    }).data().reduce(function(acc, curr) {
+                        let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka
+                        return acc + numericValue;
+                    }, 0);
 
-        // Sum the "jumlah" column
-        function sumColumn() {
-            let sum = table.column(6, {
-                search: 'applied'
-            }).data().reduce(function(acc, curr) {
-                let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
-                return acc + numericValue;
-            }, 0);
-
-            // Format the sum as Indonesian currency
-            let formattedSum = sum.toLocaleString('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
-                maximumFractionDigits: 2
-            });
-
-            // Display the formatted sum
-            $('#totalSum').html(formattedSum);
-        }
-
-        // Call sumColumn when searching/filtering is applied
-        table.on('search.dt', function() {
-            sumColumn();
-        });
-
-        // Initial sum when the page loads
-        sumColumn();
-
-        table.buttons().container()
-            .appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-        // Refilter the table
-        document.querySelectorAll('#min, #max').forEach((el) => {
-            el.addEventListener('change', () => {
-                table.draw();
-                sumColumn();
-            });
-        });
-
-
-    });
-</script>
-<script>
-    // Tangkap semua elemen dengan class delete-button
-    const deleteButtons = document.querySelectorAll(".delete-button");
-
-    deleteButtons.forEach((button) => {
-        button.addEventListener("click", function() {
-            const id = this.getAttribute("data-id");
-
-            Swal.fire({
-                title: "Apakah Anda yakin akan menghapus produk ini?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, hapus!",
-                cancelButtonText: "Gak Jadi Ah!",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Kirim permintaan hapus menggunakan Ajax
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url('dashboard/pemasukan-broadcast/delete') ?>", // Ganti dengan URL tindakan penghapusan di Controller Anda
-                        data: {
-                            id: id
-                        },
-                        success: function(response) {
-                            var data = JSON.parse(response);
-                            console.log(data);
-                            if (data.success) {
-                                Swal.fire(
-                                    "Dihapus!",
-                                    data.msg,
-                                    "success"
-                                ).then(() => {
-                                    // Muat ulang halaman setelah penghapusan
-                                    location.reload();
-                                });
-                            } else {
-                                Swal.fire(
-                                    "Error!",
-                                    data.msg,
-                                    "error"
-                                );
-                            }
-                        },
-                        error: function() {
-                            Swal.fire(
-                                "Error!",
-                                "An error occurred while deleting the item.",
-                                "error"
-                            );
-                        },
+                    // Format jumlah total sebagai mata uang Indonesia
+                    let formattedSum = sum.toLocaleString('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0, // Atur ini ke 0 untuk menghilangkan angka di belakang koma
+                        maximumFractionDigits: 2
                     });
+
+                    // Tampilkan jumlah total di elemen HTML dengan ID "totalSum"
+                    $('#totalSum').html(formattedSum);
                 }
-            });
+
+                // Panggil fungsi sumColumn saat tabel selesai dimuat
+                sumColumn();
+
+                // Panggil fungsi sumColumn lagi ketika tabel di-filter atau di-sort
+                table.on('search.dt draw.dt', sumColumn);
+            },
         });
+
+        $('#dates').change(function(event) {
+            table.ajax.reload();
+        });
+
     });
+
+    let currentDate = new Date();
+    let formattedDate = currentDate.toISOString().split('T')[0];
 </script>
 <?= $this->endSection(); ?>

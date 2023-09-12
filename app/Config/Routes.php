@@ -101,6 +101,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
 
         // uang transfer adv
         $routes->get('uang-transfer-advertiser', 'Dashboard\UangTransferBroadcastController::uangtransferadvertiser');
+        $routes->post('uang-transfer-advertiser/list-uang-transfer-adv', 'Dashboard\UangTransferBroadcastController::listUangTransferAdv');
     });
 
     $routes->group('warehouse-kuningan',  ['filter' => 'WarehouseKuninganFilter'], function ($routes) {
@@ -158,6 +159,8 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->post('uang-transfer-broadcast/update', 'Dashboard\UangTransferBroadcastController::update');
         $routes->post('uang-transfer-broadcast/delete', 'Dashboard\UangTransferBroadcastController::delete');
 
+        $routes->post('uang-transfer-broadcast/list-uang-transfer-bc', 'Dashboard\UangTransferBroadcastController::listUangTransferBc');
+
         // pengeluaran bc
         $routes->get('pengeluaran-broadcast', 'Dashboard\PengeluaranBroadcastController::index');
         $routes->get('pengeluaran-broadcast/tambah', 'Dashboard\PengeluaranBroadcastController::tambahdatapengeluaranbroadcast');
@@ -166,6 +169,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->post('pengeluaran-broadcast/update', 'Dashboard\PengeluaranBroadcastController::update');
         $routes->post('pengeluaran-broadcast/delete', 'Dashboard\PengeluaranBroadcastController::delete');
 
+        $routes->post('pengeluaran-broadcast/list-pengeluaran-bc', 'Dashboard\PengeluaranBroadcastController::listPengeluaranBc');
         // pemasukan bc
         $routes->get('pemasukan-broadcast', 'Dashboard\PemasukanBroadcastController::index');
         $routes->get('pemasukan-broadcast/tambah', 'Dashboard\PemasukanBroadcastController::tambahdatapemasukanbroadcast');
@@ -173,6 +177,8 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->post('pemasukan-broadcast/update', 'Dashboard\PemasukanBroadcastController::update');
         $routes->post('pemasukan-broadcast/add', 'Dashboard\PemasukanBroadcastController::add');
         $routes->post('pemasukan-broadcast/delete', 'Dashboard\PemasukanBroadcastController::delete');
+
+        $routes->post('pemasukan-broadcast/list-pemasukan-bc', 'Dashboard\PemasukanBroadcastController::listPemasukanBc');
     });
 
     $routes->group('lamaran', function ($routes) {
