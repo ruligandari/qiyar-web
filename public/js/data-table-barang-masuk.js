@@ -1,97 +1,175 @@
-let minDate, maxDate;
+$(function() {
 
+        var start = moment().subtract(29, 'days');
+        var end = moment();
 
-// Custom filtering function which will search data in column four between two values
-DataTable.ext.search.push(function(settings, data, dataIndex) {
-    let min = minDate.val();
-    let max = maxDate.val();
-    let date = new Date(data[1]);
+        function cb(start, end) {
+            $('input[name="datesBarangMasuk"]').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
 
-    if (
-        (min === null && max === null) ||
-        (min === null && date <= max) ||
-        (min <= date && max === null) ||
-        (min <= date && date <= max)
-    ) {
-        // Jika data sesuai dengan kriteria filter
-        return true;
-    }
-    return false;
-});
-
-// Create date inputs
-minDate = new DateTime('#min', {
-    format: 'MMMM Do YYYY'
-});
-maxDate = new DateTime('#max', {
-    format: 'MMMM Do YYYY'
-});
-
-$(document).ready(function() {
-    // DataTables initialisation for example1
-    let table1 = $('#example1').DataTable({
-        dom: 'Bfrtip',
-        buttons: [{
-                extend: 'excelHtml5',
-                footer: true,
-                title: 'Data Barang Warehouse Kuningan',
-                exportOptions: {
-                    columns: [0, 1, 2, 3]
-                },
-                className: 'mb-2',
-                // ubah nama file ketika di download
-            },
-            {
-                extend: 'pdfHtml5',
-                footer: true,
-                title: 'Data Pengeluaran Advertiser',
-                exportOptions: {
-                    columns: [0, 1, 2, 3]
-                },
-                className: 'mb-2',
+        $('#datesBarangMasuk').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Semua': [moment().subtract(1, 'years'), moment()],
+                'Hari Ini': [moment(), moment()],
+                'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
+                '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
+                'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+                'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             }
-        ],
+        }, cb);
+
+        cb(start, end);
+
     });
 
-    // Sum the "jumlah" column for example1
-    function sumColumn(table1) {
-        let sum = table1.column(3, {
-            search: 'applied'
-        }).data().reduce(function(acc, curr) {
-            let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse the formatted number
-            return acc + numericValue;
-        }, 0);
+    var urlTable = $('#urlBarangMasuk').val();
+    var urlDelete = $('#urlDelete').val();
 
-        // format the sum as number ex: 10000 to 10.000
-        let formattedSum = sum.toLocaleString('id-ID', {
-            minimumFractionDigits: 0, // Set this to 0 to remove trailing zeros
-            maximumFractionDigits: 2
+    $(document).ready(function() {
+        let table = $('#table1').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: urlTable,
+                method: 'POST',
+                data: function(d) {
+                    d.dates = $('input[name="datesBarangMasuk"]').val();
+                },
+            },
+            dom: '<"button-container"lBfrtip>',
+            buttons: [{
+                    extend: 'excelHtml5',
+                    footer: true,
+                    title: 'Data Barang Masuk - ' + formattedDate,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3],
+                    },
+                    className: 'mb-2',
+                    // ubah nama file ketika di download
+
+                },
+                {
+                    extend: 'pdfHtml5',
+                    footer: true,
+                    title: 'Data Barang Masuk - ' + formattedDate,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3],
+                    },
+                    className: 'mb-2',
+                }
+            ],
+            columns: [{
+                    data: 'no',
+                    orderable: false
+                },
+                {
+                    data: 'tanggal'
+                },
+                {
+                    data: 'nama_barang'
+                },
+                {
+                    data: 'qty'
+                },
+                {
+                    data: 'action'
+                },
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Semua']
+            ], // Pilihan jumlah data per halaman, termasuk "Semua"
+            pageLength: 10,
+            order: [],
+            columnDefs: [{
+                targets: -1,
+                orderable: false
+            }, ],
+            initComplete: function() {
+                // Fungsi untuk menghitung jumlah total kolom "jumlah"
+                function sumColumn() {
+                    let sum = table.column(3, {
+                        search: 'applied'
+                    }).data().reduce(function(acc, curr) {
+                        let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka
+                        return acc + numericValue;
+                    }, 0);
+
+                    // Format jumlah total sebagai mata uang Indonesia
+                    let formattedSum = sum.toLocaleString('id-ID', {
+                        minimumFractionDigits: 0, // Atur ini ke 0 untuk menghilangkan angka di belakang koma
+                        maximumFractionDigits: 2
+                    });
+
+                    // Tampilkan jumlah total di elemen HTML dengan ID "totalSum"
+                    $('#totalSum').html(formattedSum);
+                }
+
+                // Panggil fungsi sumColumn saat tabel selesai dimuat
+                sumColumn();
+
+                // Panggil fungsi sumColumn lagi ketika tabel di-filter atau di-sort
+                table.on('search.dt draw.dt', sumColumn);
+            },
         });
 
+        $('#datesBarangMasuk').change(function(event) {
+            table.ajax.reload();
+        });
 
-        // Display the formatted sum
-        table1.table().footer().querySelector('#totalSum').innerHTML = formattedSum;
+    });
+
+    let currentDate = new Date();
+    let formattedDate = currentDate.toISOString().split('T')[0];
+
+    function deleteRecord(id) {
+        Swal.fire({
+            title: "Apakah Anda yakin akan menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Tidak, batalkan!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kirim permintaan hapus menggunakan Ajax
+                $.ajax({
+                    type: "POST",
+                    url: urlDelete,
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        if (data.success) {
+                            Swal.fire(
+                                "Dihapus!",
+                                "Data Berhasil Dihapus",
+                                "success"
+                            ).then(() => {
+                                // Muat ulang halaman setelah penghapusan
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                "Error!",
+                                "Gagal menghapus data.",
+                                "error"
+                            );
+                        }
+                    },
+                    error: function() {
+                        Swal.fire(
+                            "Error!",
+                            "Terjadi kesalahan saat menghapus data.",
+                            "error"
+                        );
+                    },
+                });
+            }
+        });
     }
-
-    // Call sumColumn when searching/filtering is applied for example1
-    table1.on('search.dt', function() {
-        sumColumn(table1);
-    });
-
-    // Initial sum when the page loads for example1
-    sumColumn(table1);
-
-    // Move buttons container for example1
-    table1.buttons().container()
-        .appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-    // Refilter the table and recalculate the sum for example1
-    document.querySelectorAll('#min, #max').forEach((el) => {
-        el.addEventListener('change', () => {
-            table1.draw();
-            sumColumn(table1);
-        });
-    });
-
-
-});

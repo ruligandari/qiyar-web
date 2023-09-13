@@ -70,21 +70,21 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label"><b>Filter Data :</b></label>
+                        <div class="input-group" style="width: 16rem;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="far fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                            <input type="text" name="datesBarangMasuk" id="datesBarangMasuk" class="form-control form-control-sm" value="">
+                        </div>
+                    </div>
                     <div class="table-responsive">
-                        <table border="0" cellspacing="5" cellpadding="5">
-                            <tbody>
-                                <tr>
-                                    <td>Dari :</td>
-                                    <td><input type="text" id="min" name="min"></td>
-                                </tr>
-                                <tr>
-                                    <td>Sampai :</td>
-                                    <td><input type="text" id="max" name="max"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br>
-                        <table class="table table-bordered" id="example1" width="100%" cellspacing="0">
+                        <input type="hidden" value="<?= base_url('dashboard/warehouse-kuningan/list-barang-masuk') ?>" id="urlBarangMasuk">
+                        <input type="hidden" value="<?= base_url('dashboard/warehouse-kuningan/delete') ?>" id="urlDelete">
+                        <table class="table table-bordered" id="table1" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -94,22 +94,6 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                $no = 1;
-                                foreach ($barangmasuk as $data) : ?>
-                                    <tr>
-                                        <td><?= $no++ ?></td>
-                                        <td><?= $data['tanggal'] ?></td>
-                                        <td><?= $data['nama_barang'] ?></td>
-                                        <td><?= number_format($data['qty'], 0, ',', '.') ?></td>
-                                        <td class="text-center">
-                                            <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/warehouse-kuningan/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                            <button class="btn btn-danger delete-button-kng" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/warehouse-kuningan/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="2"></td>
@@ -139,21 +123,21 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label"><b>Filter Data :</b></label>
+                        <div class="input-group" style="width: 16rem;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="far fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                            <input type="text" name="datesBarangKeluar" id="datesBarangKeluar" class="form-control form-control-sm" value="">
+                        </div>
+                    </div>
                     <div class="table-responsive">
-                        <table border="0" cellspacing="5" cellpadding="5">
-                            <tbody>
-                                <tr>
-                                    <td>Dari :</td>
-                                    <td><input type="text" id="minKeluar" name="min"></td>
-                                </tr>
-                                <tr>
-                                    <td>Sampai :</td>
-                                    <td><input type="text" id="maxKeluar" name="max"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br>
-                        <table class="table table-bordered" id="example2" width="100%" cellspacing="0">
+                        <input type="hidden" value="<?= base_url('dashboard/warehouse-kuningan/list-barang-keluar') ?>" id="urlBarangKeluar">
+                        <input type="hidden" value="<?= base_url('dashboard/warehouse-kuningan/keluar/delete') ?>" id="urlDeleteBarangKeluar">
+                        <table class="table table-bordered" id="table2" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -165,25 +149,6 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                $no = 1;
-                                foreach ($barangkeluar as $data) : ?>
-                                    <tr>
-                                        <td><?= $no++ ?></td>
-                                        <td><?= $data['tanggal'] ?></td>
-                                        <td><?= $data['nama_barang'] ?></td>
-                                        <td><?= $data['qty'] ?></td>
-                                        <td><?= $data['total_resi'] ?></td>
-                                        <td><a href="<?= base_url('bukti-barang-masuk-kng/') . $data['bukti_pickup'] ?>" target="_blank">
-                                                <img src="<?= base_url('bukti-barang-masuk-kng/') . $data['bukti_pickup'] ?>" alt="" style="height:50px; width:50px"></a></td>
-                                        <td class="text-center">
-                                            <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/warehouse-kuningan/keluar/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                            <button class="btn btn-danger delete-button-kng-keluar" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/warehouse-kuningan/keluar/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="2"></td>
@@ -222,9 +187,12 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-<script src="<?= base_url('js/sweet-alert.js') ?>"></script>
+
 <script src="<?= base_url('js/data-table-barang-masuk.js') ?>"></script>
 <script src="<?= base_url('js/data-table-barang-keluar.js') ?>"></script>
+<script src="<?= base_url('js/sweet-alert.js') ?>"></script>
 
 <?= $this->endsection(); ?>
