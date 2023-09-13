@@ -25,15 +25,15 @@ $(function() {
 
 });
 
-var urlTable = $('#urlBarangKeluar').val();
-var urlDelete = $('#urlDeleteBarangKeluar').val();
+var urlTableKeluar = $('#urlBarangKeluar').val();
+var urlDeleteKeluar = $('#urlDeleteBarangKeluar').val();
 
 $(document).ready(function() {
     let table = $('#table2').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
-            url: urlTable,
+            url: urlTableKeluar,
             method: 'POST',
             data: function(d) {
                 d.dates = $('input[name="datesBarangKeluar"]').val();
@@ -172,7 +172,7 @@ function deleteRecord(id) {
             // Kirim permintaan hapus menggunakan Ajax
             $.ajax({
                 type: "POST",
-                url: urlDelete,
+                url: urlDeleteKeluar,
                 data: {
                     id: id
                 },
