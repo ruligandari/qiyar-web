@@ -91,22 +91,29 @@ $(function() {
             initComplete: function() {
                 // Fungsi untuk menghitung jumlah total kolom "jumlah"
                 function sumColumn() {
-                    let sum = table.column(3, {
-                        search: 'applied'
-                    }).data().reduce(function(acc, curr) {
-                        let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka
-                        return acc + numericValue;
-                    }, 0);
-
-                    // Format jumlah total sebagai mata uang Indonesia
-                    let formattedSum = sum.toLocaleString('id-ID', {
-                        minimumFractionDigits: 0, // Atur ini ke 0 untuk menghilangkan angka di belakang koma
-                        maximumFractionDigits: 2
-                    });
-
-                    // Tampilkan jumlah total di elemen HTML dengan ID "totalSum"
-                    $('#totalSum').html(formattedSum);
+                    let columnData = table.column(3, { search: 'applied' }).data();
+                    
+                    // Check if columnData is defined and not empty
+                    if (columnData && columnData.length > 0) {
+                        let sum = columnData.reduce(function(acc, curr) {
+                            let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka
+                            return acc + numericValue;
+                        }, 0);
+                
+                        // Format jumlah total sebagai mata uang Indonesia
+                        let formattedSum = sum.toLocaleString('id-ID', {
+                            minimumFractionDigits: 0, // Atur ini ke 0 untuk menghilangkan angka di belakang koma
+                            maximumFractionDigits: 2
+                        });
+                
+                        // Tampilkan jumlah total di elemen HTML dengan ID "totalSum"
+                        $('#totalSum').html(formattedSum);
+                    } else {
+                        // If columnData is undefined or empty, display a default value
+                        $('#totalSum').html('0');
+                    }
                 }
+                
 
                 // Panggil fungsi sumColumn saat tabel selesai dimuat
                 sumColumn();
