@@ -119,7 +119,7 @@
             <div class="container" data-aos="fade-up">
                 <!-- sweet alert -->
 
-                <form method="POST" action="<?= base_url('dashboard/tambah-lamaran') ?>" enctype="multipart/form-data">
+                <form method="POST" action="<?= base_url('tambah-lamaran') ?>" enctype="multipart/form-data">
                     <?= csrf_field(); ?>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Nama Lengkap <b style="color: red">*</b></label>

@@ -35,6 +35,8 @@ $routes->get('/', 'Home::index');
 $routes->get('cekongkir', 'Home::cekongkir');
 $routes->get('lamaran', 'Home::lamaran');
 
+$routes->post('tambah-lamaran', 'Dashboard\LamaranController::tambahdata');
+
 
 // login
 $routes->get('login', 'Admin\LoginController::index');
@@ -188,7 +190,6 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         // lamaran
         $routes->get('/', 'Dashboard\LamaranController::index');
         $routes->post('delete', 'Dashboard\LamaranController::delete');
-        $routes->post('tambah-lamaran', 'Dashboard\LamaranController::tambahdata');
     });
 });
 
