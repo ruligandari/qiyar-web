@@ -28,7 +28,7 @@
         Swal.fire({
             position: 'center',
             icon: 'success',
-            text: 'Data produk berhasil diupdate!',
+            text: '<?= session()->getFlashdata('success') ?>',
             showConfirmButton: false,
             timer: 2000
         })

@@ -20,7 +20,7 @@
       Swal.fire({
         position: 'center',
         icon: 'success',
-        text: 'Data Pengeluaran Advertiser berhasil ditambahkan!',
+        text: <?= session()->getFlashdata('success') ?>,
         showConfirmButton: false,
         timer: 2000
       }).then(function() {
