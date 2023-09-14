@@ -141,11 +141,15 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->post('update', 'Dashboard\WarehouseJakartaController::updateBarangMasuk');
         $routes->post('add', 'Dashboard\WarehouseJakartaController::addBarangMasuk');
 
+        $routes->post('list-barang-masuk-jkt', 'Dashboard\WarehouseJakartaController::listBarangMasuk');
+
         $routes->get('keluar/tambah', 'Dashboard\WarehouseJakartaController::tambahBarangKeluar');
         $routes->post('keluar/add', 'Dashboard\WarehouseJakartaController::addBarangKeluar');
         $routes->get('keluar/edit/(:any)', 'Dashboard\WarehouseJakartaController::editBarangKeluar/$1');
         $routes->post('keluar/update', 'Dashboard\WarehouseJakartaController::updateBarangKeluar');
         $routes->post('keluar/delete', 'Dashboard\WarehouseJakartaController::deleteBarangKeluar');
+
+        $routes->post('list-barang-keluar-jkt', 'Dashboard\WarehouseJakartaController::listBarangKeluarJkt');
 
         $routes->get('stok', 'Dashboard\WarehouseJakartaController::stokBarang');
         $routes->get('stok/tambah', 'Dashboard\WarehouseJakartaController::tambahStokBarang');
@@ -195,27 +199,6 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
 
 // restricted page
 $routes->get('restrictedpage', 'Admin\LoginController::restrictedpage');
-
-// $routes->get('tutup-buku', 'Dashboard\TutupBukuController::index');
-// $routes->get('tutup-buku/tambah', 'Dashboard\TutupBukuController::tambah');
-// $routes->post('tutup-buku/add', 'Dashboard\TutupBukuController::add');
-// $routes->get('tutup-buku/edit/(:any)', 'Dashboard\TutupBukuController::edit/$1');
-// $routes->post('tutup-buku/update', 'Dashboard\TutupBukuController::update');
-// $routes->post('tutup-buku/delete', 'Dashboard\TutupBukuController::delete');
-
-// $routes->get('data-advertiser', 'Dashboard\AdvertiserController::index', ['filter' => 'roleFilter']);
-// $routes->post('data-advertiser/delete', 'Dashboard\AdvertiserController::delete');
-// $routes->get('data-advertiser/edit/(:any)', 'Dashboard\AdvertiserController::edit/$1');
-// $routes->post('data-advertiser/update', 'Dashboard\AdvertiserController::update');
-// $routes->get('tambah-data-advertiser', 'Dashboard\AdvertiserController::tambahdata');
-// $routes->post('tambah-data-advertiser/add', 'Dashboard\AdvertiserController::add');
-
-// $routes->get('data-produk', 'Dashboard\ProdukController::index');
-// $routes->get('tambah-data-produk', 'Dashboard\ProdukController::tambahdata');
-// $routes->post('tambah-data-produk/add', 'Dashboard\ProdukController::add');
-// $routes->get('edit-data-produk/(:any)', 'Dashboard\ProdukController::edit/$1');
-// $routes->post('edit-data-produk/update', 'Dashboard\ProdukController::update');
-// $routes->post('data-produk/delete', 'Dashboard\ProdukController::delete');
 
 
 

@@ -28,6 +28,7 @@ $(function() {
     var urlTable = $('#urlBarangMasuk').val();
     var urlDelete = $('#urlDelete').val();
 
+
     $(document).ready(function() {
         let table = $('#table1').DataTable({
             processing: true,
@@ -145,7 +146,7 @@ $(function() {
             if (result.isConfirmed) {
                 // Kirim permintaan hapus menggunakan Ajax
                 $.ajax({
-                    type: "POST",
+                    method: "POST",
                     url: urlDelete,
                     data: {
                         id: id

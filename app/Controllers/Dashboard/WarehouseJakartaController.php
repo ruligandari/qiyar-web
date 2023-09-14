@@ -3,6 +3,9 @@
 namespace App\Controllers\Dashboard;
 
 use App\Controllers\BaseController;
+use \Hermawan\DataTables\DataTable;
+
+use DateTime;
 
 class WarehouseJakartaController extends BaseController
 {
@@ -57,7 +60,6 @@ class WarehouseJakartaController extends BaseController
     public function deleteBarangMasuk()
     {
         $id = $this->request->getPost('id');
-
         $hapus = $this->barang_masuk->delete($id);
         if ($hapus) {
             $data = [
@@ -432,5 +434,48 @@ class WarehouseJakartaController extends BaseController
         } else {
             return redirect()->to('/dashboard/warehouse-jakarta/stok/edit/' . $id)->withInput()->with('error', 'Data Gagal Diupdate!, Silahkan Periksa Kembali');
         }
+    }
+    public function listBarangMasuk()
+    {
+        $db = db_connect();
+        $builder = $db->table('barang_masuk_jkt')->select('id, tanggal, nama_barang, qty');
+        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+            // cek data diterima atau tidak
+            if ($request->dates) {
+                // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                $dates = explode(' - ', $request->dates);
+                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+            }
+        })->format('qty', function ($value) {
+            return number_format($value, 0, ',', '.');
+        })->add('action', function ($row) {
+            return '<div class="text-center"><a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/warehouse-jakarta/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
+            <button class="btn btn-danger" title="Hapus Bray" onclick="deleteRecord(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
+        }, 'last')->toJson(true);
+    }
+    public function listBarangKeluarJkt()
+    {
+        $db = db_connect();
+        $builder = $db->table('barang_keluar_jkt')->select('id, tanggal, nama_barang, qty, total_resi, bukti_pickup');
+        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+            // cek data diterima atau tidak
+            if ($request->dates) {
+                // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                $dates = explode(' - ', $request->dates);
+                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+            }
+        })->format('qty', function ($value) {
+            return number_format($value, 0, ',', '.');
+        })->format('bukti_pickup', function ($value) {
+            return '<a href="' . base_url('bukti-barang-masuk-jkt/') . $value . '" target="_blank">
+            <img src="' . base_url('bukti-barang-masuk-jkt/') . $value . '" alt="" style="height:50px; width:50px"></a>';
+        })->add('action', function ($row) {
+            return '<div class="text-center"><a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/warehouse-jakarta/keluar/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
+            <button class="btn btn-danger" title="Hapus Bray" onclick="deleteRecord(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
+        }, 'last')->toJson(true);
     }
 }
