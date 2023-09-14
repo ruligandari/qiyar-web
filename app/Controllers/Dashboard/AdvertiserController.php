@@ -291,10 +291,10 @@ class AdvertiserController extends BaseController
         $pengeluaranadv = $this->pengeluaranadv->update($id_pengeluaran, $data);
         if ($pengeluaranadv) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser/pengeluaran-advertiser');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser/pengeluaran-advertiser');
+            return redirect()->to('/dashboard/advertiser/pengeluaran-advertiser');
         }
     }
 

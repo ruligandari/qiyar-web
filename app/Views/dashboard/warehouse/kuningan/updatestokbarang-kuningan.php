@@ -41,7 +41,7 @@
           <select class="form-control" name="jenis_barang_masuk" id="">
             <option value="0" selected>Pilih Jenis Barang Masuk</option>
             <option value="Barang Return">Barang Return</option>
-            <option value="Barang Baru">Barang Baru</option>
+            <option value="Barang Beli">Barang Beli</option>
           </select>
         </div>
         <div class="form-group">

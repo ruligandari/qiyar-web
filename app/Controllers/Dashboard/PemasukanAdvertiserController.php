@@ -84,7 +84,7 @@ class PemasukanAdvertiserController extends BaseController
         $this->pemasukanadv->insert($data);
         $upload_bukti->move('bukti_pemasukan_advertiser');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/advertiser/tambah-data-pemasukan-advertiser');
+        return redirect()->to('/dashboard/advertiser/pemasukan-advertiser');
     }
 
     public  function edit($id)
