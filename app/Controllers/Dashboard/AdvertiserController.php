@@ -35,7 +35,7 @@ class AdvertiserController extends BaseController
         if (session()->get('role') == 1 || session()->get('role') == 4 || session()->get('role') == 3) {
 
             $pengeluaranadv = $this->pengeluaranadv->findAll();
-        } else {
+        } else if (session()->get('role') == 5) {
             $pengeluaranadv = $this->pengeluaranadv->where('nama_advertiser', session()->get('nama'))->findAll();
         }
 
@@ -50,24 +50,43 @@ class AdvertiserController extends BaseController
     {
         $db = db_connect();
 
-        $builder =  $db->table('pengeluaran_advertiser')->select('id_pengeluaran, tanggal, waktu, nama_advertiser, bank_tujuan, jumlah, keterangan');
+        if (session()->get('role') == '5') {
 
-        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
-            // cek data diterima atau tidak
+            $builder = $db->table('pengeluaran_advertiser')
+                ->select('id_pengeluaran, tanggal, waktu, nama_advertiser, bank_tujuan, jumlah, keterangan')
+                ->where('nama_advertiser', session()->get('nama'));
+            return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+                // cek data diterima atau tidak
 
-            if ($request->dates != null) {
-                // ambil rentang tanggal 09/01/2023 - 09/01/2023
-                $dates = explode(' - ', $request->dates);
-                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
-                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
-                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
-            }
-        })->add('action', function ($row) {
-            return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/advertiser/pengeluaran-advertiser/edit/') . $row->id_pengeluaran . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
-            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id_pengeluaran . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
-        }, 'last')->format('jumlah', function ($value) {
-            return number_format($value, 0, ',', '.');
-        })->toJson(true);
+                if ($request->dates != null) {
+                    // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                    $dates = explode(' - ', $request->dates);
+                    $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                    $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                    $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+                }
+            })->format('jumlah', function ($value) {
+                return number_format($value, 0, ',', '.');
+            })->toJson(true);
+        } else if (session()->get('role') == '1' || session()->get('role') == '3') {
+            $builder =  $db->table('pengeluaran_advertiser')->select('id_pengeluaran, tanggal, waktu, nama_advertiser, bank_tujuan, jumlah, keterangan');
+            return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+                // cek data diterima atau tidak
+
+                if ($request->dates != null) {
+                    // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                    $dates = explode(' - ', $request->dates);
+                    $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                    $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                    $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+                }
+            })->add('action', function ($row) {
+                return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/advertiser/pengeluaran-advertiser/edit/') . $row->id_pengeluaran . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id_pengeluaran . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
+            }, 'last')->format('jumlah', function ($value) {
+                return number_format($value, 0, ',', '.');
+            })->toJson(true);
+        }
     }
 
     public function pengeluaranadvertiser()

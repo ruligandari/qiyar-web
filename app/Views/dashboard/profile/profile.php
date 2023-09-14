@@ -52,7 +52,7 @@
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Email</label>
-                    <input type="email" name="email" placeholder="Harga Total" class="form-control formatted-input" value="<?= $data['email'] ?>" required>
+                    <input type="email" name="email" placeholder="Email" class="form-control formatted-input" value="<?= $data['email'] ?>" required>
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Password Baru</label>

@@ -86,16 +86,23 @@
                             <th>Bank Tujuan</th>
                             <th>Keterangan</th>
                             <th>Jumlah</th>
-                            <th>Aksi</th>
+                            <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
+                                <th>Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
-
                     <tfoot>
                         <tr>
-                            <th colspan="5"></th>
-                            <th style="text-align:right">Total:</th>
-                            <th id="totalSum"></th>
-                            <th></th>
+                            <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
+                                <th colspan="5"></th>
+                                <th style="text-align:right">Total:</th>
+                                <th id="totalSum"></th>
+                                <th></th>
+                            <?php else : ?>
+                                <th colspan="5"></th>
+                                <th style="text-align:right">Total:</th>
+                                <th id="totalSum"></th>
+                            <?php endif; ?>
                         </tr>
                     </tfoot>
                 </table>
@@ -209,11 +216,12 @@
                 {
                     data: 'jumlah'
                 },
+                <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?> {
+                        data: 'action',
+                        orderable: false
+                    },
 
-                {
-                    data: 'action',
-                    orderable: false
-                },
+                <?php endif; ?>
             ],
             lengthMenu: [
                 [10, 25, 50, -1],
