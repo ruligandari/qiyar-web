@@ -134,10 +134,10 @@ class PemasukanAdvertiserController extends BaseController
         $pengeluaranadv = $this->pemasukanadv->update($id, $data);
         if ($pengeluaranadv) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/advertiser/pemasukan-advertiser/pemasukan-advertiser');
+            return redirect()->to('/dashboard/advertiser/pemasukan-advertiser');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/advertiser/pemasukan-advertiser/pemasukan-advertiser');
+            return redirect()->to('/dashboard/advertiser/pemasukan-advertiser');
         }
     }
 

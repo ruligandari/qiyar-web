@@ -130,7 +130,7 @@
                         <input type="text" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required />
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Nomor Whatsapps <b style="color: red">*</b></label>
+                        <label for="exampleInputEmail1" class="form-label">Nomor Whatsapp <b style="color: red">*</b></label>
                         <input type="text" name="nomor" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required />
                     </div>
                     <div class="mb-3">
