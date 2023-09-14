@@ -127,4 +127,9 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
-
+public/bukti_pemasukan_advertiser/*
+public/bukti_pemasukan_broadcast/*
+public/bukti_pengeluaran_broadcast/*
+public/bukti_pengeluaran_kantor/*
+public/bukti-barang-masuk-jkt/*
+public/bukti-barang-masuk-kng/*
