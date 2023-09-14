@@ -130,18 +130,18 @@ class UangTransferBroadcastController extends BaseController
         $uangtransferbroadcast = $this->uangtransferbroadcast->update($id, $data);
         if ($uangtransferbroadcast) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/broadcast/pemasukan-broadcast');
+            return redirect()->to('/dashboard/broadcast/uang-transfer-broadcast');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/broadcast/pemasukan-broadcast');
+            return redirect()->to('/dashboard/broadcast/uang-transfer-broadcast');
         }
     }
 
     public function delete()
     {
         $id = $this->request->getPost('id');
-        $uangtransferbroadcast = $this->pemasukanbroadcast->delete($id);
-        if ($pemasukanbroadcast) {
+        $uangtransferbroadcast = $this->uangtransferbroadcast->delete($id);
+        if ($uangtransferbroadcast) {
             $data = [
                 'success' => true,
                 'msg' => 'Data berhasil dihapus nih!'

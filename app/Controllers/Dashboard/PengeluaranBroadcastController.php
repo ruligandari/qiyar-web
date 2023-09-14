@@ -53,7 +53,7 @@ class PengeluaranBroadcastController extends BaseController
         $this->pengeluaranbroadcast->insert($data);
         $upload_bukti->move('bukti_pengeluaran_broadcast');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/pengeluaran-broadcast');
+        return redirect()->to('/dashboard/broadcast/pengeluaran-broadcast');
     }
     public  function edit($id)
     {
@@ -101,10 +101,10 @@ class PengeluaranBroadcastController extends BaseController
         $pengeluaranbroadcast = $this->pengeluaranbroadcast->update($id, $data);
         if ($pengeluaranbroadcast) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pengeluaran-broadcast');
+            return redirect()->to('/dashboard/broadcast/pengeluaran-broadcast');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pengeluaran-broadcast');
+            return redirect()->to('/dashboard/broadcast/pengeluaran-broadcast');
         }
     }
     public function delete()

@@ -83,7 +83,7 @@ class PemasukanBroadcastController extends BaseController
         $this->pemasukanbroadcast->insert($data);
         $upload_bukti->move('bukti_pemasukan_broadcast');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/pemasukan-broadcast/');
+        return redirect()->to('/dashboard/broadcast/pemasukan-broadcast/');
     }
 
     public  function edit($id)
@@ -133,10 +133,10 @@ class PemasukanBroadcastController extends BaseController
         $pemasukanbroadcast = $this->pemasukanbroadcast->update($id, $data);
         if ($pemasukanbroadcast) {
             session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/pemasukan-broadcast');
+            return redirect()->to('/dashboard/broadcast/pemasukan-broadcast');
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/pemasukan-broadcast/edit/' . $id);
+            return redirect()->to('/dashboard/broadcast/pemasukan-broadcast/edit/' . $id);
         }
     }
 
