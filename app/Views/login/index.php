@@ -13,7 +13,7 @@
 
   <!-- Custom fonts for this template-->
   <link rel="icon" href="<?= base_url('front/') ?>assets/img/logoqiyar.png">
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="<?= base_url('/') ?>plugin/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
@@ -126,13 +126,20 @@
                       <input type="email" name="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
                     </div>
                     <div class="form-group">
-                      <input type="password" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                      <input type="password" name="password" id="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
                     </div>
+                    <div class="form-group">
 
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showPassword">
+                        <label class="form-check-label" for="showPassword">Lihat Kata Sandi</label>
+                      </div>
+                    </div>
                     <button type="submit" class="btn btn-primary btn-user btn-block">
                       Login
                     </button>
                     <hr>
+
                   </form>
                 </div>
               </div>
@@ -147,15 +154,30 @@
   </div>
 
   <!-- Bootstrap core JavaScript-->
-  <script src="<?= base_url('/') ?>vendor/jquery/jquery.min.js"></script>
-  <script src="<?= base_url('/') ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= base_url('/') ?>plugin/jquery/jquery.min.js"></script>
+  <script src="<?= base_url('/') ?>plugin/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="<?= base_url('/') ?>vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="<?= base_url('/') ?>plugin/jquery-easing/jquery.easing.min.js"></script>
 
   <!-- Custom scripts for all pages-->
   <script src="<?= base_url('/') ?>js/sb-admin-2.min.js"></script>
-  <script src="<?= base_url('/') ?>sweetalert2.all.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const passwordInput = document.getElementById("password");
+      const showPasswordCheckbox = document.getElementById("showPassword");
+
+      showPasswordCheckbox.addEventListener("change", function() {
+        if (showPasswordCheckbox.checked) {
+          passwordInput.type = "text";
+        } else {
+          passwordInput.type = "password";
+        }
+      });
+    });
+  </script>
+
+
 </body>
 
 </html>
