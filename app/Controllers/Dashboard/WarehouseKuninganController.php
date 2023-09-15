@@ -398,7 +398,7 @@ class WarehouseKuninganController extends BaseController
         // mendapatkan qty dari barang masuk where nama barang
         $barang_masuk = $this->barang_masuk->where('nama_barang', $barang_keluar['nama_barang'])->first();
         $qtyBarangMasuk = $barang_masuk['qty'];
-        $tambahQty = $qtyBarangMasuk + $barang_keluar['qty'];
+        $tambahQty = $qtyBarangMasuk - $barang_keluar['qty'];
 
         // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
         $this->barang_masuk->update($barang_masuk['id'], [
