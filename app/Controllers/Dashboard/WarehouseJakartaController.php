@@ -161,7 +161,7 @@ class WarehouseJakartaController extends BaseController
             // pindahkan file ke folder img
             $upload_bukti->move('bukti-barang-masuk-jkt', $namaFile);
         } else {
-            return redirect()->to('/dashboard/warehouse-jakarta/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
+            return redirect()->to('/dashboard/warehouse-jakarta/keluar/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
         }
 
         $data = [
