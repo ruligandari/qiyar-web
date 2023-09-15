@@ -91,25 +91,10 @@ class WarehouseJakartaController extends BaseController
         $id = $this->request->getPost('id');
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
-        $upload_bukti = $this->request->getFile('upload_bukti');
-        $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
-
-        // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
-            // generate nama file random
-            $namaFile = $upload_bukti->getRandomName();
-            // pindahkan file ke folder img
-            $upload_bukti->move('bukti-barang-masuk-jkt', $namaFile);
-            // hapus file lama
-            unlink('bukti-barang-masuk-jkt/' . $bukti_transfer_lama);
-        } else {
-            $namaFile = $bukti_transfer_lama;
-        }
 
         $data = [
             'nama_barang' => $nama_barang,
             'qty' => $qty,
-            'upload_bukti' => $namaFile
         ];
 
         if ($data) {
@@ -391,6 +376,7 @@ class WarehouseJakartaController extends BaseController
         $qty = $this->request->getPost('qty');
         $qty_lama = $this->request->getPost('qty_lama');
         $upload_bukti = $this->request->getFile('upload_bukti');
+        $jenis_barang_masuk = $this->request->getPost('jenis_barang_masuk');
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
         // cek apakah ada file yang diupload
@@ -419,6 +405,7 @@ class WarehouseJakartaController extends BaseController
             'tanggal' => $tanggal,
             'nama_barang' => $barang_masuk['nama_barang'],
             'qty' => $qty,
+            'jenis_barang_masuk' => $jenis_barang_masuk,
             'upload_bukti' => $namaFile
         ];
 

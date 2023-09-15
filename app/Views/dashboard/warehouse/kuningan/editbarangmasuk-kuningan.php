@@ -27,56 +27,54 @@
             <label for="formGroupExampleInput">Nama Barang</label>
             <input type="text" name="nama_barang" class="form-control" value="<?= $data['nama_barang'] ?>" placeholder=" Masukan Jumlah" required>
           </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Qty</label>
-            <input type="text" name="qty" placeholder="Jumlah" class="form-control" value="<?= $data['qty'] ?>" required>
-          </div>
-          <div class=" form-group">
-            <label for="formGroupExampleInput">Upload Bukti</label>
-            <input type="file" name="upload_bukti" class="form-control-file form-control" id="exampleFormControlFile1">
-            <input type="hidden" name="bukti_transfer_lama" value="<?= $data['upload_bukti'] ?>">
-            <?php if ($data['upload_bukti'] != null) : ?>
-              <p>Bukti Sebelumnya: <a href="<?= base_url('bukti-barang-masuk-kng/') . $data['upload_bukti'] ?>"><?= $data['upload_bukti'] ?></a></p>
-            <?php endif; ?>
-            <br>
-            <img id="previewImage" src="" style="max-width: 100%; max-height: 200px;">
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+          div class="form-group">
+          <label for="formGroupExampleInput">Jenis Barang Masuk</label>
+          <select class="form-control" name="jenis_barang_masuk" id="">
+            <option value="0" selected>Pilih Jenis Barang Masuk</option>
+            <option value="Barang Return">Barang Return</option>
+            <option value="Barang Baru">Barang Beli</option>
+          </select>
       </div>
+      <div class="form-group">
+        <label for="formGroupExampleInput">Qty</label>
+        <input type="text" name="qty" placeholder="Jumlah" class="form-control" value="<?= $data['qty'] ?>" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
     </div>
-
   </div>
-  <?= $this->endSection(); ?>
 
-  <?= $this->section('script'); ?>
-  <script>
-    // Mendapatkan elemen input file
-    var inputFile = document.getElementById('exampleFormControlFile1');
+</div>
+<?= $this->endSection(); ?>
 
-    // Mendapatkan elemen gambar untuk menampilkan preview
-    var previewImage = document.getElementById('previewImage');
+<?= $this->section('script'); ?>
+<script>
+  // Mendapatkan elemen input file
+  var inputFile = document.getElementById('exampleFormControlFile1');
 
-    // Menambahkan event listener untuk menghandle perubahan input file
-    inputFile.addEventListener('change', function() {
-      var file = inputFile.files[0];
+  // Mendapatkan elemen gambar untuk menampilkan preview
+  var previewImage = document.getElementById('previewImage');
 
-      if (file) {
-        // Membaca file sebagai URL data
-        var reader = new FileReader();
+  // Menambahkan event listener untuk menghandle perubahan input file
+  inputFile.addEventListener('change', function() {
+    var file = inputFile.files[0];
 
-        reader.onload = function(e) {
-          // Menampilkan gambar pada elemen gambar
-          previewImage.src = e.target.result;
-          // Menampilkan elemen gambar
-          previewImage.style.display = 'block';
-        };
+    if (file) {
+      // Membaca file sebagai URL data
+      var reader = new FileReader();
 
-        reader.readAsDataURL(file);
-      } else {
-        // Menghapus elemen gambar jika tidak ada file yang dipilih
-        previewImage.src = "";
-      }
-    });
-  </script>
-  <?= $this->endSection(); ?>
+      reader.onload = function(e) {
+        // Menampilkan gambar pada elemen gambar
+        previewImage.src = e.target.result;
+        // Menampilkan elemen gambar
+        previewImage.style.display = 'block';
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      // Menghapus elemen gambar jika tidak ada file yang dipilih
+      previewImage.src = "";
+    }
+  });
+</script>
+<?= $this->endSection(); ?>

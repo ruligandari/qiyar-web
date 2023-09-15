@@ -105,25 +105,12 @@ class WarehouseKuninganController extends BaseController
         $id = $this->request->getPost('id');
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
-        $upload_bukti = $this->request->getFile('upload_bukti');
-        $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
-
-        // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
-            // generate nama file random
-            $namaFile = $upload_bukti->getRandomName();
-            // pindahkan file ke folder img
-            $upload_bukti->move('bukti-barang-masuk-kng', $namaFile);
-            // hapus file lama
-            unlink('bukti-barang-masuk-kng/' . $bukti_transfer_lama);
-        } else {
-            $namaFile = $bukti_transfer_lama;
-        }
+        $jenis_barang = $this->request->getPost('jenis_barang_masuk');
 
         $data = [
             'nama_barang' => $nama_barang,
             'qty' => $qty,
-            'upload_bukti' => $namaFile
+            'jenis_barang_masuk' => $jenis_barang
         ];
 
         if ($data) {
