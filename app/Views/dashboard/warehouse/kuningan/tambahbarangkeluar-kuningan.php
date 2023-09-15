@@ -64,15 +64,15 @@
                     <button type="button" class="btn btn-link" id="tambahBarang">+ Tambah Item </button>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Qty</label>
-                        <input type="text" class="form-control" id="harga" name="qty" placeholder="Masukan Qty">
+                        <input type="text" class="form-control" id="harga" name="qty" placeholder="Masukan Qty" required>
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Total Resi</label>
-                        <input type="text" class="form-control" id="harga" name="total_resi" placeholder="Masukan Total Resi">
+                        <input type="text" class="form-control" id="harga" name="total_resi" placeholder="Masukan Total Resi" required>
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
-                        <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" name="upload_bukti">
+                        <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" name="upload_bukti" required>
                         <br id="jarak">
                         <img id="previewImage" src="" style="max-width: 100%; max-height: 200px;">
                     </div>

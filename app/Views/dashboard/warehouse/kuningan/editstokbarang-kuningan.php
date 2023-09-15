@@ -39,6 +39,18 @@
             </select>
           </div>
           <div class="form-group">
+            <label for="formGroupExampleInput">Jenis Barang Masuk</label>
+            <select class="form-control" name="jenis_barang_masuk" id="">
+              <?php if ($data['jenis_barang_masuk'] == 'Barang Return') : ?>
+                <option value="Barang Return" selected>Barang Return</option>
+                <option value="Barang Beli">Barang Beli</option>
+              <?php else : ?>
+                <option value="Barang Return">Barang Return</option>
+                <option value="Barang Beli" selected>Barang Beli</option>
+              <?php endif; ?>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="formGroupExampleInput">Qty</label>
             <input type="text" name="qty" placeholder="Jumlah" class="form-control" value="<?= $data['qty'] ?>" required>
           </div>

@@ -52,17 +52,11 @@
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Nama Barang</label>
-                        <input type="text" class="form-control" id="formGroupExampleInput" name="nama_barang" placeholder="Masukan Nama Barang">
+                        <input type="text" class="form-control" id="formGroupExampleInput" name="nama_barang" placeholder="Masukan Nama Barang" required>
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Qty</label>
-                        <input type="text" class="form-control formatted-input" id="harga" name="qty" placeholder="Masukan Qty">
-                    </div>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput">Upload Bukti Pembayaran</label>
-                        <input type="file" class="form-control-file form-control" id="exampleFormControlFile1" name="upload_bukti">
-                        <br id="jarak">
-                        <img id="previewImage" src="" style="max-width: 100%; max-height: 200px;">
+                        <input type="text" class="form-control formatted-input" id="harga" name="qty" placeholder="Masukan Qty" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

@@ -42,23 +42,11 @@ class WarehouseKuninganController extends BaseController
         $tanggal = $this->request->getPost('tanggal');
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
-        $upload_bukti = $this->request->getFile('upload_bukti');
-
-        // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
-            // generate nama file random
-            $namaFile = $upload_bukti->getRandomName();
-            // pindahkan file ke folder img
-            $upload_bukti->move('bukti-barang-masuk-kng', $namaFile);
-        } else {
-            return redirect()->to('/dashboard/warehouse-kuningan/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
-        }
 
         $data = [
             'tanggal' => $tanggal,
             'nama_barang' => $nama_barang,
             'qty' => $qty,
-            'upload_bukti' => $namaFile
         ];
 
         if ($data) {
@@ -105,12 +93,12 @@ class WarehouseKuninganController extends BaseController
         $id = $this->request->getPost('id');
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
-        $jenis_barang = $this->request->getPost('jenis_barang_masuk');
+
 
         $data = [
             'nama_barang' => $nama_barang,
             'qty' => $qty,
-            'jenis_barang_masuk' => $jenis_barang
+
         ];
 
         if ($data) {
@@ -221,7 +209,7 @@ class WarehouseKuninganController extends BaseController
             // pindahkan file ke folder img
             $upload_bukti->move('bukti-barang-masuk-kng', $namaFile);
         } else {
-            return redirect()->to('/dashboard/warehouse-kuningan/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
+            return redirect()->to('/dashboard/warehouse-kuningan/keluar/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
         }
 
         $data = [
@@ -437,6 +425,7 @@ class WarehouseKuninganController extends BaseController
         $qty_lama = $this->request->getPost('qty_lama');
         $upload_bukti = $this->request->getFile('upload_bukti');
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
+        $jenis_barang = $this->request->getPost('jenis_barang_masuk');
 
         // cek apakah ada file yang diupload
         if (!$upload_bukti->getError() == 4) {
@@ -464,6 +453,7 @@ class WarehouseKuninganController extends BaseController
             'tanggal' => $tanggal,
             'nama_barang' => $barang_masuk['nama_barang'],
             'qty' => $qty,
+            'jenis_barang_masuk' => $jenis_barang,
             'upload_bukti' => $namaFile
         ];
 
