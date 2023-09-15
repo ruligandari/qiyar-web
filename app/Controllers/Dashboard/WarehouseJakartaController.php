@@ -355,7 +355,7 @@ class WarehouseJakartaController extends BaseController
         $qty_barang_keluar = $barang_keluar['qty'];
 
         // tambah qty ke barang_masuk
-        $tambah_qty = $qty_barang_masuk['qty'] + $qty_barang_keluar;
+        $tambah_qty = $qty_barang_masuk['qty'] - $qty_barang_keluar;
 
         $this->barang_masuk->update($qty_barang_masuk['id'], [
             'qty' => $tambah_qty
