@@ -298,9 +298,19 @@ class WarehouseKuninganController extends BaseController
     {
         $id = $this->request->getPost('id');
         // unlink $bukti_pickup
-        // $barang_keluar = $this->barang_keluar->find($id);
-        // unlink('bukti-barang-masuk-kng/' . $barang_keluar['bukti_pickup']);
+        $barang_keluar = $this->barang_keluar->find($id);
 
+        // mendapatkan qty dari barang masuk where nama barang
+        $barang_masuk = $this->barang_masuk->where('nama_barang', $barang_keluar['nama_barang'])->first();
+        $qtyBarangMasuk = $barang_masuk['qty'];
+        $tambahQty = $qtyBarangMasuk + $barang_keluar['qty'];
+
+        // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
+        $this->barang_masuk->update($barang_masuk['id'], [
+            'qty' => $tambahQty
+        ]);
+
+        unlink('bukti-barang-masuk-kng/' . $barang_keluar['bukti_pickup']);
         $hapus = $this->barang_keluar->delete($id);
         if ($hapus) {
             $data = [
@@ -384,8 +394,18 @@ class WarehouseKuninganController extends BaseController
 
         // unlink $bukti_pickup
         $barang_keluar = $this->stok_barang->find($id);
-        unlink('bukti-barang-masuk-kng/' . $barang_keluar['upload_bukti']);
 
+        // mendapatkan qty dari barang masuk where nama barang
+        $barang_masuk = $this->barang_masuk->where('nama_barang', $barang_keluar['nama_barang'])->first();
+        $qtyBarangMasuk = $barang_masuk['qty'];
+        $tambahQty = $qtyBarangMasuk + $barang_keluar['qty'];
+
+        // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
+        $this->barang_masuk->update($barang_masuk['id'], [
+            'qty' => $tambahQty
+        ]);
+
+        unlink('bukti-barang-masuk-kng/' . $barang_keluar['upload_bukti']);
         $hapus = $this->stok_barang->delete($id);
         if ($hapus) {
             $data = [

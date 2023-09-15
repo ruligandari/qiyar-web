@@ -181,6 +181,7 @@ function deleteJktKeluar(id) {
                 },
                 success: function(response) {
                     var data = JSON.parse(response);
+                    console.log(data);
                     if (data.success) {
                         Swal.fire(
                             "Dihapus!",

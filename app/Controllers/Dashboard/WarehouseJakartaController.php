@@ -250,9 +250,22 @@ class WarehouseJakartaController extends BaseController
     {
         $id = $this->request->getPost('id');
         // unlink $bukti_pickup
-        // $barang_keluar = $this->barang_keluar->find($id);
-        // unlink('bukti-barang-masuk-jkt/' . $barang_keluar['bukti_pickup']);
+        $barang_keluar = $this->barang_keluar->find($id);
 
+        // mendapatkan data stok
+        $qty_barang_masuk = $this->barang_masuk->where('nama_barang', $barang_keluar['nama_barang'])->first();
+        $qty_barang_keluar = $barang_keluar['qty'];
+
+        // tambah qty ke barang_masuk
+        $tambah_qty = $qty_barang_masuk['qty'] + $qty_barang_keluar;
+
+        $this->barang_masuk->update($qty_barang_masuk['id'], [
+            'qty' => $tambah_qty
+        ]);
+
+
+
+        unlink('bukti-barang-masuk-jkt/' . $barang_keluar['bukti_pickup']);
         $hapus = $this->barang_keluar->delete($id);
         if ($hapus) {
             $data = [
@@ -336,8 +349,19 @@ class WarehouseJakartaController extends BaseController
 
         // unlink $bukti_pickup
         $barang_keluar = $this->stok_barang->find($id);
-        unlink('bukti-barang-masuk-jkt/' . $barang_keluar['upload_bukti']);
 
+        // mendapatkan data stok
+        $qty_barang_masuk = $this->barang_masuk->where('nama_barang', $barang_keluar['nama_barang'])->first();
+        $qty_barang_keluar = $barang_keluar['qty'];
+
+        // tambah qty ke barang_masuk
+        $tambah_qty = $qty_barang_masuk['qty'] + $qty_barang_keluar;
+
+        $this->barang_masuk->update($qty_barang_masuk['id'], [
+            'qty' => $tambah_qty
+        ]);
+
+        unlink('bukti-barang-masuk-jkt/' . $barang_keluar['upload_bukti']);
         $hapus = $this->stok_barang->delete($id);
         if ($hapus) {
             $data = [
