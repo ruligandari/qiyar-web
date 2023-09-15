@@ -152,7 +152,7 @@ class WarehouseKuninganController extends BaseController
             return number_format($value, 0, ',', '.');
         })->add('action', function ($row) {
             return '<div class="text-center"><a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/warehouse-kuningan/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
-            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
+            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteKngMasuk(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
         }, 'last')->toJson(true);
     }
     public function listBarangKeluar()
@@ -175,7 +175,7 @@ class WarehouseKuninganController extends BaseController
             <img src="' . base_url('bukti-barang-masuk-kng/') . $value . '" alt="" style="height:50px; width:50px"></a>';
         })->add('action', function ($row) {
             return '<div class="text-center"><a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/warehouse-kuningan/keluar/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
-            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
+            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteKngKeluar(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
         }, 'last')->toJson(true);
     }
 

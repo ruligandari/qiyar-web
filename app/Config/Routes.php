@@ -51,6 +51,8 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     // Dashboard
     $routes->get('/', 'Dashboard\DashboardController::index');
 
+    $routes->post('list-pendapatan-adv', 'Dashboard\DashboardController::listPendapatanAdv');
+
     // profile
     $routes->group('profile', function ($routes) {
         $routes->get('/', 'Dashboard\ProfileController::index');

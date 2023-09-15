@@ -70,4 +70,23 @@ class DashboardController extends BaseController
         ];
         return view('dashboard/index', $data);
     }
+
+    public function listPendapatanAdv()
+    {
+        $startDate = $this->request->getPost('start_date');
+        $enddata = $this->request->getPost('end_date');
+        // cari data dari model pengeluaranadv
+        $pengeluaranadv = $this->pengeluaranadv->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
+        $pemasukanadv = $this->pemasukanadv->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
+        $pengeluaranKantor = $this->pengeluarankantor->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
+        $pemasukanTransfer = $this->uangtransferadvertiser->where('jenis_transfer', 'Iklan')->select('tanggal, harga_total')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
+
+        $data = [
+            'pengeluaran' => $pengeluaranadv,
+            'pemasukan' => $pemasukanadv,
+            'pengeluaranKantor' => $pengeluaranKantor,
+            'pemasukanTransfer' => $pemasukanTransfer,
+        ];
+        return json_encode($data);
+    }
 }

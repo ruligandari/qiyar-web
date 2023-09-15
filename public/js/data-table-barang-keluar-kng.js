@@ -28,6 +28,9 @@ $(function() {
 var urlTableKeluar = $('#urlBarangKeluar').val();
 var urlDeleteKeluar = $('#urlDeleteBarangKeluar').val();
 
+console.log(urlDeleteKeluar);
+console.log(urlTableKeluar);
+
 $(document).ready(function() {
     let table = $('#table2').DataTable({
         processing: true,
@@ -158,7 +161,7 @@ $(document).ready(function() {
 });
 
 
-function deleteRecord(id) {
+function deleteKngKeluar(id) {
     Swal.fire({
         title: "Apakah Anda yakin akan menghapus data ini?",
         icon: "warning",

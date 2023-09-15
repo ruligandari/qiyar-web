@@ -191,8 +191,8 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 
-<script src="<?= base_url('js/data-table-barang-masuk.js') ?>"></script>
-<script src="<?= base_url('js/data-table-barang-keluar.js') ?>"></script>
+<script src="<?= base_url('js/data-table-barang-masuk-jkt.js') ?>"></script>
+<script src="<?= base_url('js/data-table-barang-keluar-jkt.js') ?>"></script>
 <script src="<?= base_url('js/sweet-alert.js') ?>"></script>
 
 

@@ -27,7 +27,8 @@ $(function() {
 
     var urlTable = $('#urlBarangMasuk').val();
     var urlDelete = $('#urlDelete').val();
-
+console.log(urlDelete);
+console.log(urlTable);
 
     $(document).ready(function() {
         let table = $('#table1').DataTable({
@@ -133,7 +134,7 @@ $(function() {
     let currentDate = new Date();
     let formattedDate = currentDate.toISOString().split('T')[0];
 
-    function deleteRecord(id) {
+    function deleteKngMasuk(id) {
         Swal.fire({
             title: "Apakah Anda yakin akan menghapus data ini?",
             icon: "warning",
