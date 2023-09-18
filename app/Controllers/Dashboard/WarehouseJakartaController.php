@@ -123,9 +123,29 @@ class WarehouseJakartaController extends BaseController
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
         $total_resi = $this->request->getPost('total_resi');
-        $upload_bukti = $this->request->getFile('upload_bukti');
-
         // cek jumlah array $nama barang
+
+        if ($nama_barang == null) {
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($qty == null) {
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($total_resi == null) {
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($tanggal == null) {
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        }
         $jumlahNamaBarang = count($nama_barang);
 
         if ($jumlahNamaBarang > 1) {
@@ -155,13 +175,17 @@ class WarehouseJakartaController extends BaseController
         $namaBarangDb = $cekNamaBarang['nama_barang'];
 
         // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
+        $upload_bukti = $this->request->getFile('upload_bukti');
+        if ($upload_bukti) {
             // generate nama file random
             $namaFile = $upload_bukti->getRandomName();
             // pindahkan file ke folder img
             $upload_bukti->move('bukti-barang-masuk-jkt', $namaFile);
         } else {
-            return redirect()->to('/dashboard/warehouse-jakarta/keluar/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
         }
 
         $data = [
@@ -172,12 +196,17 @@ class WarehouseJakartaController extends BaseController
             'bukti_pickup' => $namaFile
         ];
 
-        if ($data) {
+        if ($this->barang_keluar->insert($data)) {
             // insert data 
-            $this->barang_keluar->insert($data);
-            return redirect()->to('/dashboard/warehouse-jakarta')->with('success', 'Data Berhasil Ditambahkan!');
+            return json_encode([
+                'message' => 'Data Barang Keluar Berhasil ditambahkan.',
+                'status' => true
+            ]);
         } else {
-            return redirect()->to('/dashboard/warehouse-jakarta-keluar/tambah')->withInput()->with('error', 'Data Gagal Ditambahkan!, Silahkan Periksa Kembali');
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
         }
     }
 
