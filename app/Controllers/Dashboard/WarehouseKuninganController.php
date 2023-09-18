@@ -61,9 +61,15 @@ class WarehouseKuninganController extends BaseController
     public function deleteBarangMasuk()
     {
         $id = $this->request->getPost('id');
+        $nama_barang = $this->barang_masuk->find($id);
+        $nama_barang = $nama_barang['nama_barang'];
+
+        // delete barang_keluar dengan nama_barang
+        $cekBarangKeluar = $this->barang_keluar->where('nama_barang', $nama_barang)->delete();
+        $cekStokBarang = $this->stok_barang->where('nama_barang', $nama_barang)->delete();
 
         $hapus = $this->barang_masuk->delete($id);
-        if ($hapus) {
+        if ($hapus && $cekBarangKeluar && $cekStokBarang) {
             $data = [
                 'success' => true
             ];

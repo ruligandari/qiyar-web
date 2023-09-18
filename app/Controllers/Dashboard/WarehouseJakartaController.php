@@ -60,8 +60,15 @@ class WarehouseJakartaController extends BaseController
     public function deleteBarangMasuk()
     {
         $id = $this->request->getPost('id');
+        $nama_barang = $this->barang_masuk->find($id);
+        $nama_barang = $nama_barang['nama_barang'];
+
+        // delete barang_keluar dengan nama_barang
+        $cekBarangKeluar = $this->barang_keluar->where('nama_barang', $nama_barang)->delete();
+        $cekStokBarang = $this->stok_barang->where('nama_barang', $nama_barang)->delete();
+
         $hapus = $this->barang_masuk->delete($id);
-        if ($hapus) {
+        if ($hapus && $cekBarangKeluar && $cekStokBarang) {
             $data = [
                 'success' => true
             ];
@@ -338,14 +345,41 @@ class WarehouseJakartaController extends BaseController
         $jenis_barang_masuk = $this->request->getPost('jenis_barang_masuk');
         $upload_bukti = $this->request->getFile('upload_bukti');
 
+        if ($nama_barang_form == null) {
+            return json_encode([
+                'message' => 'Stok Barang Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($qty == null) {
+            return json_encode([
+                'message' => 'Stok Barang Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($jenis_barang_masuk == null) {
+            return json_encode([
+                'message' => 'Stok Barang Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($tanggal == null) {
+            return json_encode([
+                'message' => 'Stok Barang Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        }
+
         // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
+        // cek apakah ada file yang diupload
+        $upload_bukti = $this->request->getFile('upload_bukti');
+        if ($upload_bukti) {
             // generate nama file random
             $namaFile = $upload_bukti->getRandomName();
             // pindahkan file ke folder img
             $upload_bukti->move('bukti-barang-masuk-jkt', $namaFile);
         } else {
-            return redirect()->to('/dashboard/warehouse-jakarta/stok/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
+            return json_encode([
+                'message' => 'Stok Barang Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
         }
         // mendapatkan nama_barang dari tabel barang masuk berdasarkan id
         $barang_masuk = $this->barang_masuk->find($nama_barang_form);
@@ -366,9 +400,15 @@ class WarehouseJakartaController extends BaseController
             ]);
             // insert
             $this->stok_barang->insert($data);
-            return redirect()->to('/dashboard/warehouse-jakarta/stok')->with('success', 'Data Berhasil Ditambahkan!');
+            return json_encode([
+                'message' => 'Stok Barang Berhasil ditambahkan, lengkapi data',
+                'status' => true
+            ]);
         } else {
-            return redirect()->to('/dashboard/warehouse-jakarta/stok/tambah')->withInput()->with('error', 'Data Gagal Ditambahkan!, Silahkan Periksa Kembali');
+            return json_encode([
+                'message' => 'Stok Barang Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
         }
     }
 
