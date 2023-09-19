@@ -102,7 +102,7 @@
                     <div class="card-body">
                         <form method="POST" action="<?= base_url('dashboard/setting/add') ?>">
                             <div class="form-group">
-                                <label for="exampleFormControlInput1">Email</label>
+                                <label for="exampleFormControlInput1">Nama</label>
                                 <input type="text" name="nama" class="form-control" id="exampleFormControlInput1" placeholder="Nama">
                             </div>
                             <div class="form-group">
