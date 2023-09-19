@@ -240,45 +240,77 @@ class WarehouseJakartaController extends BaseController
         $qty = $this->request->getPost('qty');
         $qty_lama = $this->request->getPost('qty_lama');
         $total_resi = $this->request->getPost('total_resi');
-        $upload_bukti = $this->request->getFile('bukti_pickup');
+        $upload_bukti = $this->request->getFile('upload_bukti');
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
         // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
+        if ($upload_bukti) {
+            // return json_encode(['data' => $upload_bukti->getName(), 'status' => false]);
             // generate nama file random
             $namaFile = $upload_bukti->getRandomName();
             // pindahkan file ke folder img
             $upload_bukti->move('bukti-barang-masuk-jkt', $namaFile);
             // hapus file lama
-            unlink('bukti-barang-masuk-jkt/' . $bukti_transfer_lama);
+            try {
+                unlink('bukti-barang-masuk-jkt/' . $bukti_transfer_lama);
+            } catch (\Throwable $th) {
+                json_encode(['data' => $th->getMessage(), 'status' => false]);
+            }
+
+            // return json_encode(['data' => $bukti_transfer_lama, 'status' => false]);
+            $barang_masuk = $this->barang_masuk->find($nama_barang);
+
+            if ($qty != $qty_lama) {
+                // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
+                $kurangQty = $barang_masuk['qty'] - $qty_lama;
+                $tambahQty = $kurangQty + $qty;
+                $this->barang_masuk->update($nama_barang, [
+                    'qty' => $tambahQty
+                ]);
+            }
+
+            $data = [
+                'nama_barang' => $barang_masuk['nama_barang'],
+                'total_resi' => $total_resi,
+                'qty' => $qty,
+                'bukti_pickup' => $namaFile
+            ];
+
+            if ($data) {
+                // insert data 
+                $this->barang_keluar->update($id, $data);
+                // unlink('bukti-barang-masuk-jkt/' . $bukti_transfer_lama);
+                return json_encode(['message' => 'Data Barang Keluar Berhasil diupdate.', 'status' => true]);
+            } else {
+                return json_encode(['message' => 'Data Barang Keluar Gagal diupdate.', 'status' => false]);
+            }
         } else {
             $namaFile = $bukti_transfer_lama;
-        }
+            $barang_masuk = $this->barang_masuk->find($nama_barang);
 
-        $barang_masuk = $this->barang_masuk->find($nama_barang);
+            if ($qty != $qty_lama) {
+                // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
+                $kurangQty = $barang_masuk['qty'] - $qty_lama;
+                $tambahQty = $kurangQty + $qty;
+                $this->barang_masuk->update($nama_barang, [
+                    'qty' => $tambahQty
+                ]);
+            }
 
-        if ($qty != $qty_lama) {
-            // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
-            $kurangQty = $barang_masuk['qty'] - $qty_lama;
-            $tambahQty = $kurangQty + $qty;
-            $this->barang_masuk->update($nama_barang, [
-                'qty' => $tambahQty
-            ]);
-        }
+            $data = [
+                'nama_barang' => $barang_masuk['nama_barang'],
+                'total_resi' => $total_resi,
+                'qty' => $qty,
+                'bukti_pickup' => $namaFile
+            ];
 
-        $data = [
-            'nama_barang' => $barang_masuk['nama_barang'],
-            'total_resi' => $total_resi,
-            'qty' => $qty,
-            'bukti_pickup' => $namaFile
-        ];
-
-        if ($data) {
-            // insert data 
-            $this->barang_keluar->update($id, $data);
-            return redirect()->to('/dashboard/warehouse-jakarta')->with('success', 'Data Berhasil Diupdate!');
-        } else {
-            return redirect()->to('/dashboard/warehouse-jakarta-keluar/edit/' . $id)->withInput()->with('error', 'Data Gagal Diupdate!, Silahkan Periksa Kembali');
+            if ($data) {
+                // insert data 
+                $this->barang_keluar->update($id, $data);
+                return redirect()->to('/dashboard/warehouse-jakarta')->with('success', 'Data Berhasil Diupdate!');
+            } else {
+                return redirect()->to('/dashboard/warehouse-jakarta/keluar/edit/' . $id)->withInput()->with('error', 'Data Gagal Diupdate!, Silahkan Periksa Kembali');
+            }
         }
     }
 
@@ -301,19 +333,34 @@ class WarehouseJakartaController extends BaseController
 
 
 
-        unlink('bukti-barang-masuk-jkt/' . $barang_keluar['bukti_pickup']);
-        $hapus = $this->barang_keluar->delete($id);
-        if ($hapus) {
-            $data = [
-                'success' => true
-            ];
-        } else {
-            $data = [
-                'success' => false
-            ];
-        }
+        if ($barang_keluar['bukti_pickup'] == true) {
+            unlink('bukti-barang-masuk-jkt/' . $barang_keluar['bukti_pickup']);
+            $hapus = $this->barang_keluar->delete($id);
+            if ($hapus) {
+                $data = [
+                    'success' => true
+                ];
+            } else {
+                $data = [
+                    'success' => false
+                ];
+            }
 
-        return json_encode($data);
+            return json_encode($data);
+        } else {
+            $hapus = $this->barang_keluar->delete($id);
+            if ($hapus) {
+                $data = [
+                    'success' => true
+                ];
+            } else {
+                $data = [
+                    'success' => false
+                ];
+            }
+
+            return json_encode($data);
+        }
     }
 
     public function stokBarang()
