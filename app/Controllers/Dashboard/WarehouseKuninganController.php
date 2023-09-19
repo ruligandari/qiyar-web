@@ -177,6 +177,29 @@ class WarehouseKuninganController extends BaseController
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
         $total_resi = $this->request->getPost('total_resi');
+
+        if ($nama_barang == null) {
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($qty == null) {
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($total_resi == null) {
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        } else if ($tanggal == null) {
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
+        }
+
         $upload_bukti = $this->request->getFile('upload_bukti');
 
         // cek jumlah array $nama barang
@@ -209,13 +232,17 @@ class WarehouseKuninganController extends BaseController
         $namaBarangDb = $cekNamaBarang['nama_barang'];
 
         // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
+        $upload_bukti = $this->request->getFile('upload_bukti');
+        if ($upload_bukti) {
             // generate nama file random
             $namaFile = $upload_bukti->getRandomName();
             // pindahkan file ke folder img
             $upload_bukti->move('bukti-barang-masuk-kng', $namaFile);
         } else {
-            return redirect()->to('/dashboard/warehouse-kuningan/keluar/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
+            return json_encode([
+                'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
         }
 
         $data = [
@@ -229,9 +256,17 @@ class WarehouseKuninganController extends BaseController
         if ($data) {
             // insert data 
             $this->barang_keluar->insert($data);
-            return redirect()->to('/dashboard/warehouse-kuningan')->with('success', 'Data Berhasil Ditambahkan!');
+            return json_encode([
+                'status' => true,
+                'message' => 'Data Barang Keluar Berhasil ditambahkan'
+            ]);
         } else {
-            return redirect()->to('/dashboard/warehouse-kuningan-keluar/tambah')->withInput()->with('error', 'Data Gagal Ditambahkan!, Silahkan Periksa Kembali');
+            return json_encode(
+                [
+                    'status' => false,
+                    'message' => 'Data Barang Keluar Gagal ditambahkan, lengkapi data'
+                ]
+            );
         }
     }
 
@@ -258,45 +293,83 @@ class WarehouseKuninganController extends BaseController
         $qty = $this->request->getPost('qty');
         $qty_lama = $this->request->getPost('qty_lama');
         $total_resi = $this->request->getPost('total_resi');
-        $upload_bukti = $this->request->getFile('bukti_pickup');
+        $upload_bukti = $this->request->getFile('upload_bukti');
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
         // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
+        if ($upload_bukti) {
             // generate nama file random
             $namaFile = $upload_bukti->getRandomName();
             // pindahkan file ke folder img
             $upload_bukti->move('bukti-barang-masuk-kng', $namaFile);
             // hapus file lama
-            unlink('bukti-barang-masuk-kng/' . $bukti_transfer_lama);
+            try {
+                unlink('bukti-barang-masuk-kng/' . $bukti_transfer_lama);
+            } catch (\Throwable $th) {
+                return json_encode([
+                    'message' => $th->getMessage(),
+                    'status' => false
+                ]);
+            }
+
+            $barang_masuk = $this->barang_masuk->find($nama_barang);
+
+            if ($qty != $qty_lama) {
+                // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
+                $kurangQty = $barang_masuk['qty'] - $qty_lama;
+                $tambahQty = $kurangQty + $qty;
+                $this->barang_masuk->update($nama_barang, [
+                    'qty' => $tambahQty
+                ]);
+            }
+
+            $data = [
+                'nama_barang' => $barang_masuk['nama_barang'],
+                'total_resi' => $total_resi,
+                'qty' => $qty,
+                'bukti_pickup' => $namaFile
+            ];
+
+            if ($data) {
+                // insert data 
+                $this->barang_keluar->update($id, $data);
+                return json_encode([
+                    'status' => true,
+                    'message' => 'Data Barang Keluar Berhasil diupdate'
+                ]);
+            } else {
+                return json_encode([
+                    'status' => false,
+                    'message' => 'Data Barang Keluar Gagal diupdate, lengkapi data'
+                ]);
+            }
         } else {
             $namaFile = $bukti_transfer_lama;
-        }
+            $barang_masuk = $this->barang_masuk->find($nama_barang);
 
-        $barang_masuk = $this->barang_masuk->find($nama_barang);
+            if ($qty != $qty_lama) {
+                // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
+                $kurangQty = $barang_masuk['qty'] - $qty_lama;
+                $tambahQty = $kurangQty + $qty;
+                $this->barang_masuk->update($nama_barang, [
+                    'qty' => $tambahQty
+                ]);
+            }
 
-        if ($qty != $qty_lama) {
-            // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
-            $kurangQty = $barang_masuk['qty'] - $qty_lama;
-            $tambahQty = $kurangQty + $qty;
-            $this->barang_masuk->update($nama_barang, [
-                'qty' => $tambahQty
-            ]);
-        }
+            $data = [
+                'nama_barang' => $barang_masuk['nama_barang'],
+                'total_resi' => $total_resi,
+                'qty' => $qty,
+                'bukti_pickup' => $namaFile
+            ];
 
-        $data = [
-            'nama_barang' => $barang_masuk['nama_barang'],
-            'total_resi' => $total_resi,
-            'qty' => $qty,
-            'bukti_pickup' => $namaFile
-        ];
-
-        if ($data) {
-            // insert data 
-            $this->barang_keluar->update($id, $data);
-            return redirect()->to('/dashboard/warehouse-kuningan')->with('success', 'Data Berhasil Diupdate!');
-        } else {
-            return redirect()->to('/dashboard/warehouse-kuningan-keluar/edit/' . $id)->withInput()->with('error', 'Data Gagal Diupdate!, Silahkan Periksa Kembali');
+            if ($data) {
+                // insert data 
+                $this->barang_keluar->update($id, $data);
+                return redirect()->to('/dashboard/warehouse-kuningan')->with('success', 'Data Berhasil Diupdate!');
+            } else {
+                return redirect()->to('/dashboard/warehouse-kuningan-keluar/edit/' . $id)->withInput()->with('error', 'Data Gagal Diupdate!, Silahkan Periksa Kembali');
+            }
         }
     }
 
