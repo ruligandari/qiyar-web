@@ -59,14 +59,14 @@
                             <div class="col-xl-6">
                                 <h6 class=" font-weight-bold text-primary">Data Warehouse</h6>
                             </div>
-                            <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?>
-                                <div class="col-xl-6 d-flex justify-content-end">
+                            <div class="col-xl-6 d-flex justify-content-end">
 
-                                    <a href="<?= base_url('dashboard/warehouse-jakarta/stok') ?>" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Stok Produk</a>
+                                <a href="<?= base_url('dashboard/warehouse-jakarta/stok') ?>" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Stok Produk</a>
+                                <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?>
                                     <div class="col-xl-1"></div>
                                     <a href="<?= base_url('dashboard/warehouse-jakarta/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Produk Baru</a>
-                                </div>
-                            <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>

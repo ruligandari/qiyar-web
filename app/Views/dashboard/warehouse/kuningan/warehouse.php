@@ -60,8 +60,8 @@
                                 <h6 class=" font-weight-bold text-primary">Data Warehouse</h6>
                             </div>
                             <div class="col-xl-6 d-flex justify-content-end">
-                                <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '3') : ?>
-                                    <a href="<?= base_url('dashboard/warehouse-kuningan/stok') ?>" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Stok Produk</a>
+                                <a href="<?= base_url('dashboard/warehouse-kuningan/stok') ?>" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Stok Produk</a>
+                                <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
                                     <div class="col-xl-1"></div>
                                     <a href="<?= base_url('dashboard/warehouse-kuningan/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Produk Baru</a>
                                 <?php endif; ?>
@@ -91,15 +91,23 @@
                                     <th>Tanggal</th>
                                     <th>Nama Barang</th>
                                     <th>Qty</th>
-                                    <th>Aksi</th>
+                                    <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
+                                        <th>Aksi</th>
+                                    <?php endif; ?>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="2"></td>
-                                    <td><b>Total Qty :</b></td>
-                                    <td id="totalSum"></td>
-                                    <td></td>
+                                    <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
+                                        <td colspan="2"></td>
+                                        <td><b>Total Qty :</b></td>
+                                        <td id="totalSum"></td>
+                                        <td></td>
+                                    <?php else : ?>
+                                        <td colspan="2"></td>
+                                        <td><b>Total Qty :</b></td>
+                                        <td id="totalSum"></td>
+                                    <?php endif; ?>
                                 </tr>
                             </tfoot>
                         </table>
@@ -116,7 +124,7 @@
                     <div class="">
                         <div class="d-sm-flex align-items-center justify-content-between">
                             <h6 class=" font-weight-bold text-primary">Barang Keluar</h6>
-                            <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '3') : ?>
+                            <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
                                 <a href="<?= base_url('dashboard/warehouse-kuningan/keluar/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                             <?php endif; ?>
                         </div>
@@ -146,16 +154,26 @@
                                     <th>Qty</th>
                                     <th>Total Resi</th>
                                     <th>Bukti Pickup</th>
-                                    <th>Aksi</th>
+                                    <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
+                                        <th>Aksi</th>
+                                    <?php endif; ?>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="2"></td>
-                                    <td><b>Total :</b></td>
-                                    <td id="totalQty"></td>
-                                    <td id="totalResi"></td>
-                                    <td colspan="2"></td>
+                                    <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
+                                        <td colspan="2"></td>
+                                        <td><b>Total :</b></td>
+                                        <td id="totalQty"></td>
+                                        <td id="totalResi"></td>
+                                        <td colspan="2"></td>
+                                    <?php else : ?>
+                                        <td colspan="2"></td>
+                                        <td><b>Total :</b></td>
+                                        <td id="totalQty"></td>
+                                        <td id="totalResi"></td>
+                                        <td></td>
+                                    <?php endif; ?>
                                 </tr>
                             </tfoot>
                         </table>
@@ -189,7 +207,79 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script>
+    <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
+        var columnBarangMasukKng = [{
+            data: 'no',
+            orderable: false
+        }, {
+            data: 'tanggal'
+        }, {
+            data: 'nama_barang'
+        }, {
+            data: 'qty'
+        }, {
+            data: 'action'
+        }, ];
+    <?php else : ?>
+        var columnBarangMasukKng = [{
+            data: 'no',
+            orderable: false
+        }, {
+            data: 'tanggal'
+        }, {
+            data: 'nama_barang'
+        }, {
+            data: 'qty'
+        }];
+    <?php endif; ?>
 
+    <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
+        var columnBarangKeluarKng = [{
+                data: 'no',
+                orderable: false
+            },
+            {
+                data: 'tanggal'
+            },
+            {
+                data: 'nama_barang'
+            },
+            {
+                data: 'qty'
+            },
+            {
+                data: 'total_resi'
+            },
+            {
+                data: 'bukti_pickup'
+            }, {
+                data: 'action'
+            },
+        ];
+    <?php else : ?>
+        var columnBarangKeluarKng = [{
+                data: 'no',
+                orderable: false
+            },
+            {
+                data: 'tanggal'
+            },
+            {
+                data: 'nama_barang'
+            },
+            {
+                data: 'qty'
+            },
+            {
+                data: 'total_resi'
+            },
+            {
+                data: 'bukti_pickup'
+            },
+        ];
+    <?php endif; ?>
+</script>
 
 <script src="<?= base_url('js/data-table-barang-masuk-kng.js') ?>"></script>
 <script src="<?= base_url('js/data-table-barang-keluar-kng.js') ?>"></script>

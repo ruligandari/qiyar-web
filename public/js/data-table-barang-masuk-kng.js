@@ -63,23 +63,7 @@ console.log(urlTable);
                     className: 'mb-2',
                 }
             ],
-            columns: [{
-                    data: 'no',
-                    orderable: false
-                },
-                {
-                    data: 'tanggal'
-                },
-                {
-                    data: 'nama_barang'
-                },
-                {
-                    data: 'qty'
-                },
-                {
-                    data: 'action'
-                },
-            ],
+            columns: columnBarangMasukKng,
             lengthMenu: [
                 [10, 25, 50, -1],
                 [10, 25, 50, 'Semua']
