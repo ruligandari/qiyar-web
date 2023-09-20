@@ -57,7 +57,7 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '7' || session()->get('role') == '3' || session()->get('role') == '2') : ?>
+            <?php if (session()->get('role') == '1' || session()->get('role') == '6' || session()->get('role') == '7' || session()->get('role') == '3' || session()->get('role') == '2' || session()->get('role') == '5') : ?>
                 <div class="sidebar-heading text-white">
                     Warehouse
                 </div>

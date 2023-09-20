@@ -27,7 +27,7 @@ class WarehouseKuninganFilter implements FilterInterface
     {
         if (session()->get('isLogin') == false) {
         }
-        if (session()->get('role') == '6' || session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '3') {
+        if (session()->get('role') == '6' || session()->get('role') == '1' || session()->get('role') == '2' || session()->get('role') == '3' || session()->get('role') == '5') {
         } else {
             return redirect()->back();
         }
