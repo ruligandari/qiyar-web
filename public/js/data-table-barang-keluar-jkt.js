@@ -82,29 +82,7 @@ $(document).ready(function() {
                 className: 'mb-2',
             }
         ],
-        columns: [{
-                data: 'no',
-                orderable: false
-            },
-            {
-                data: 'tanggal'
-            },
-            {
-                data: 'nama_barang'
-            },
-            {
-                data: 'qty'
-            },
-            {
-                data: 'total_resi'
-            },
-            {
-                data: 'bukti_pickup'
-            },
-            {
-                data: 'action'
-            },
-        ],
+        columns: columnBarangKeluarJkt,
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'Semua']

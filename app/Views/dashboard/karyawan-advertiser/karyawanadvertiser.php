@@ -48,7 +48,9 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Karyawan Advertiser</h6>
-                    <a href="<?= base_url('dashboard/advertiser/karyawan-advertiser/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <?php if (in_array(session()->get('role'), ['2', '3', '4', '5'])) : ?>
+                        <a href="<?= base_url('dashboard/advertiser/karyawan-advertiser/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <?php endif ?>
                 </div>
             </div>
         </div>
@@ -61,7 +63,9 @@
                             <th>Nama</th>
                             <th>Email</th>
                             <th>Role</th>
-                            <th>Aksi</th>
+                            <?php if (in_array(session()->get('role'), ['2', '3', '4', '5'])) : ?>
+                                <th>Aksi</th>
+                            <?php endif ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,10 +78,12 @@
                                 <td><?= $data['nama'] ?></td>
                                 <td><?= $data['email'] ?></td>
                                 <td><?= $data['role'] ?></td>
-                                <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/advertiser/karyawan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/advertiser/karyawan-advertiser/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                </td>
+                                <?php if (in_array(session()->get('role'), ['2', '3', '4', '5'])) : ?>
+                                    <td class="text-center">
+                                        <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/advertiser/karyawan-advertiser/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                                        <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/advertiser/karyawan-advertiser/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
+                                    </td>
+                                <?php endif ?>
                             </tr>
                         <?php
                         endforeach

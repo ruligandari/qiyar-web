@@ -66,7 +66,9 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Pengeluaran Kantor</h6>
-                    <a href="<?= base_url('dashboard/advertiser/tambah-data-pengeluaran-kantor') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <?php if (session()->get('role') == '3') : ?>
+                        <a href="<?= base_url('dashboard/advertiser/tambah-data-pengeluaran-kantor') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <?php endif ?>
                 </div>
             </div>
         </div>
@@ -94,17 +96,25 @@
                             <th>Nama Bank Penerima</th>
                             <th>Upload Bukti</th>
                             <th>Jumlah</th>
-                            <th>Aksi</th>
+                            <?php if (session()->get('role') == '3') : ?>
+                                <th>Aksi</th>
+                            <?php endif ?>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6"></td>
-                            <td><b>Total</b></td>
-                            <td id="totalSum"></td>
-                            <td></td>
+                            <?php if (session()->get('role') == '3') : ?>
+                                <td colspan="6"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                                <td></td>
+                            <?php else : ?>
+                                <td colspan="6"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                            <?php endif ?>
                         </tr>
                     </tfoot>
                 </table>
@@ -239,10 +249,11 @@
                 {
                     data: 'jumlah'
                 },
-                {
-                    data: 'action',
-                    orderable: false
-                },
+                <?php if (session()->get('role') == '3') : ?> {
+                        data: 'action',
+                        orderable: false
+                    },
+                <?php endif ?>
             ],
             lengthMenu: [
                 [10, 25, 50, -1],

@@ -56,7 +56,7 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Pengeluaran Advertiser</h6>
-                    <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
+                    <?php if (in_array(session()->get('role'), ['2', '3', '4', '5'])) : ?>
                         <a href="<?= base_url('dashboard/advertiser/tambah-data-pengeluaran-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                     <?php endif; ?>
                 </div>
@@ -86,14 +86,14 @@
                             <th>Bank Tujuan</th>
                             <th>Keterangan</th>
                             <th>Jumlah</th>
-                            <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
+                            <?php if (in_array(session()->get('role'), ['2', '3'])) : ?>
                                 <th>Aksi</th>
                             <?php endif; ?>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?>
+                            <?php if (session()->get('role') == '3') : ?>
                                 <th colspan="5"></th>
                                 <th style="text-align:right">Total:</th>
                                 <th id="totalSum"></th>
@@ -216,7 +216,7 @@
                 {
                     data: 'jumlah'
                 },
-                <?php if (session()->get('role') == '1' || session()->get('role') == '3') : ?> {
+                <?php if (session()->get('role') == '3') : ?> {
                         data: 'action',
                         orderable: false
                     },
