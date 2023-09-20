@@ -56,7 +56,9 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Pemasukan Broadcast</h6>
-                    <a href="<?= base_url('dashboard/broadcast/pemasukan-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <?php if (in_array(session()->get('role'), ['2'])) : ?>
+                        <a href="<?= base_url('dashboard/broadcast/pemasukan-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
+                    <?php endif ?>
                 </div>
             </div>
         </div>
@@ -84,40 +86,26 @@
                             <th>Nama Bank Penerima</th>
                             <th>Jumlah</th>
                             <th>Bukti Upload</th>
-                            <th>Aksi</th>
+                            <?php if (in_array(session()->get('role'), ['2'])) : ?>
+                                <th>Aksi</th>
+                            <?php endif ?>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        $no = 1;
-                        foreach ($pemasukanbroadcast as $data) :
-                        ?>
-                            <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= $data['tanggal'] ?></td>
-                                <td><?= $data['waktu'] ?></td>
-                                <td><?= $data['expedisi'] ?></td>
-                                <td><?= $data['bank_tujuan'] ?></td>
-                                <td><?= $data['penerima'] ?></td>
-                                <td><?= number_format($data['jumlah'], 0, ',', '.') ?>
-                                <td><a href="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" target="_blank">
-                                        <img src="<?= base_url('bukti_pemasukan_broadcast/') . $data['upload_bukti'] ?>" alt="" style="width: 50px; height:50px;"></a></td>
-                                </td>
-                                <td class="text-center">
-                                    <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/broadcast/pemasukan-broadcast/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                    <button class="btn btn-danger delete-button" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/broadcast/pemasukan-broadcast/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                </td>
-                            </tr>
-                        <?php
-                        endforeach
-                        ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="5"></td>
-                            <td><b>Total</b></td>
-                            <td id="totalSum"></td>
-                            <td colspan="2"></td>
+                            <?php if (in_array(session()->get('role'), ['2'])) : ?>
+                                <td colspan="5"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                                <td colspan="2"></td>
+                            <?php else : ?>
+                                <td colspan="5"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                                <td></td>
+                            <?php endif ?>
                         </tr>
                     </tfoot>
                 </table>
@@ -252,11 +240,11 @@
                 {
                     data: 'upload_bukti'
                 },
-
-                {
-                    data: 'action',
-                    orderable: false
-                },
+                <?php if (in_array(session()->get('role'), ['2'])) : ?> {
+                        data: 'action',
+                        orderable: false
+                    },
+                <?php endif ?>
             ],
             lengthMenu: [
                 [10, 25, 50, -1],

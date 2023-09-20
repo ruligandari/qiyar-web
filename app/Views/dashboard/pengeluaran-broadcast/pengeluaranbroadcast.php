@@ -56,7 +56,7 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Jenis Pengeluaran</h6>
-                    <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
+                    <?php if (in_array(session()->get('role'), ['2'])) : ?>
                         <a href="<?= base_url('dashboard/broadcast/pengeluaran-broadcast/tambah') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                     <?php endif; ?>
                 </div>
@@ -86,18 +86,23 @@
                             <th>Nama Penerima</th>
                             <th>Bukti</th>
                             <th>Jumlah</th>
-                            <?php if (session()->get('role') == '1' || session()->get('role') == '2') : ?>
+                            <?php if (in_array(session()->get('role'), ['2'])) : ?>
                                 <th>Aksi</th>
                             <?php endif; ?>
                         </tr>
                     </thead>
 
                     <tfoot>
-                        <tr>
-                            <td colspan="6"></td>
-                            <td><b>Total</b></td>
-                            <td id="totalSum"></td>
-                            <td></td>
+                        <tr><?php if (in_array(session()->get('role'), ['2'])) : ?>
+                                <td colspan="6"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                                <td></td>
+                            <?php else : ?>
+                                <td colspan="6"></td>
+                                <td><b>Total</b></td>
+                                <td id="totalSum"></td>
+                            <?php endif ?>
                         </tr>
                     </tfoot>
                 </table>
@@ -234,10 +239,11 @@
                 {
                     data: 'jumlah'
                 },
-                {
-                    data: 'action',
-                    orderable: false
-                },
+                <?php if (in_array(session()->get('role'), ['2'])) : ?> {
+                        data: 'action',
+                        orderable: false
+                    },
+                <?php endif; ?>
             ],
             lengthMenu: [
                 [10, 25, 50, -1],
