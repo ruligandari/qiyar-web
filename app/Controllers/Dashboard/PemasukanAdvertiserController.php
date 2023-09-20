@@ -68,7 +68,6 @@ class PemasukanAdvertiserController extends BaseController
         $penerima = $this->request->getPost('penerima');
         $jumlah = $this->request->getPost('jumlah');
         $upload_bukti = $this->request->getFile('upload_bukti');
-
         // convert 140,000 to 140000
         $jumlah = str_replace(',', '', $jumlah);
 
@@ -83,8 +82,7 @@ class PemasukanAdvertiserController extends BaseController
         ];
         $this->pemasukanadv->insert($data);
         $upload_bukti->move('bukti_pemasukan_advertiser');
-        session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/advertiser/pemasukan-advertiser');
+        return json_encode(['status' => true, 'message' => 'Data berhasil ditambahkan']);
     }
 
     public  function edit($id)

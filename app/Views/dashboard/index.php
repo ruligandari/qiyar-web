@@ -472,9 +472,33 @@
                     }
                     groupedDataBc[tanggal].pengeluaranBc += parseFloat(item.jumlah);
                 });
+
+                var groupedDataArray = Object.entries(groupedData);
+                var groupedDataBcArray = Object.entries(groupedDataBc);
+
+                groupedDataArray.sort(function(a, b) {
+                    return new Date(a[0]) - new Date(b[0]);
+                });
+
+                groupedDataBcArray.sort(function(a, b) {
+                    return new Date(a[0]) - new Date(b[0]);
+                });
+
+                var sortedGroupedData = {};
+                var sortedGroupedDataBc = {};
+
+                groupedDataArray.forEach(function(item) {
+                    sortedGroupedData[item[0]] = item[1];
+                });
+
+                groupedDataBcArray.forEach(function(item) {
+                    sortedGroupedDataBc[item[0]] = item[1];
+                });
+
+
                 // Mengambil tanggal sebagai label
-                var labels = Object.keys(groupedData);
-                var labelsbroadcast = Object.keys(groupedDataBc);
+                var labels = Object.keys(sortedGroupedData);
+                var labelsbroadcast = Object.keys(sortedGroupedDataBc);
 
                 // Mengambil data pemasukan, pengeluaran, pengeluaranKantor, dan pemasukanTransfer sebagai data
                 var dataValuesPemasukan = labels.map(function(label) {
@@ -505,6 +529,33 @@
                 var dataValuesPengeluaranBc = labelsbroadcast.map(function(label) {
                     return groupedDataBc[label].pengeluaranBc;
                 });
+
+
+                function formatDateToMonthDay(dateString) {
+                    const options = {
+                        month: 'short',
+                        day: 'numeric'
+                    };
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('id-ID', options);
+                }
+
+                var formattedLabels = labels.map(function(label) {
+                    return formatDateToMonthDay(label);
+                });
+
+                var formattedLabelsBroadcast = labelsbroadcast.map(function(label) {
+                    return formatDateToMonthDay(label);
+                });
+
+                // Penggunaan dalam kode Anda
+                var labels = formattedLabels;
+                var labelsbroadcast = formattedLabelsBroadcast;
+
+                // ...
+                // Kode pengambilan data lainnya tetap sama
+
+                console.log(sortedGroupedData);
 
                 // Membuat grafik batang
 
@@ -596,7 +647,7 @@
                                         drawBorder: false
                                     },
                                     ticks: {
-                                        maxTicksLimit: 30
+                                        maxTicksLimit: 30,
                                     }
                                 }],
                                 yAxes: [{
