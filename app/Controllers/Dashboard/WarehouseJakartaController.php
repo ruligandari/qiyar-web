@@ -521,7 +521,7 @@ class WarehouseJakartaController extends BaseController
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
         // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
+        if ($upload_bukti) {
             // generate nama file random
             $namaFile = $upload_bukti->getRandomName();
             // pindahkan file ke folder img
@@ -558,9 +558,13 @@ class WarehouseJakartaController extends BaseController
             $this->barang_masuk->update($nama_barang, [
                 'qty' => $tambahQty
             ]);
+            if ($upload_bukti) {
+
+                return json_encode(['message' => 'Data Barang Berhasil diupdate.', 'status' => true]);
+            }
             return redirect()->to('/dashboard/warehouse-jakarta/stok')->with('success', 'Data Berhasil Diupdate!');
         } else {
-            return redirect()->to('/dashboard/warehouse-jakarta/stok/edit/' . $id)->withInput()->with('error', 'Data Gagal Diupdate!, Silahkan Periksa Kembali');
+            return json_encode(['message' => 'Data Barang Keluar Gagal diupdate.', 'status' => false]);
         }
     }
     public function listBarangMasuk()

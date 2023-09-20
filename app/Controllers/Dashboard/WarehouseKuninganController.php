@@ -434,13 +434,16 @@ class WarehouseKuninganController extends BaseController
         $upload_bukti = $this->request->getFile('upload_bukti');
 
         // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
+        if ($upload_bukti) {
             // generate nama file random
             $namaFile = $upload_bukti->getRandomName();
             // pindahkan file ke folder img
             $upload_bukti->move('bukti-barang-masuk-kng', $namaFile);
         } else {
-            return redirect()->to('/dashboard/warehouse-kuningan/stok/tambah')->withInput()->with('error', 'File Upload Bukti Barang Masuk Wajib Diisi!');
+            return json_encode([
+                'message' => 'Data Stok Barang Gagal ditambahkan, lengkapi data',
+                'status' => false
+            ]);
         }
         // mendapatkan nama_barang dari tabel barang masuk berdasarkan id
         $barang_masuk = $this->barang_masuk->find($nama_barang_form);
@@ -461,9 +464,15 @@ class WarehouseKuninganController extends BaseController
             ]);
             // insert
             $this->stok_barang->insert($data);
-            return redirect()->to('/dashboard/warehouse-kuningan/stok')->with('success', 'Data Berhasil Ditambahkan!');
+            return json_encode([
+                'status' => true,
+                'message' => 'Data Stok Barang Berhasil ditambahkan'
+            ]);
         } else {
-            return redirect()->to('/dashboard/warehouse-kuningan/stok/tambah')->withInput()->with('error', 'Data Gagal Ditambahkan!, Silahkan Periksa Kembali');
+            return json_encode([
+                'status' => false,
+                'message' => 'Data Stok Barang Gagal ditambahkan'
+            ]);
         }
     }
 
@@ -527,7 +536,7 @@ class WarehouseKuninganController extends BaseController
         $jenis_barang = $this->request->getPost('jenis_barang_masuk');
 
         // cek apakah ada file yang diupload
-        if (!$upload_bukti->getError() == 4) {
+        if ($upload_bukti) {
             // generate nama file random
             $namaFile = $upload_bukti->getRandomName();
             // pindahkan file ke folder img
@@ -564,9 +573,20 @@ class WarehouseKuninganController extends BaseController
             $this->barang_masuk->update($nama_barang, [
                 'qty' => $tambahQty
             ]);
-            return redirect()->to('/dashboard/warehouse-kuningan/stok')->with('success', 'Data Berhasil Diupdate!');
+            if ($upload_bukti) {
+                return json_encode([
+                    'status' => true,
+                    'message' => 'Data Stok Barang Berhasil diupdate'
+                ]);
+            } else {
+
+                return redirect()->to('/dashboard/warehouse-kuningan/stok')->with('success', 'Data Berhasil Diupdate!');
+            }
         } else {
-            return redirect()->to('/dashboard/warehouse-kuningan/stok/edit/' . $id)->withInput()->with('error', 'Data Gagal Diupdate!, Silahkan Periksa Kembali');
+            return json_encode([
+                'status' => false,
+                'message' => 'Data Stok Barang Gagal diupdate, lengkapi data'
+            ]);
         }
     }
 }
