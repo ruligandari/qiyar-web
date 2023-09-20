@@ -316,8 +316,8 @@ class WarehouseKuninganController extends BaseController
 
             if ($qty != $qty_lama) {
                 // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
-                $kurangQty = $barang_masuk['qty'] - $qty_lama;
-                $tambahQty = $kurangQty + $qty;
+                $kurangQty = $barang_masuk['qty'] + $qty_lama;
+                $tambahQty = $kurangQty - $qty;
                 $this->barang_masuk->update($nama_barang, [
                     'qty' => $tambahQty
                 ]);
@@ -349,8 +349,8 @@ class WarehouseKuninganController extends BaseController
 
             if ($qty != $qty_lama) {
                 // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
-                $kurangQty = $barang_masuk['qty'] - $qty_lama;
-                $tambahQty = $kurangQty + $qty;
+                $kurangQty = $barang_masuk['qty'] + $qty_lama;
+                $tambahQty = $kurangQty - $qty;
                 $this->barang_masuk->update($nama_barang, [
                     'qty' => $tambahQty
                 ]);

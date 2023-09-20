@@ -237,8 +237,8 @@ class WarehouseJakartaController extends BaseController
     {
         $id = $this->request->getPost('id');
         $nama_barang = $this->request->getPost('nama_barang');
-        $qty = $this->request->getPost('qty');
-        $qty_lama = $this->request->getPost('qty_lama');
+        $qty = $this->request->getVar('qty');
+        $qty_lama = $this->request->getVar('qty_lama');
         $total_resi = $this->request->getPost('total_resi');
         $upload_bukti = $this->request->getFile('upload_bukti');
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
@@ -262,8 +262,9 @@ class WarehouseJakartaController extends BaseController
 
             if ($qty != $qty_lama) {
                 // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
-                $kurangQty = $barang_masuk['qty'] - $qty_lama;
-                $tambahQty = $kurangQty + $qty;
+                $kurangQty = $barang_masuk['qty'] + $qty_lama;
+                $tambahQty = $kurangQty - $qty;
+                return json_encode(['data' => $tambahQty, 'status' => false]);
                 $this->barang_masuk->update($nama_barang, [
                     'qty' => $tambahQty
                 ]);
@@ -290,8 +291,8 @@ class WarehouseJakartaController extends BaseController
 
             if ($qty != $qty_lama) {
                 // update barang_masuk dengan mengurangi qty yang didatabase dengan qty dari form
-                $kurangQty = $barang_masuk['qty'] - $qty_lama;
-                $tambahQty = $kurangQty + $qty;
+                $kurangQty = $barang_masuk['qty'] + $qty_lama;
+                $tambahQty = $kurangQty - $qty;
                 $this->barang_masuk->update($nama_barang, [
                     'qty' => $tambahQty
                 ]);
