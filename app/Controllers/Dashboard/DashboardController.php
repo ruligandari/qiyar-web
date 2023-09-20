@@ -81,11 +81,19 @@ class DashboardController extends BaseController
         $pengeluaranKantor = $this->pengeluarankantor->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
         $pemasukanTransfer = $this->uangtransferadvertiser->where('jenis_transfer', 'Iklan')->select('tanggal, harga_total')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
 
+        $pemasukanBroadcast = $this->pemasukanbc->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
+        $uangtransferBc = $this->uangtransferadvertiser->where('jenis_transfer', 'Broadcast')->select('tanggal, harga_total')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
+        $uangtransferBcAdv = $this->uangtransferadvertiser->where('jenis_transfer', 'Iklan')->select('tanggal, harga_total')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
+        $pengeluaranBc = $this->pengeluaranbroadcast->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
         $data = [
             'pengeluaran' => $pengeluaranadv,
             'pemasukan' => $pemasukanadv,
             'pengeluaranKantor' => $pengeluaranKantor,
             'pemasukanTransfer' => $pemasukanTransfer,
+            'pemasukanBroadcast' => $pemasukanBroadcast,
+            'uangTransferBc' => $uangtransferBc,
+            'uangTransferAdv' => $uangtransferBcAdv,
+            'pengeluaranBc' => $pengeluaranBc,
         ];
         return json_encode($data);
     }
