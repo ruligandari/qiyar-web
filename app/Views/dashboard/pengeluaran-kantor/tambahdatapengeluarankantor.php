@@ -58,7 +58,7 @@
         <form method="POST" action="<?= base_url('dashboard/advertiser/pengeluaran-kantor/add')  ?> " enctype="multipart/form-data">
           <div class="form-group">
             <label for="formGroupExampleInput">Tanggal Input</label>
-            <input type="text" class="form-control" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input" readonly>
+            <input type="date" class="form-control" value="<?= date('Y-m-d') ?>" id="formGroupExampleInput" name="tanggal" placeholder="Tanggal Input">
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Waktu</label>
