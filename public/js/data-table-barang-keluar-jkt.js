@@ -31,7 +31,7 @@ var urlDeleteKeluar = $('#urlDeleteBarangKeluar').val();
 console.log(urlDeleteKeluar);
 console.log(urlTableKeluar);
 
-jq2(document).ready(function() {
+$(document).ready(function() {
     let table = $('#table2').DataTable({
         processing: true,
         serverSide: true,
