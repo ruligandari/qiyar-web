@@ -208,6 +208,10 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script>
+    var jq2 = jQuery.noConflict();
+</script>
 <script>
     <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?>
         var columnBarangMasukJkt = [{
