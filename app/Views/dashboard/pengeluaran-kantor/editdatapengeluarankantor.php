@@ -51,6 +51,11 @@
           </select>
         </div>
         <div class="form-group">
+          <!-- keterangan -->
+          <label for="formGroupExampleInput">Keterangan</label>
+          <textarea name="keterangan" class="form-control"><?= $data['keterangan'] ?></textarea>
+        </div>
+        <div class="form-group">
           <label for="formGroupExampleInput">Bank Tujuan</label>
           <input type="text" name="bank_tujuan" class="form-control " value="<?= $data['bank_tujuan'] ?>" required>
         </div>

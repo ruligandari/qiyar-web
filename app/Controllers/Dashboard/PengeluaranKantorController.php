@@ -43,35 +43,11 @@ class PengeluaranKantorController extends BaseController
 
         if ($upload_bukti) {
             $file_name = $upload_bukti->getRandomName();
+            $upload_bukti->move('bukti_pengeluaran_kantor', $file_name);
         } else {
             return redirect()->to('/dashboard/advertiser/tambah-data-pengeluaran-kantor')->withInput()->with('error', 'Upload Bukti harus diisi.');
         }
 
-        // Validasi data
-        $validation = \Config\Services::validation();
-        $validate = $this->validate([
-            'waktu' => 'required',
-            'banktujuan' => 'required',
-            'penerima' => 'required',
-            'jumlah' => 'required',
-            'upload_bukti' => 'uploaded[upload_bukti]|max_size[upload_bukti,1024]|is_image[upload_bukti]',
-        ], [
-            'waktu' => ['required' => 'Waktu harus diisi.'],
-            'banktujuan' => ['required' => 'Bank Tujuan harus diisi.'],
-            'penerima' => ['required' => 'Penerima harus diisi.'],
-            'jumlah' => ['required' => 'Jumlah harus diisi.'],
-            'upload_bukti' => [
-                'uploaded' => 'Upload Bukti harus diisi.',
-                'max_size' => 'Ukuran file terlalu besar. Maksimum 1MB.',
-                'is_image' => 'File harus berupa gambar.'
-            ],
-        ]);
-
-        // Jika validasi gagal
-        if (!$validate) {
-            session()->setFlashdata('error', $validation->getErrors());
-            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/tambah-data-pengeluaran-kantor')->withInput();
-        }
 
         // Jika validasi berhasil
         $jumlah = str_replace(',', '', $jumlah);
@@ -87,7 +63,6 @@ class PengeluaranKantorController extends BaseController
         ];
 
         $this->pengeluarankantor->insert($data);
-        $upload_bukti->move('bukti_pengeluaran_kantor', $file_name);
         return json_encode(['status' => true, 'message' => 'Data Pengeluaran berhasil ditambahkan']);
     }
 
@@ -107,6 +82,7 @@ class PengeluaranKantorController extends BaseController
         $jenis_pengeluaran = $this->request->getPost('jenis_pengeluaran');
         $bank_tujuan = $this->request->getPost('bank_tujuan');
         $jumlah = $this->request->getPost('jumlah');
+        $keterangan = $this->request->getPost('keterangan');
         $nama_penerima = $this->request->getPost('nama_penerima');
         $bukti_transfer = $this->request->getFile('upload_bukti');
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
@@ -138,6 +114,7 @@ class PengeluaranKantorController extends BaseController
             'nama_penerima' => $nama_penerima,
             'bank_tujuan' => $bank_tujuan,
             'jenis_pengeluaran' => $jenis_pengeluaran,
+            'keterangan' => $keterangan,
             'bukti_transfer' => $file_name,
         ];
 
