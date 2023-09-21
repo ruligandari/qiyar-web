@@ -97,6 +97,7 @@
                                     <?php endif; ?>
                                 </tr>
                             </thead>
+                            <tbody></tbody>
                             <tfoot>
                                 <tr>
                                     <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?>
@@ -160,6 +161,7 @@
                                     <?php endif; ?>
                                 </tr>
                             </thead>
+                            <tbody></tbody>
                             <tfoot>
                                 <tr>
                                     <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?>
@@ -222,8 +224,7 @@
         }, {
             data: 'action'
         }, ];
-    <?php endif ?>
-    <?php if (in_array(session()->get('role'), ['1', '5', '4'])) : ?>
+    <?php else : ?>
         var columnBarangMasukJkt = [{
             data: 'no',
             orderable: false
@@ -259,8 +260,7 @@
                 data: 'action'
             },
         ];
-    <?php endif ?>
-    <?php if (in_array(session()->get('role'), ['1', '5', '4'])) : ?>
+    <?php else : ?>
         var columnBarangKeluarJkt = [{
                 data: 'no',
                 orderable: false
