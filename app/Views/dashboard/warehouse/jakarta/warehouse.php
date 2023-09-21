@@ -146,6 +146,7 @@
                     </div>
                     <input type="hidden" value="<?= base_url('dashboard/warehouse-jakarta/list-barang-keluar-jkt') ?>" id="urlBarangKeluar">
                     <input type="hidden" value="<?= base_url('dashboard/warehouse-jakarta/keluar/delete') ?>" id="urlDeleteBarangKeluar">
+                    <input type="hidden" id="role" value="<?= session()->get('role') ?>">
                     <div class="table-responsive">
                         <table class="table table-bordered" id="table2" width="100%" cellspacing="0">
                             <thead>
@@ -210,79 +211,6 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script>
-    <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?>
-        var columnBarangMasukJkt = [{
-            data: 'no',
-            orderable: false
-        }, {
-            data: 'tanggal'
-        }, {
-            data: 'nama_barang'
-        }, {
-            data: 'qty'
-        }, {
-            data: 'action'
-        }, ];
-    <?php else : ?>
-        var columnBarangMasukJkt = [{
-            data: 'no',
-            orderable: false
-        }, {
-            data: 'tanggal'
-        }, {
-            data: 'nama_barang'
-        }, {
-            data: 'qty'
-        }];
-    <?php endif; ?>
-
-    <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?>
-        var columnBarangKeluarJkt = [{
-                data: 'no',
-                orderable: false
-            },
-            {
-                data: 'tanggal'
-            },
-            {
-                data: 'nama_barang'
-            },
-            {
-                data: 'qty'
-            },
-            {
-                data: 'total_resi'
-            },
-            {
-                data: 'bukti_pickup'
-            }, {
-                data: 'action'
-            },
-        ];
-    <?php else : ?>
-        var columnBarangKeluarJkt = [{
-                data: 'no',
-                orderable: false
-            },
-            {
-                data: 'tanggal'
-            },
-            {
-                data: 'nama_barang'
-            },
-            {
-                data: 'qty'
-            },
-            {
-                data: 'total_resi'
-            },
-            {
-                data: 'bukti_pickup'
-            },
-        ];
-    <?php endif; ?>
-</script>
 
 <script src="<?= base_url('js/data-table-barang-masuk-jkt.js') ?>"></script>
 <script src="<?= base_url('js/data-table-barang-keluar-jkt.js') ?>"></script>
