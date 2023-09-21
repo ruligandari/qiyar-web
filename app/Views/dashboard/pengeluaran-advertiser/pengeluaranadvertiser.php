@@ -56,7 +56,7 @@
             <div class="">
                 <div class="d-sm-flex align-items-center justify-content-between">
                     <h6 class=" font-weight-bold text-primary">Data Pengeluaran Advertiser</h6>
-                    <?php if (in_array(session()->get('role'), ['2', '3', '4', '5'])) : ?>
+                    <?php if (in_array(session()->get('role'), ['2', '3'])) : ?>
                         <a href="<?= base_url('dashboard/advertiser/tambah-data-pengeluaran-advertiser') ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Tambah Data</a>
                     <?php endif; ?>
                 </div>
