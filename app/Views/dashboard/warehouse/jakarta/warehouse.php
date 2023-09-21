@@ -222,7 +222,7 @@
         }, {
             data: 'action'
         }, ];
-    <?php else : ?>
+    <?php if (in_array(session()->get('role'), ['1', '5', '4'])) : ?>
         var columnBarangMasukJkt = [{
             data: 'no',
             orderable: false
@@ -258,7 +258,7 @@
                 data: 'action'
             },
         ];
-    <?php else : ?>
+        <?php if (in_array(session()->get('role'), ['1', '5', '4'])) : ?>
         var columnBarangKeluarJkt = [{
                 data: 'no',
                 orderable: false
