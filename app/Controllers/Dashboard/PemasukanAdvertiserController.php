@@ -71,6 +71,9 @@ class PemasukanAdvertiserController extends BaseController
         // convert 140,000 to 140000
         $jumlah = str_replace(',', '', $jumlah);
 
+        if ($upload_bukti == null) {
+            return redirect()->to('dashboard/advertiser/tambah-data-pemasukan-advertiser')->withInput()->with('error', 'Bukti Upload harus diisi');
+        }
         $data = [
             'tanggal' => $tanggal,
             'waktu' => $waktu,
@@ -111,28 +114,38 @@ class PemasukanAdvertiserController extends BaseController
         } else if (strpos($jumlah, '.') !== false) {
             $jumlah = str_replace('.', '', $jumlah);
         }
+        if ($upload_bukti) {
+            $nama_file = $upload_bukti->getName();
+            // cek file apakah ada
+            if (file_exists('bukti_pemasukan_advertiser/' . $bukti_transfer_lama)) {
 
+                unlink('bukti_pemasukan_advertiser/' . $bukti_transfer_lama);
+            }
+            // upload file baru
+            $upload_bukti->move('bukti_pemasukan_advertiser');
+        } else {
+            $nama_file = $bukti_transfer_lama;
+        }
         $data = [
             'expedisi' => $expedisi,
             'jumlah' => $jumlah,
             'penerima' => $penerima,
             'bank_tujuan' => $bank_tujuan,
-            'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
+            'upload_bukti' => $nama_file,
         ];
-
-        // hapus file lama
-        if ($upload_bukti->getName() != null) {
-            unlink('bukti_pemasukan_advertiser/' . $bukti_transfer_lama);
-            // upload file baru
-            $upload_bukti->move('bukti_pemasukan_advertiser');
-        }
 
 
         // update data
         $pengeluaranadv = $this->pemasukanadv->update($id, $data);
         if ($pengeluaranadv) {
-            session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/advertiser/pemasukan-advertiser');
+            if ($upload_bukti) {
+
+                return json_encode(['status' => true, 'message' => 'Data berhasil diupdate']);
+            } else {
+
+                session()->setFlashdata('success', 'Data berhasil diupdate');
+                return redirect()->to('/dashboard/advertiser/pemasukan-advertiser');
+            }
         } else {
             session()->setFlashdata('error', 'Data gagal diupdate');
             return redirect()->to('/dashboard/advertiser/pemasukan-advertiser');

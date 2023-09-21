@@ -154,6 +154,7 @@
 
     // The configuration we've talked about above
     autoProcessQueue: false,
+    required: true,
     // paramname
     paramName: "upload_bukti",
     uploadMultiple: false,
@@ -175,7 +176,7 @@
       // First change the button to actually tell Dropzone to process the queue.
       this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
         // Make sure that the form isn't actually being sent.
-        if (myDropzone.getQueuedFiles().length != 0) {
+        if (myDropzone.getQueuedFiles().length > 0) {
           e.preventDefault();
           e.stopPropagation();
           myDropzone.processQueue();

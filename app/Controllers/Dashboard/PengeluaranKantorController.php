@@ -40,6 +40,12 @@ class PengeluaranKantorController extends BaseController
         $jumlah = $this->request->getPost('jumlah');
         $upload_bukti = $this->request->getFile('upload_bukti');
 
+        if ($upload_bukti) {
+            $file_name = $upload_bukti->getRandomName();
+        } else {
+            return redirect()->to('/dashboard/advertiser/tambah-data-pengeluaran-kantor')->withInput()->with('error', 'Upload Bukti harus diisi.');
+        }
+
         // Validasi data
         $validation = \Config\Services::validation();
         $validate = $this->validate([
@@ -75,14 +81,12 @@ class PengeluaranKantorController extends BaseController
             'nama_penerima' => $penerima,
             'jenis_pengeluaran' => $jenispengeluaran,
             'jumlah' => $jumlah,
-            'bukti_transfer' => $upload_bukti->getName()
+            'bukti_transfer' => $file_name
         ];
 
         $this->pengeluarankantor->insert($data);
-        $upload_bukti->move('bukti_pengeluaran_kantor');
-
-        session()->setFlashdata('success', 'Data Pengeluaran berhasil ditambahkan');
-        return redirect()->to('/dashboard/advertiser/pengeluaran-kantor');
+        $upload_bukti->move('bukti_pengeluaran_kantor', $file_name);
+        return json_encode(['status' => true, 'message' => 'Data Pengeluaran berhasil ditambahkan']);
     }
 
     public  function edit($id)
@@ -102,7 +106,7 @@ class PengeluaranKantorController extends BaseController
         $bank_tujuan = $this->request->getPost('bank_tujuan');
         $jumlah = $this->request->getPost('jumlah');
         $nama_penerima = $this->request->getPost('nama_penerima');
-        $bukti_transfer = $this->request->getFile('bukti_transfer');
+        $bukti_transfer = $this->request->getFile('upload_bukti');
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
         // convert 140,000 or 140.000 to 140000
@@ -112,27 +116,38 @@ class PengeluaranKantorController extends BaseController
             $jumlah = str_replace('.', '', $jumlah);
         }
 
+        if ($bukti_transfer) {
+            $file_name = $bukti_transfer->getRandomName();
+            // hapus file lama
+            // cek apakah file ada
+            if (file_exists('bukti_pengeluaran_kantor/' . $bukti_transfer_lama)) {
+                unlink('bukti_pengeluaran_kantor/' . $bukti_transfer_lama);
+            } else {
+                session()->setFlashdata('error', 'File tidak ditemukan');
+                return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/edit/' . $id_pengeluaran)->withInput();
+            }
+            $bukti_transfer->move('bukti_pengeluaran_kantor', $file_name);
+        } else {
+            $file_name = $bukti_transfer_lama;
+        }
+
         $data = [
             'jumlah' => $jumlah,
             'nama_penerima' => $nama_penerima,
             'bank_tujuan' => $bank_tujuan,
             'jenis_pengeluaran' => $jenis_pengeluaran,
-            'bukti_transfer' => $bukti_transfer->getName() ? $bukti_transfer->getName() : $bukti_transfer_lama,
+            'bukti_transfer' => $file_name,
         ];
 
-        if ($bukti_transfer->getName() != null) {
-            // hapus file lama
-            unlink('bukti_pengeluaran_kantor/' . $bukti_transfer_lama);
-            $bukti_transfer->move('bukti_pengeluaran_kantor');
-        }
         // update data
         $pengeluarankantor = $this->pengeluarankantor->update($id_pengeluaran, $data);
         if ($pengeluarankantor) {
-            session()->setFlashdata('success', 'Data berhasil diupdate');
-            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor');
+            if ($bukti_transfer) {
+                return json_encode(['status' => true, 'message' => 'Data Pengeluaran berhasil diupdate']);
+            }
+            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor')->with('success', 'Data Pengeluaran berhasil diupdate');
         } else {
-            session()->setFlashdata('error', 'Data gagal diupdate');
-            return redirect()->to('/dashboard/advertiser/pengeluaran-kantor/edit/' . $id_pengeluaran)->withInput();
+            return json_encode(['status' => false, 'message' => 'Data Pengeluaran gagal diupdate']);
         }
     }
 
