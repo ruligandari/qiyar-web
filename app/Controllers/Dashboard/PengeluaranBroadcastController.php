@@ -40,6 +40,15 @@ class PengeluaranBroadcastController extends BaseController
         $upload_bukti = $this->request->getFile('upload_bukti');
         $jumlah = $this->request->getPost('jumlah');
 
+        if ($upload_bukti) {
+            // generate nama file random
+            $nama_file = $upload_bukti->getRandomName();
+            // pindahkan file ke folder public/img
+            $upload_bukti->move('bukti_pengeluaran_broadcast', $nama_file);
+        } else {
+            return redirect()->to('/dashboard/broadcast/pengeluaran-broadcast')->with('error', 'Upload bukti transfer gagal');
+        }
+
         $jumlah = str_replace(',', '', $jumlah);
         $data = [
             'tanggal' => $tanggal,
@@ -47,13 +56,12 @@ class PengeluaranBroadcastController extends BaseController
             'jenis_pengeluaran' => $jenis_pengeluaran,
             'bank_tujuan' => $bank_tujuan,
             'nama_penerima' => $nama_penerima,
-            'upload_bukti' => $upload_bukti->getName(),
+            'upload_bukti' => $nama_file,
             'jumlah' => $jumlah
         ];
         $this->pengeluaranbroadcast->insert($data);
-        $upload_bukti->move('bukti_pengeluaran_broadcast');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/broadcast/pengeluaran-broadcast');
+        return json_encode(['status' => true, 'message' => 'Data berhasil ditambahkan!']);
     }
     public  function edit($id)
     {
@@ -74,6 +82,15 @@ class PengeluaranBroadcastController extends BaseController
         $jumlah = $this->request->getPost('jumlah');
         $bukti_transfer_lama = $this->request->getPost('bukti_transfer_lama');
 
+        if ($upload_bukti) {
+            $file_name = $upload_bukti->getRandomName();
+            // move file
+            $upload_bukti->move('bukti_pengeluaran_broadcast', $file_name);
+            unlink('bukti_pengeluaran_broadcast/' . $bukti_transfer_lama);
+        } else {
+            $file_name = $bukti_transfer_lama;
+        }
+
         // convert 140,000 or 140.000 to 140000
         if (strpos($jumlah, ',') !== false) {
             $jumlah = str_replace(',', '', $jumlah);
@@ -85,21 +102,16 @@ class PengeluaranBroadcastController extends BaseController
             'jenis_pengeluaran' => $jenis_pengeluaran,
             'bank_tujuan' => $bank_tujuan,
             'nama_penerima' => $nama_penerima,
-            'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
+            'upload_bukti' => $file_name,
             'jumlah' => $jumlah,
         ];
-
-        // hapus file lama
-        if ($upload_bukti->getName() != null) {
-            unlink('bukti_pengeluaran_broadcast/' . $bukti_transfer_lama);
-            // upload file baru
-            $upload_bukti->move('bukti_pengeluaran_broadcast');
-        }
-
 
         // update data
         $pengeluaranbroadcast = $this->pengeluaranbroadcast->update($id, $data);
         if ($pengeluaranbroadcast) {
+            if ($upload_bukti) {
+                return json_encode(['status' => true, 'message' => 'Data berhasil diupdate!']);
+            }
             session()->setFlashdata('success', 'Data berhasil diupdate');
             return redirect()->to('/dashboard/broadcast/pengeluaran-broadcast');
         } else {

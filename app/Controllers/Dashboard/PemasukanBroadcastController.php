@@ -68,6 +68,14 @@ class PemasukanBroadcastController extends BaseController
         $jumlah = $this->request->getPost('jumlah');
         $upload_bukti = $this->request->getFile('upload_bukti');
 
+        if ($upload_bukti) {
+            $file_name = $upload_bukti->getRandomName();
+            // move file
+            $upload_bukti->move('bukti_pemasukan_broadcast', $file_name);
+        } else {
+            return redirect()->to('/dashboard/broadcast/pemasukan-broadcast/tambah')->with('error', 'Upload bukti gagal');
+        }
+
         // convert 140,000 to 140000
         $jumlah = str_replace(',', '', $jumlah);
 
@@ -78,12 +86,10 @@ class PemasukanBroadcastController extends BaseController
             'bank_tujuan' => $bank_tujuan,
             'penerima' => $penerima,
             'jumlah' => $jumlah,
-            'upload_bukti' => $upload_bukti->getName()
+            'upload_bukti' => $file_name
         ];
         $this->pemasukanbroadcast->insert($data);
-        $upload_bukti->move('bukti_pemasukan_broadcast');
-        session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/broadcast/pemasukan-broadcast/');
+        return json_encode(['status' => true, 'message' => 'Data berhasil ditambahkan!']);
     }
 
     public  function edit($id)
@@ -113,25 +119,28 @@ class PemasukanBroadcastController extends BaseController
             $jumlah = str_replace('.', '', $jumlah);
         }
 
+        if ($upload_bukti) {
+            $file_name = $upload_bukti->getRandomName();
+            // move file
+            $upload_bukti->move('bukti_pemasukan_broadcast', $file_name);
+        } else {
+            $file_name = $bukti_transfer_lama;
+        }
+
         $data = [
             'expedisi' => $expedisi,
             'jumlah' => $jumlah,
             'penerima' => $penerima,
             'bank_tujuan' => $bank_tujuan,
-            'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
+            'upload_bukti' => $file_name,
         ];
-
-        // hapus file lama
-        if ($upload_bukti->getName() != null) {
-            unlink('bukti_pemasukan_broadcast/' . $bukti_transfer_lama);
-            // upload file baru
-            $upload_bukti->move('bukti_pemasukan_broadcast');
-        }
-
 
         // update data
         $pemasukanbroadcast = $this->pemasukanbroadcast->update($id, $data);
         if ($pemasukanbroadcast) {
+            if ($upload_bukti) {
+                return json_encode(['status' => true, 'message' => 'Data berhasil diupdate!']);
+            }
             session()->setFlashdata('success', 'Data berhasil diupdate');
             return redirect()->to('/dashboard/broadcast/pemasukan-broadcast');
         } else {

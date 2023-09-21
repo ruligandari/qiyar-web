@@ -67,6 +67,14 @@ class UangTransferBroadcastController extends BaseController
         $harga_total = $this->request->getPost('harga_total');
         $upload_bukti = $this->request->getFile('upload_bukti');
 
+        if ($upload_bukti) {
+            $file_name = $upload_bukti->getRandomName();
+            // move file
+            $upload_bukti->move('bukti_pemasukan_broadcast', $file_name);
+        } else {
+            return redirect()->to('/dashboard/broadcast/uang-transfer-broadcast')->with('error', 'Bukti Transfer harus diupload');
+        }
+
         // convert 140,000 to 140000
         $harga_total = str_replace(',', '', $harga_total);
         $data = [
@@ -75,12 +83,11 @@ class UangTransferBroadcastController extends BaseController
             'bank_penerima' => $bank_penerima,
             'jenis_transfer' => $jenis_transfer,
             'harga_total' => $harga_total,
-            'upload_bukti' => $upload_bukti->getName()
+            'upload_bukti' => $file_name
         ];
         $this->uangtransferbroadcast->insert($data);
-        $upload_bukti->move('bukti_pemasukan_broadcast');
         session()->setFlashdata('success', 'Data berhasil ditambahkan');
-        return redirect()->to('/dashboard/broadcast/uang-transfer-broadcast');
+        return json_encode(['status' => true, 'message' => 'Data berhasil ditambahkan!']);
     }
 
     public  function edit($id)
@@ -110,25 +117,30 @@ class UangTransferBroadcastController extends BaseController
             $harga_total = str_replace('.', '', $harga_total);
         }
 
+        if ($upload_bukti) {
+            $file_name = $upload_bukti->getRandomName();
+            // move file
+            $upload_bukti->move('bukti_pemasukan_broadcast', $file_name);
+            // unlink
+            unlink('bukti_pemasukan_broadcast/' . $bukti_transfer_lama);
+        } else {
+            $file_name = $bukti_transfer_lama;
+        }
+
         $data = [
             'nama_konsumen' => $nama_konsumen,
             'bank_penerima' => $bank_penerima,
             'jenis_transfer' => $jenis_transfer,
             'harga_total' => $harga_total,
-            'upload_bukti' => ($upload_bukti->getName() != null) ? $upload_bukti->getName() : $bukti_transfer_lama,
+            'upload_bukti' => $file_name,
         ];
-
-        // hapus file lama
-        if ($upload_bukti->getName() != null) {
-            unlink('bukti_pemasukan_broadcast/' . $bukti_transfer_lama);
-            // upload file baru
-            $upload_bukti->move('bukti_pemasukan_broadcast');
-        }
-
 
         // update data
         $uangtransferbroadcast = $this->uangtransferbroadcast->update($id, $data);
         if ($uangtransferbroadcast) {
+            if ($upload_bukti) {
+                return json_encode(['status' => true, 'message' => 'Data berhasil diupdate!']);
+            }
             session()->setFlashdata('success', 'Data berhasil diupdate');
             return redirect()->to('/dashboard/broadcast/uang-transfer-broadcast');
         } else {
