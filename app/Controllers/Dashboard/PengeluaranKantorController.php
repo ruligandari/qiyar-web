@@ -35,6 +35,7 @@ class PengeluaranKantorController extends BaseController
         $tanggal = $this->request->getPost('tanggal');
         $waktu = $this->request->getPost('waktu');
         $jenispengeluaran = $this->request->getPost('jenis_pengeluaran');
+        $keterangan = $this->request->getPost('keterangan');
         $banktujuan = $this->request->getPost('banktujuan');
         $penerima = $this->request->getPost('penerima');
         $jumlah = $this->request->getPost('jumlah');
@@ -80,6 +81,7 @@ class PengeluaranKantorController extends BaseController
             'bank_tujuan' => $banktujuan,
             'nama_penerima' => $penerima,
             'jenis_pengeluaran' => $jenispengeluaran,
+            'keterangan' => $keterangan,
             'jumlah' => $jumlah,
             'bukti_transfer' => $file_name
         ];
@@ -169,7 +171,7 @@ class PengeluaranKantorController extends BaseController
     public function listPengeluaranKantor()
     {
         $db = db_connect();
-        $builder = $db->table('pengeluaran_kantor')->select('id_pengeluaran_kantor, tanggal, waktu, jenis_pengeluaran, bank_tujuan, nama_penerima, jumlah, bukti_transfer');
+        $builder = $db->table('pengeluaran_kantor')->select('id_pengeluaran_kantor, tanggal, waktu, jenis_pengeluaran, keterangan, bank_tujuan, nama_penerima, jumlah, bukti_transfer');
         return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
             // cek data diterima atau tidak
             if ($request->dates) {

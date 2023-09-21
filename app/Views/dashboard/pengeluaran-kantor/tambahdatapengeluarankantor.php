@@ -86,6 +86,10 @@
           </select>
         </div>
         <div class="form-group">
+          <label for="formGroupExampleInput">Keterangan</label>
+          <textarea class="form-control" id="formGroupExampleInput" name="keterangan" placeholder="Masukan Keterangan" required></textarea>
+        </div>
+        <div class="form-group">
           <label for="formGroupExampleInput">Bank Tujuan</label>
           <input type="text" class="form-control" id="formGroupExampleInput" name="banktujuan" placeholder="Masukan Bank Tujuan" required>
         </div>
