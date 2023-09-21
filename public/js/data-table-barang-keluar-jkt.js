@@ -32,51 +32,6 @@ console.log(urlDeleteKeluar);
 console.log(urlTableKeluar);
 
 $(document).ready(function() {
-    var role = $('#role').val();
-    if (role == '2' || role == '3' || role == '7') {
-        var columnBarangKeluarJkt = [{
-            data: 'no',
-            orderable: false
-        },
-        {
-            data: 'tanggal'
-        },
-        {
-            data: 'nama_barang'
-        },
-        {
-            data: 'qty'
-        },
-        {
-            data: 'total_resi'
-        },
-        {
-            data: 'bukti_pickup'
-        }, {
-            data: 'action'
-        }];
-    } else {
-        var columnBarangKeluarJkt = [{
-            data: 'no',
-            orderable: false
-        },
-        {
-            data: 'tanggal'
-        },
-        {
-            data: 'nama_barang'
-        },
-        {
-            data: 'qty'
-        },
-        {
-            data: 'total_resi'
-        },
-        {
-            data: 'bukti_pickup'
-        }
-    ];
-    }
     let table = $('#table2').DataTable({
         processing: true,
         serverSide: true,
@@ -127,7 +82,27 @@ $(document).ready(function() {
                 className: 'mb-2',
             }
         ],
-        columns: columnBarangKeluarJkt,
+        columns: [{
+            data: 'no',
+            orderable: false
+        },
+        {
+            data: 'tanggal'
+        },
+        {
+            data: 'nama_barang'
+        },
+        {
+            data: 'qty'
+        },
+        {
+            data: 'total_resi'
+        },
+        {
+            data: 'bukti_pickup'
+        }, {
+            data: 'action'
+        }],
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'Semua']

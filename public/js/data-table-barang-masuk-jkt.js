@@ -29,33 +29,6 @@ $(function() {
     var urlDelete = $('#urlDelete').val();
 
     $(document).ready(function() {
-        var role = $('#role').val();
-        if (role == '2' || role == '3'|| role == '7') {
-            var columnBarangMasukJkt = [{
-                data: 'no',
-                orderable: false
-            }, {
-                data: 'tanggal'
-            }, {
-                data: 'nama_barang'
-            }, {
-                data: 'qty'
-            }, {
-                data: 'action'
-            }];
-        } else {
-            var columnBarangMasukJkt = [{
-                data: 'no',
-                orderable: false
-            }, {
-                data: 'tanggal'
-            }, {
-                data: 'nama_barang'
-            }, {
-                data: 'qty'
-            }];
-        }
-
         let table = $('#table1').DataTable({
             processing: true,
             serverSide: true,
@@ -88,7 +61,18 @@ $(function() {
                     className: 'mb-2',
                 }
             ],
-            columns: columnBarangMasukJkt,
+            columns: [{
+                data: 'no',
+                orderable: false
+            }, {
+                data: 'tanggal'
+            }, {
+                data: 'nama_barang'
+            }, {
+                data: 'qty'
+            }, {
+                data: 'action'
+            }],
             lengthMenu: [
                 [10, 25, 50, -1],
                 [10, 25, 50, 'Semua']
