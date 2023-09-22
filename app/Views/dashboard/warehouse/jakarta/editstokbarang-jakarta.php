@@ -33,140 +33,141 @@
       <div class="">
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
-      <div class="card-body">
-        <form method="POST" class="dropzone" id="fileDrop" action="<?= base_url('dashboard/warehouse-jakarta/stok/update') ?>" enctype="multipart/form-data">
-          <input type="hidden" name="id" value="<?= $data['id'] ?>">
-          <input type="hidden" name="qty_lama" value="<?= $data['qty'] ?>">
-          <div class="form-group">
-            <label for="formGroupExampleInput">Tanggal</label>
-            <input type="date" name="tanggal" class="form-control" value="<?= $data['tanggal'] ?>" placeholder=" Masukan Jumlah" required>
-          </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Nama Barang</label>
-            <!-- <input type="text" name="nama_barang" class="form-control" value="<?= $data['nama_barang'] ?>" placeholder=" Masukan Jumlah" required> -->
-            <select name="nama_barang" class="form-control">
-              <option value="<?= $id ?>" selected><?= $data['nama_barang'] ?></option>
-              <?php foreach ($barang as $b) : ?>
-                <option value="<?= $b['id'] ?>" $isSelected><?= $b['nama_barang'] ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Jenis Barang Masuk</label>
-            <select class="form-control" name="jenis_barang_masuk" id="">
-              <?php if ($data['jenis_barang_masuk'] == 'Barang Return') : ?>
-                <option value="Barang Return" selected>Barang Return</option>
-                <option value="Barang Beli">Barang Beli</option>
-              <?php else : ?>
-                <option value="Barang Return">Barang Return</option>
-                <option value="Barang Beli" selected>Barang Beli</option>
-              <?php endif; ?>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Qty</label>
-            <input type="text" name="qty" placeholder="Jumlah" class="form-control" value="<?= $data['qty'] ?>" required>
-          </div>
-          <div class=" form-group">
-            <input type="hidden" name="bukti_transfer_lama" value="<?= $data['upload_bukti'] ?>">
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <div class="form-group">
-              <p class="text-hidden">Bukti Upload Sebelumnya: <a href="<?= base_url('bukti-barang-masuk-jkt/') . $data['upload_bukti'] ?>"><?= $data['upload_bukti'] ?></a></p>
-            </div>
-        </form>
-      </div>
     </div>
-
+    <div class="card-body">
+      <form method="POST" class="dropzone" id="fileDrop" action="<?= base_url('dashboard/warehouse-jakarta/stok/update') ?>" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<?= $data['id'] ?>">
+        <input type="hidden" name="qty_lama" value="<?= $data['qty'] ?>">
+        <div class="form-group">
+          <label for="formGroupExampleInput">Tanggal</label>
+          <input type="date" name="tanggal" class="form-control" value="<?= $data['tanggal'] ?>" placeholder=" Masukan Jumlah" required>
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput">Nama Barang</label>
+          <!-- <input type="text" name="nama_barang" class="form-control" value="<?= $data['nama_barang'] ?>" placeholder=" Masukan Jumlah" required> -->
+          <select name="nama_barang" class="form-control">
+            <option value="<?= $id ?>" selected><?= $data['nama_barang'] ?></option>
+            <?php foreach ($barang as $b) : ?>
+              <option value="<?= $b['id'] ?>" $isSelected><?= $b['nama_barang'] ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput">Jenis Barang Masuk</label>
+          <select class="form-control" name="jenis_barang_masuk" id="">
+            <?php if ($data['jenis_barang_masuk'] == 'Barang Return') : ?>
+              <option value="Barang Return" selected>Barang Return</option>
+              <option value="Barang Beli">Barang Beli</option>
+            <?php else : ?>
+              <option value="Barang Return">Barang Return</option>
+              <option value="Barang Beli" selected>Barang Beli</option>
+            <?php endif; ?>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput">Qty</label>
+          <input type="text" name="qty" placeholder="Jumlah" class="form-control" value="<?= $data['qty'] ?>" required>
+        </div>
+        <div class=" form-group">
+          <input type="hidden" name="bukti_transfer_lama" value="<?= $data['upload_bukti'] ?>">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="form-group">
+            <p class="text-hidden">Bukti Upload Sebelumnya: <a href="<?= base_url('bukti-barang-masuk-jkt/') . $data['upload_bukti'] ?>"><?= $data['upload_bukti'] ?></a></p>
+          </div>
+      </form>
+    </div>
   </div>
-  <?= $this->endSection(); ?>
 
-  <?= $this->section('script'); ?>
-  <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-  <script>
-    Dropzone.autoDiscover = true;
-    Dropzone.options.fileDrop = { // The camelized version of the ID of the form element
+</div>
+<?= $this->endSection(); ?>
 
-      // The configuration we've talked about above
-      autoProcessQueue: false,
-      // paramname
-      paramName: "upload_bukti",
-      uploadMultiple: false,
-      parallelUploads: 1,
-      maxFiles: 1,
-      maxFilesize: 2, // MB
-      acceptedFiles: ".jpeg,.jpg,.png,.gif",
-      // tambahkan close
-      addRemoveLinks: true,
-      // atur agar diatas button submit
-      dictDefaultMessage: "Klik atau Drop disini untuk mengupload Bukti Upload",
+<?= $this->section('script'); ?>
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<script>
+  Dropzone.autoDiscover = true;
+  Dropzone.options.fileDrop = { // The camelized version of the ID of the form element
 
-      dictFileTooBig: "Ukuran file terlalu besar ({{filesize}}MiB). Maksimal ukuran file {{maxFilesize}}MiB.",
+    // The configuration we've talked about above
+    autoProcessQueue: false,
+    // paramname
+    paramName: "upload_bukti",
+    uploadMultiple: false,
+    parallelUploads: 1,
+    maxFiles: 1,
+    maxFilesize: 2, // MB
+    acceptedFiles: ".jpeg,.jpg,.png,.gif",
+    // tambahkan close
+    addRemoveLinks: true,
+    // atur agar diatas button submit
+    dictDefaultMessage: "Klik atau Drop disini untuk mengupload Bukti Upload",
 
-      // The setting up of the dropzone
-      init: function() {
-        var myDropzone = this;
-        // autodiscover set false
-        // First change the button to actually tell Dropzone to process the queue.
-        this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
-          // Make sure that the form isn't actually being sent.
-          if (myDropzone.getQueuedFiles().length > 0) {
-            // Ada file dalam antrian, proses antrian
-            e.preventDefault();
-            e.stopPropagation();
-            myDropzone.processQueue();
-          } else {
-            // Tidak ada file dalam antrian, izinkan formulir untuk dikirimkan
-          }
-        });
+    dictFileTooBig: "Ukuran file terlalu besar ({{filesize}}MiB). Maksimal ukuran file {{maxFilesize}}MiB.",
 
-        // terima response ketika sukses
-        this.on("success", function(file, response) {
-          // dapatkan status dari json response
-          var respond = JSON.parse(response);
-          // jika sukses
-          if (respond.status == true) {
-            // sweet alert
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              text: 'Data berhasil ditambahkan!',
-              showConfirmButton: false,
-              timer: 2000
-            }).then(function() {
-              window.location = "<?= base_url('dashboard/warehouse-jakarta/stok') ?>";
-            });
-          } else {
-            // sweet alert
-            Swal.fire({
-              position: 'center',
-              icon: 'error',
-              text: 'Data gagal ditambahkan!',
-              showConfirmButton: false,
-              timer: 2000
-            });
-          }
-        });
+    // The setting up of the dropzone
+    init: function() {
+      var myDropzone = this;
+      // autodiscover set false
+      // First change the button to actually tell Dropzone to process the queue.
+      this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
+        // Make sure that the form isn't actually being sent.
+        if (myDropzone.getQueuedFiles().length > 0) {
+          // Ada file dalam antrian, proses antrian
+          e.preventDefault();
+          e.stopPropagation();
+          myDropzone.processQueue();
+        } else {
+          // Tidak ada file dalam antrian, izinkan formulir untuk dikirimkan
+        }
+      });
 
-        // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-        // of the sending event because uploadMultiple is set to true.
-        this.on("sendingmultiple", function() {
-          // Gets triggered when the form is actually being sent.
-          // Hide the success button or the complete form.
+      // terima response ketika sukses
+      this.on("success", function(file, response) {
+        // dapatkan status dari json response
+        var respond = JSON.parse(response);
+        // jika sukses
+        if (respond.status == true) {
+          // sweet alert
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            text: 'Data berhasil ditambahkan!',
+            showConfirmButton: false,
+            timer: 2000
+          }).then(function() {
+            window.location = "<?= base_url('dashboard/warehouse-jakarta/stok') ?>";
+          });
+        } else {
+          // sweet alert
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            text: 'Data gagal ditambahkan!',
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      });
 
-        });
-        this.on("successmultiple", function(files, response) {
-          // Gets triggered when the files have successfully been sent.
-          // Redirect user or notify of success.
+      // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+      // of the sending event because uploadMultiple is set to true.
+      this.on("sendingmultiple", function() {
+        // Gets triggered when the form is actually being sent.
+        // Hide the success button or the complete form.
 
-          console.log(response);
-        });
-        this.on("errormultiple", function(files, response) {
-          // Gets triggered when there was an error sending the files.
-          // Maybe show form again, and notify user of error
-          console.log(response);
-        });
-      }
+      });
+      this.on("successmultiple", function(files, response) {
+        // Gets triggered when the files have successfully been sent.
+        // Redirect user or notify of success.
 
+        console.log(response);
+      });
+      this.on("errormultiple", function(files, response) {
+        // Gets triggered when there was an error sending the files.
+        // Maybe show form again, and notify user of error
+        console.log(response);
+      });
     }
-  </script>
-  <?= $this->endSection(); ?>
+
+  }
+</script>
+<?= $this->endSection(); ?>

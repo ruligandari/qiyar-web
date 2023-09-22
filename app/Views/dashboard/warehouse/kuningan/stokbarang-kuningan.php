@@ -184,7 +184,7 @@
             buttons: [{
                     extend: 'excelHtml5',
                     footer: true,
-                    title: 'Data Stok Barang Masuk - ' + formattedDate,
+                    title: 'Data Stok Barang Masuk Kuningan- ' + formattedDate,
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5],
                     },
@@ -195,7 +195,7 @@
                 {
                     extend: 'pdfHtml5',
                     footer: true,
-                    title: 'Data Stok Barang Masuk - ' + formattedDate,
+                    title: 'Data Stok Barang Masuk Kuningan- ' + formattedDate,
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5],
                         format: {

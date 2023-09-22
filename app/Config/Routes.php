@@ -160,6 +160,8 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->post('stok/delete', 'Dashboard\WarehouseJakartaController::deleteStokBarang');
         $routes->post('stok/update', 'Dashboard\WarehouseJakartaController::updateStokBarang');
         $routes->get('stok/edit/(:any)', 'Dashboard\WarehouseJakartaController::editStokBarang/$1');
+
+        $routes->post('list-stok-barang', 'Dashboard\WarehouseJakartaController::listStokBarang');
     });
 
     $routes->group('broadcast', ['filter' => 'BroadcastFilter'], function ($routes) {

@@ -610,4 +610,27 @@ class WarehouseJakartaController extends BaseController
             <button class="btn btn-danger" title="Hapus Bray" onclick="deleteJktKeluar(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
         }, 'last')->toJson(true);
     }
+    public function listStokBarang()
+    {
+        $db = db_connect();
+        $builder = $db->table('stok_barang_jkt')->select('id, tanggal, nama_barang, qty, jenis_barang_masuk, upload_bukti');
+        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
+            // cek data diterima atau tidak
+            if ($request->dates) {
+                // ambil rentang tanggal 09/01/2023 - 09/01/2023
+                $dates = explode(' - ', $request->dates);
+                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+            }
+        })->format('qty', function ($value) {
+            return number_format($value, 0, ',', '.');
+        })->format('upload_bukti', function ($value) {
+            return '<a href="' . base_url('bukti-barang-masuk-jkt/') . $value . '" target="_blank">
+            <img src="' . base_url('bukti-barang-masuk-jkt/') . $value . '" alt="" style="height:50px; width:50px"></a>';
+        })->add('action', function ($row) {
+            return '<div class="text-center"><a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/warehouse-jakarta/stok/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
+            <button class="btn btn-danger" title="Hapus Bray" onclick="deleteStokJkt(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
+        }, 'last')->toJson(true);
+    }
 }
