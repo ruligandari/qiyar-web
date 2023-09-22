@@ -132,6 +132,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->post('keluar/delete', 'Dashboard\WarehouseKuninganController::deleteBarangKeluar');
 
         $routes->post('list-barang-keluar', 'Dashboard\WarehouseKuninganController::listBarangKeluar');
+        $routes->post('list-stok-barang', 'Dashboard\WarehouseKuninganController::listStokBarang');
     });
 
     $routes->group('warehouse-jakarta', ['filter' => 'WarehouseJakartaFilter'], function ($routes) {

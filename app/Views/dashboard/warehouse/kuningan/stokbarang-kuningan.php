@@ -60,20 +60,20 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label"><b>Filter Data :</b></label>
+                        <div class="input-group" style="width: 16rem;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="far fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                            <input type="text" name="datesStokBarang" id="datesStokBarang" class="form-control form-control-sm" value="">
+                        </div>
+                    </div>
                     <div class="table-responsive">
-                        <table border="0" cellspacing="5" cellpadding="5">
-                            <tbody>
-                                <tr>
-                                    <td>Dari :</td>
-                                    <td><input type="text" id="min" name="min"></td>
-                                </tr>
-                                <tr>
-                                    <td>Sampai :</td>
-                                    <td><input type="text" id="max" name="max"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br>
+                        <input type="hidden" value="<?= base_url('dashboard/warehouse-kuningan/list-stok-barang') ?>" id="urlStokBarang">
+                        <input type="hidden" value="<?= base_url('dashboard/warehouse-kuningan/stok/delete') ?>" id="urlDeleteStokBarang">
                         <table class="table table-bordered" id="table-stok" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -89,24 +89,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $i = 1;
-                                foreach ($stok as $data) : ?>
-                                    <tr>
-                                        <td><?= $i++ ?></td>
-                                        <td><?= $data['tanggal'] ?></td>
-                                        <td><?= $data['nama_barang'] ?></td>
-                                        <td><?= number_format($data['qty'], 0, ',', '.') ?></td>
-                                        <td><?= $data['jenis_barang_masuk'] ?></td>
-                                        <td><a href="<?= base_url('bukti-barang-masuk-kng/') . $data['upload_bukti'] ?>" target="_blank">
-                                                <img src="<?= base_url('bukti-barang-masuk-kng/') . $data['upload_bukti'] ?>" alt="" style="height:50px; width:50px"></a></td>
-                                        <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
-                                            <td class="text-center">
-                                                <a class="btn btn-success" title="Edit Bray" href="<?= base_url('dashboard/warehouse-kuningan/stok/edit/') . $data['id'] ?>" role="button"><i class="fas fa-sm fa-pen"></i></a>
-                                                <button class="btn btn-danger delete-stok" title="Hapus Bray" data-id="<?= $data['id'] ?>" data-url="<?= base_url('dashboard/warehouse-kuningan/stok/delete') ?>" role="button"><i class="fas fa-sm fa-trash"></i></i></button>
-                                            </td>
-                                        <?php endif ?>
-                                    </tr>
-                                <?php endforeach; ?>
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -152,8 +134,208 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script>
+    $(function() {
 
-<script src="<?= base_url('js/sweet-alert.js') ?>"></script>
-<script src="<?= base_url('js/data-table-stok.js') ?>"></script>
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('input[name="datesStokBarang"]').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $('#datesStokBarang').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Semua': [moment().subtract(1, 'years'), moment()],
+                'Hari Ini': [moment(), moment()],
+                'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
+                '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
+                'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+                'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+
+    var urlTable = $('#urlStokBarang').val();
+    var urlDelete = $('#urlDeleteStokBarang').val();
+    console.log(urlDelete);
+    console.log(urlTable);
+
+    $(document).ready(function() {
+        let table = $('#table-stok').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: urlTable,
+                method: 'POST',
+                data: function(d) {
+                    d.dates = $('input[name="datesStokBarang"]').val();
+                },
+            },
+            dom: '<"button-container"lBfrtip>',
+            buttons: [{
+                    extend: 'excelHtml5',
+                    footer: true,
+                    title: 'Data Stok Barang Masuk - ' + formattedDate,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5],
+                    },
+                    className: 'mb-2',
+                    // ubah nama file ketika di download
+
+                },
+                {
+                    extend: 'pdfHtml5',
+                    footer: true,
+                    title: 'Data Stok Barang Masuk - ' + formattedDate,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Jika kolom adalah gambar, return elemen img
+                                if (column === 5) {
+                                    return $('img', data).attr('src');
+                                }
+                                return data;
+                            }
+                        }
+                    },
+                    className: 'mb-2',
+                }
+            ],
+            columns: [{
+                    data: 'no',
+                    orderable: false
+                }, {
+                    data: 'tanggal'
+                }, {
+                    data: 'nama_barang'
+                }, {
+                    data: 'qty'
+                },
+                {
+                    data: 'jenis_barang_masuk'
+                },
+                {
+                    data: 'upload_bukti'
+                },
+                <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?> {
+                        data: 'action'
+                    }
+                <?php endif ?>
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'Semua']
+            ], // Pilihan jumlah data per halaman, termasuk "Semua"
+            pageLength: 10,
+            order: [],
+            columnDefs: [{
+                targets: -1,
+                orderable: false
+            }, ],
+            initComplete: function() {
+                // Fungsi untuk menghitung jumlah total kolom "jumlah"
+                function sumColumn() {
+                    let columnData = table.column(3, {
+                        search: 'applied'
+                    }).data();
+
+                    // Check if columnData is defined and not empty
+                    if (columnData && columnData.length > 0) {
+                        let sum = columnData.reduce(function(acc, curr) {
+                            let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka
+                            return acc + numericValue;
+                        }, 0);
+
+                        // Format jumlah total sebagai mata uang Indonesia
+                        let formattedSum = sum.toLocaleString('id-ID', {
+                            minimumFractionDigits: 0, // Atur ini ke 0 untuk menghilangkan angka di belakang koma
+                            maximumFractionDigits: 2
+                        });
+
+                        // Tampilkan jumlah total di elemen HTML dengan ID "totalSum"
+                        $('#totalSum').html(formattedSum);
+                    } else {
+                        // If columnData is undefined or empty, display a default value
+                        $('#totalSum').html('0');
+                    }
+                }
+
+
+                // Panggil fungsi sumColumn saat tabel selesai dimuat
+                sumColumn();
+
+                // Panggil fungsi sumColumn lagi ketika tabel di-filter atau di-sort
+                table.on('search.dt draw.dt', sumColumn);
+            },
+        });
+
+        $('#datesStokBarang').change(function(event) {
+            table.ajax.reload();
+        });
+
+    });
+
+    let currentDate = new Date();
+    let formattedDate = currentDate.toISOString().split('T')[0];
+
+    function deleteStokKng(id) {
+        Swal.fire({
+            title: "Apakah Anda yakin akan menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Tidak, batalkan!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kirim permintaan hapus menggunakan Ajax
+                $.ajax({
+                    method: "POST",
+                    url: urlDelete,
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        if (data.success) {
+                            Swal.fire(
+                                "Dihapus!",
+                                "Data Berhasil Dihapus",
+                                "success"
+                            ).then(() => {
+                                // Muat ulang halaman setelah penghapusan
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                "Error!",
+                                "Gagal menghapus data.",
+                                "error"
+                            );
+                        }
+                    },
+                    error: function() {
+                        Swal.fire(
+                            "Error!",
+                            "Terjadi kesalahan saat menghapus data.",
+                            "error"
+                        );
+                    },
+                });
+            }
+        });
+    }
+</script>
 
 <?= $this->endsection(); ?>

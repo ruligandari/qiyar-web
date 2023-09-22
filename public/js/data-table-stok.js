@@ -30,7 +30,7 @@ maxDate = new DateTime('#max', {
 $(document).ready(function() {
     // DataTables initialisation for example1
     let tableStok = $('#table-stok').DataTable({
-        dom: 'Bfrtip',
+        dom: 'lBfrtip',
         buttons: [{
                 extend: 'excelHtml5',
                 footer: true,
