@@ -192,13 +192,13 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning  h-100 py-2">
+                        <div class="card border-left-secondary h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Jenis Pengeluaran</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <span id="pengeluaran-bc">0</span></div>
+                                        <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                            Uang Transfer Iklan Broadcast</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <span id="uang-transfer-iklan">0</span></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -225,6 +225,20 @@
                     </div>
                     <!-- Earnings (Monthly) Card Example -->
                     <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning  h-10 py-2 mb-4">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Jenis Pengeluaran</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Rp. <span id="pengeluaran-bc">0</span></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card border-left-info h-10 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -243,6 +257,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <!-- Content Row -->
             </div>
@@ -312,6 +327,7 @@
                 var dataPemasukanBc = data.pemasukanBroadcast;
                 var dataUangTransferBc = data.uangTransferBc;
                 var dataUangTransferAdv = data.uangTransferAdv;
+                var dataTransferBroadcatIlkan = data.transferIklanBroadcast;
                 var dataPengeluaranBc = data.pengeluaranBc;
 
                 function sumJumlah(dataArray) {
@@ -335,9 +351,10 @@
                 var totalPemasukanBc = sumJumlah(dataPemasukanBc);
                 var totalUangTransferBc = sumJumlahTransfer(dataUangTransferBc);
                 var totalUangTransferAdv = sumJumlahTransfer(dataUangTransferAdv);
+                var totalTransferIklanBroadcast = sumJumlahTransfer(dataTransferBroadcatIlkan);
                 var totalPengeluaranBc = sumJumlah(dataPengeluaranBc);
 
-                var labaBroadcast = totalPemasukanBc + totalUangTransferBc - totalUangTransferAdv - totalPengeluaranBc;
+                var labaBroadcast = totalPemasukanBc + totalUangTransferBc + totalTransferIklanBroadcast - totalPengeluaranBc;
                 // masukan ke id pengeluaran-iklan dengan number format
                 var formatPengeluaran = number_format(totalPengeluaran, 0, ',', '.');
                 var formatPemasukan = number_format(totalPemasukan, 0, ',', '.');
@@ -349,6 +366,7 @@
                 var formatPemasukanBc = number_format(totalPemasukanBc, 0, ',', '.');
                 var formatUangTransferBc = number_format(totalUangTransferBc, 0, ',', '.');
                 var formatUangTransferAdv = number_format(totalUangTransferAdv, 0, ',', '.');
+                var formatUangTransferIklanBroadcast = number_format(totalTransferIklanBroadcast, 0, ',', '.');
                 var formatPengeluaranBc = number_format(totalPengeluaranBc, 0, ',', '.');
 
                 var formatLabaBroadcast = number_format(labaBroadcast, 0, ',', '.');
@@ -362,6 +380,7 @@
                 $('#pemasukan-bc').html(formatPemasukanBc);
                 $('#uang-transfer-bc').html(formatUangTransferBc);
                 $('#uang-transfer-bc-adv').html(formatUangTransferAdv);
+                $('#uang-transfer-iklan').html(formatUangTransferIklanBroadcast);
                 $('#pengeluaran-bc').html(formatPengeluaranBc);
                 $('#laba-bc').html(formatLabaBroadcast);
                 var groupedData = {};

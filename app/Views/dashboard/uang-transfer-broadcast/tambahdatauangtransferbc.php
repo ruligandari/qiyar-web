@@ -82,6 +82,7 @@
             <select name="jenis_transfer" class="form-control" id="formGroupExampleInput">
               <option value="Iklan">Iklan</option>
               <option value="Broadcast">Broadcast</option>
+              <option value="Broadcast Iklan">Broadcast Iklan</option>
             </select>
           </div>
           <div class="form-group">

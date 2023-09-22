@@ -40,6 +40,7 @@ class DashboardController extends BaseController
         $pemasukanadv = $this->pemasukanadv->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
         $pengeluaranKantor = $this->pengeluarankantor->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
         $pemasukanTransfer = $this->uangtransferadvertiser->where('jenis_transfer', 'Iklan')->select('tanggal, harga_total')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
+        $transferIklanBroadcast = $this->uangtransferadvertiser->where('jenis_transfer', 'Broadcast Iklan')->select('tanggal, harga_total')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
 
         $pemasukanBroadcast = $this->pemasukanbc->select('tanggal, jumlah')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
         $uangtransferBc = $this->uangtransferadvertiser->where('jenis_transfer', 'Broadcast')->select('tanggal, harga_total')->where('tanggal >=', $startDate)->where('tanggal <=', $enddata)->findAll();
@@ -54,6 +55,7 @@ class DashboardController extends BaseController
             'uangTransferBc' => $uangtransferBc,
             'uangTransferAdv' => $uangtransferBcAdv,
             'pengeluaranBc' => $pengeluaranBc,
+            'transferIklanBroadcast' => $transferIklanBroadcast,
         ];
         return json_encode($data);
     }
