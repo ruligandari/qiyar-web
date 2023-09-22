@@ -317,7 +317,6 @@
                 end_date: endDate
             },
             success: function(response) {
-                console.log(response);
                 var data = JSON.parse(response);
                 var dataPemasukan = data.pemasukan;
                 var dataPengeluaran = data.pengeluaran;
@@ -386,7 +385,7 @@
                 var groupedData = {};
                 var groupedDataBc = {};
 
-                // Memproses data pemasukan
+                // Memproses data pemasukan ADV
                 dataPemasukan.forEach(function(item) {
                     var tanggal = item.tanggal;
                     if (!groupedData[tanggal]) {
@@ -442,6 +441,7 @@
                     groupedData[tanggal].pemasukanTransfer += parseFloat(item.harga_total);
                 });
 
+                // memproses data pemasukan BC
                 dataPemasukanBc.forEach(function(item) {
                     var tanggal = item.tanggal;
                     if (!groupedDataBc[tanggal]) {
@@ -449,7 +449,8 @@
                             pemasukanBroadcast: 0,
                             uangTransferBc: 0,
                             uangTransferAdv: 0,
-                            pengeluaranBc: 0
+                            pengeluaranBc: 0,
+                            transferIklanBroadcast: 0
                         };
                     }
                     groupedDataBc[tanggal].pemasukanBroadcast += parseFloat(item.jumlah);
@@ -462,7 +463,8 @@
                             pemasukanBroadcast: 0,
                             uangTransferBc: 0,
                             uangTransferAdv: 0,
-                            pengeluaranBc: 0
+                            pengeluaranBc: 0,
+                            transferIklanBroadcast: 0
                         };
                     }
                     groupedDataBc[tanggal].uangTransferBc += parseFloat(item.harga_total);
@@ -475,10 +477,25 @@
                             pemasukanBroadcast: 0,
                             uangTransferBc: 0,
                             uangTransferAdv: 0,
-                            pengeluaranBc: 0
+                            pengeluaranBc: 0,
+                            transferIklanBroadcast: 0
                         };
                     }
                     groupedDataBc[tanggal].uangTransferAdv += parseFloat(item.harga_total);
+                });
+
+                dataTransferBroadcatIlkan.forEach(function(item) {
+                    var tanggal = item.tanggal;
+                    if (!groupedDataBc[tanggal]) {
+                        groupedDataBc[tanggal] = {
+                            pemasukanBroadcast: 0,
+                            uangTransferBc: 0,
+                            uangTransferAdv: 0,
+                            pengeluaranBc: 0,
+                            transferIklanBroadcast: 0
+                        };
+                    }
+                    groupedDataBc[tanggal].transferIklanBroadcast += parseFloat(item.harga_total);
                 });
 
                 dataPengeluaranBc.forEach(function(item) {
@@ -488,7 +505,8 @@
                             pemasukanBroadcast: 0,
                             uangTransferBc: 0,
                             uangTransferAdv: 0,
-                            pengeluaranBc: 0
+                            pengeluaranBc: 0,
+                            transferIklanBroadcast: 0
                         };
                     }
                     groupedDataBc[tanggal].pengeluaranBc += parseFloat(item.jumlah);
@@ -543,6 +561,10 @@
                     return groupedDataBc[label].uangTransferBc;
                 });
 
+                var dataValuesTransferIklanBroadcast = labelsbroadcast.map(function(label) {
+                    return groupedDataBc[label].transferIklanBroadcast;
+                });
+
                 var dataValuesUangTransferAdv = labelsbroadcast.map(function(label) {
                     return groupedDataBc[label].uangTransferAdv;
                 });
@@ -575,8 +597,6 @@
 
                 // ...
                 // Kode pengambilan data lainnya tetap sama
-
-                console.log(sortedGroupedData);
 
                 // Membuat grafik batang
 
@@ -721,7 +741,7 @@
                     var myLineChart2 = new Chart(ctx2, {
                         type: 'line',
                         data: {
-                            labels: labels,
+                            labels: labelsbroadcast,
                             datasets: [{
                                     label: "Uang Transfer Advertiser",
                                     lineTension: 0.3,
@@ -766,6 +786,21 @@
                                     pointHitRadius: 10,
                                     pointBorderWidth: 2,
                                     data: dataValuesUangTransferBc,
+                                },
+                                {
+                                    label: "Uang Transfer Iklan Broadcast",
+                                    lineTension: 0.3,
+                                    backgroundColor: "rgba(133,135,150, 0.05)",
+                                    borderColor: "rgba(133,135,150)",
+                                    pointRadius: 3,
+                                    pointBackgroundColor: "rgba(133,135,150)",
+                                    pointBorderColor: "rgba(133,135,150)",
+                                    pointHoverRadius: 3,
+                                    pointHoverBackgroundColor: "rgba(133,135,150)",
+                                    pointHoverBorderColor: "rgba(133,135,150)",
+                                    pointHitRadius: 10,
+                                    pointBorderWidth: 2,
+                                    data: dataValuesTransferIklanBroadcast,
                                 },
                                 {
                                     label: "Jenis Pengeluaran",
