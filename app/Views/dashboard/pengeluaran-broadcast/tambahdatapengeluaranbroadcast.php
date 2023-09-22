@@ -69,10 +69,11 @@
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Jenis Pengeluaran</label>
-            <select name="jenis_pengeluaran" class="form-control" id="formGroupExampleInput">
-              <option value="Barang">Barang</option>
-              <option value="Wifi">Wifi</option>
-            </select>
+            <input type="text" class="form-control" name="jenis_pengeluaran" required>
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Keterangan</label>
+            <textarea type="text" class="form-control" name="keterangan" required></textarea>
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Bank Tujuan</label>

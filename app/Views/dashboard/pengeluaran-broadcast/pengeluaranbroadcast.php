@@ -82,6 +82,7 @@
                             <th>Tanggal</th>
                             <th>Waktu</th>
                             <th>Jenis Pengeluaran</th>
+                            <th>Keterangan</th>
                             <th>Bank Tujuan</th>
                             <th>Nama Penerima</th>
                             <th>Bukti</th>
@@ -94,12 +95,12 @@
 
                     <tfoot>
                         <tr><?php if (in_array(session()->get('role'), ['2'])) : ?>
-                                <td colspan="6"></td>
+                                <td colspan="7"></td>
                                 <td><b>Total</b></td>
                                 <td id="totalSum"></td>
                                 <td></td>
                             <?php else : ?>
-                                <td colspan="6"></td>
+                                <td colspan="7"></td>
                                 <td><b>Total</b></td>
                                 <td id="totalSum"></td>
                             <?php endif ?>
@@ -179,11 +180,11 @@
                     footer: true,
                     title: 'Data Pemasukan Broadcast - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                         format: {
                             body: function(data, row, column, node) {
                                 // Jika kolom adalah gambar, return elemen img
-                                if (column === 6) {
+                                if (column === 7) {
                                     return $('img', data).attr('src');
                                 }
                                 return data;
@@ -199,11 +200,11 @@
                     footer: true,
                     title: 'Data Pemasukan Broadcast - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                         format: {
                             body: function(data, row, column, node) {
                                 // Jika kolom adalah gambar, return elemen img
-                                if (column === 6) {
+                                if (column === 7) {
                                     return $('img', data).attr('src');
                                 }
                                 return data;
@@ -225,6 +226,9 @@
                 },
                 {
                     data: 'jenis_pengeluaran'
+                },
+                {
+                    data: 'keterangan'
                 },
                 {
                     data: 'bank_tujuan'
@@ -258,7 +262,7 @@
             initComplete: function() {
                 // Fungsi untuk menghitung jumlah total kolom "jumlah"
                 function sumColumn() {
-                    let sum = table.column(7, {
+                    let sum = table.column(8, {
                         search: 'applied'
                     }).data().reduce(function(acc, curr) {
                         let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka

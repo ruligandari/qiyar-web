@@ -38,18 +38,11 @@
           <input type="hidden" name="id" value="<?= $data['id'] ?>">
           <div class="form-group">
             <label for="formGroupExampleInput">Pengeluaran</label>
-            <select name="jenis_pengeluaran" class="form-control" id="formGroupExampleInput">
-              <?php if ($data['jenis_pengeluaran'] = 'Pengeluaran Kantor') {
-                $selected1 = 'selected';
-                $selected2 = '';
-              } else {
-                $selected1 = '';
-                $selected2 = 'selected';
-              }
-              ?>
-              <option value="Pengeluaran Kantor" <?= $selected1 ?>>Pengeluaran Kantor</option>
-              <option value="Belanja Barang" <?= $selected2 ?>>Belanja Barang</option>
-            </select>
+            <input type="text" name="jenis_pengeluaran" value="<?= $data['jenis_pengeluaran'] ?>" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">Keterangan</label>
+            <input type="text" name="keterangan" value="<?= $data['keterangan'] ?>" class="form-control">
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput">Bank Tujuan</label>

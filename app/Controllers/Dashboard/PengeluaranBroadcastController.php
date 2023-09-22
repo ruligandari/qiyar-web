@@ -35,6 +35,7 @@ class PengeluaranBroadcastController extends BaseController
         $tanggal = $this->request->getPost('tanggal');
         $waktu = $this->request->getPost('waktu');
         $jenis_pengeluaran = $this->request->getPost('jenis_pengeluaran');
+        $keterangan = $this->request->getPost('keterangan');
         $bank_tujuan = $this->request->getPost('bank_tujuan');
         $nama_penerima = $this->request->getPost('nama_penerima');
         $upload_bukti = $this->request->getFile('upload_bukti');
@@ -54,6 +55,7 @@ class PengeluaranBroadcastController extends BaseController
             'tanggal' => $tanggal,
             'waktu' => $waktu,
             'jenis_pengeluaran' => $jenis_pengeluaran,
+            'keterangan' => $keterangan,
             'bank_tujuan' => $bank_tujuan,
             'nama_penerima' => $nama_penerima,
             'upload_bukti' => $nama_file,
@@ -77,6 +79,7 @@ class PengeluaranBroadcastController extends BaseController
         $id = $this->request->getPost('id');
         $jenis_pengeluaran = $this->request->getPost('jenis_pengeluaran');
         $bank_tujuan = $this->request->getPost('bank_tujuan');
+        $keterangan = $this->request->getPost('keterangan');
         $nama_penerima = $this->request->getPost('nama_penerima');
         $upload_bukti = $this->request->getFile('upload_bukti');
         $jumlah = $this->request->getPost('jumlah');
@@ -100,6 +103,7 @@ class PengeluaranBroadcastController extends BaseController
 
         $data = [
             'jenis_pengeluaran' => $jenis_pengeluaran,
+            'keterangan' => $keterangan,
             'bank_tujuan' => $bank_tujuan,
             'nama_penerima' => $nama_penerima,
             'upload_bukti' => $file_name,
@@ -140,7 +144,7 @@ class PengeluaranBroadcastController extends BaseController
     public function listPengeluaranBc()
     {
         $db = db_connect();
-        $builder = $db->table('pengeluaran_broadcast')->select('id, tanggal, waktu, jenis_pengeluaran, bank_tujuan, nama_penerima, jumlah, upload_bukti');
+        $builder = $db->table('pengeluaran_broadcast')->select('id, tanggal, waktu, jenis_pengeluaran, keterangan, bank_tujuan, nama_penerima, jumlah, upload_bukti');
         return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
             // cek data diterima atau tidak
             if ($request->dates) {
