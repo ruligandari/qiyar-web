@@ -33,197 +33,198 @@
       <div class="">
         <h6 class=" font-weight-bold text-primary">Silahkan Masukan Data</h6>
       </div>
-      <div class="card-body">
-        <form method="POST" class="dropzone" id="fileDrop" action="<?= base_url('dashboard/broadcast/pengeluaran-broadcast/update') ?>" enctype="multipart/form-data">
-          <input type="hidden" name="id" value="<?= $data['id'] ?>">
-          <div class="form-group">
-            <label for="formGroupExampleInput">Pengeluaran</label>
-            <input type="text" name="jenis_pengeluaran" value="<?= $data['jenis_pengeluaran'] ?>" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Keterangan</label>
-            <input type="text" name="keterangan" value="<?= $data['keterangan'] ?>" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Bank Tujuan</label>
-            <input type="text" name="bank_tujuan" placeholder="Masukan Bank Tujuan" class="form-control" value="<?= $data['bank_tujuan'] ?>" required>
-          </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Nama Bank Penerima</label>
-            <input type="text" name="nama_penerima" placeholder="Nama Bank Penerima" class="form-control" value="<?= $data['nama_penerima'] ?>" required>
-          </div>
-          <div class=" form-group">
-            <input type="hidden" name="bukti_transfer_lama" value="<?= $data['upload_bukti'] ?>">
-          </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">Jumlah</label>
-            <input type="text" name="jumlah" value="<?= number_format($data['jumlah']) ?>" class="form-control formatted-input" placeholder="Masukan Jumlah" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <div class="form-group">
-            <p>Bukti Transfer Sebelumnya: <a href="<?= base_url('bukti_pengeluaran_broadcast/') . $data['upload_bukti'] ?>"><?= $data['upload_bukti'] ?></a></p>
-          </div>
-        </form>
-      </div>
     </div>
-
+    <div class="card-body">
+      <form method="POST" class="dropzone" id="fileDrop" action="<?= base_url('dashboard/broadcast/pengeluaran-broadcast/update') ?>" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<?= $data['id'] ?>">
+        <div class="form-group">
+          <label for="formGroupExampleInput">Pengeluaran</label>
+          <input type="text" name="jenis_pengeluaran" value="<?= $data['jenis_pengeluaran'] ?>" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput">Keterangan</label>
+          <input type="text" name="keterangan" value="<?= $data['keterangan'] ?>" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput">Bank Tujuan</label>
+          <input type="text" name="bank_tujuan" placeholder="Masukan Bank Tujuan" class="form-control" value="<?= $data['bank_tujuan'] ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput">Nama Bank Penerima</label>
+          <input type="text" name="nama_penerima" placeholder="Nama Bank Penerima" class="form-control" value="<?= $data['nama_penerima'] ?>" required>
+        </div>
+        <div class=" form-group">
+          <input type="hidden" name="bukti_transfer_lama" value="<?= $data['upload_bukti'] ?>">
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput">Jumlah</label>
+          <input type="text" name="jumlah" value="<?= number_format($data['jumlah']) ?>" class="form-control formatted-input" placeholder="Masukan Jumlah" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="form-group">
+          <p>Bukti Transfer Sebelumnya: <a href="<?= base_url('bukti_pengeluaran_broadcast/') . $data['upload_bukti'] ?>"><?= $data['upload_bukti'] ?></a></p>
+        </div>
+      </form>
+    </div>
   </div>
-  <?= $this->endSection(); ?>
 
-  <?= $this->section('script'); ?>
-  <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+</div>
+<?= $this->endSection(); ?>
 
-  <script>
-    Dropzone.autoDiscover = true;
-    Dropzone.options.fileDrop = { // The camelized version of the ID of the form element
+<?= $this->section('script'); ?>
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
-      // The configuration we've talked about above
-      autoProcessQueue: false,
-      // paramname
-      paramName: "upload_bukti",
-      uploadMultiple: false,
-      parallelUploads: 1,
-      maxFiles: 1,
-      maxFilesize: 2, // MB
-      acceptedFiles: ".jpeg,.jpg,.png,.gif",
-      // tambahkan close
-      addRemoveLinks: true,
-      // atur agar diatas button submit
-      dictDefaultMessage: "Klik atau Drop disini untuk mengupload Bukti Upload",
+<script>
+  Dropzone.autoDiscover = true;
+  Dropzone.options.fileDrop = { // The camelized version of the ID of the form element
 
-      dictFileTooBig: "Ukuran file terlalu besar ({{filesize}}MiB). Maksimal ukuran file {{maxFilesize}}MiB.",
+    // The configuration we've talked about above
+    autoProcessQueue: false,
+    // paramname
+    paramName: "upload_bukti",
+    uploadMultiple: false,
+    parallelUploads: 1,
+    maxFiles: 1,
+    maxFilesize: 2, // MB
+    acceptedFiles: ".jpeg,.jpg,.png,.gif",
+    // tambahkan close
+    addRemoveLinks: true,
+    // atur agar diatas button submit
+    dictDefaultMessage: "Klik atau Drop disini untuk mengupload Bukti Upload",
 
-      // The setting up of the dropzone
-      init: function() {
-        var myDropzone = this;
-        // autodiscover set false
-        // First change the button to actually tell Dropzone to process the queue.
-        this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
-          // Make sure that the form isn't actually being sent.
-          if (myDropzone.getQueuedFiles().length > 0) {
-            // Ada file dalam antrian, proses antrian
-            e.preventDefault();
-            e.stopPropagation();
-            myDropzone.processQueue();
-          } else {
-            // Tidak ada file dalam antrian, izinkan formulir untuk dikirimkan
-          }
-        });
+    dictFileTooBig: "Ukuran file terlalu besar ({{filesize}}MiB). Maksimal ukuran file {{maxFilesize}}MiB.",
 
-        // terima response ketika sukses
-        this.on("success", function(file, response) {
-          // dapatkan status dari json response
-          var respond = JSON.parse(response);
+    // The setting up of the dropzone
+    init: function() {
+      var myDropzone = this;
+      // autodiscover set false
+      // First change the button to actually tell Dropzone to process the queue.
+      this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
+        // Make sure that the form isn't actually being sent.
+        if (myDropzone.getQueuedFiles().length > 0) {
+          // Ada file dalam antrian, proses antrian
+          e.preventDefault();
+          e.stopPropagation();
+          myDropzone.processQueue();
+        } else {
+          // Tidak ada file dalam antrian, izinkan formulir untuk dikirimkan
+        }
+      });
 
-          console.log(respond.data);
-          // jika sukses
-          if (respond.status == true) {
-            // sweet alert
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              text: 'Data berhasil diupdate!',
-              showConfirmButton: false,
-              timer: 2000
-            }).then(function() {
-              window.location = "<?= base_url('dashboard/broadcast/pengeluaran-broadcast') ?>";
-            });
-          } else {
-            // sweet alert
-            Swal.fire({
-              position: 'center',
-              icon: 'error',
-              text: 'Data gagal ditambahkan!',
-              showConfirmButton: false,
-              timer: 2000
-            });
-          }
-        });
+      // terima response ketika sukses
+      this.on("success", function(file, response) {
+        // dapatkan status dari json response
+        var respond = JSON.parse(response);
 
-        // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
-        // of the sending event because uploadMultiple is set to true.
-        this.on("sendingmultiple", function() {
-          // Gets triggered when the form is actually being sent.
-          // Hide the success button or the complete form.
+        console.log(respond.data);
+        // jika sukses
+        if (respond.status == true) {
+          // sweet alert
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            text: 'Data berhasil diupdate!',
+            showConfirmButton: false,
+            timer: 2000
+          }).then(function() {
+            window.location = "<?= base_url('dashboard/broadcast/pengeluaran-broadcast') ?>";
+          });
+        } else {
+          // sweet alert
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            text: 'Data gagal ditambahkan!',
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      });
 
-        });
-        this.on("successmultiple", function(files, response) {
-          // Gets triggered when the files have successfully been sent.
-          // Redirect user or notify of success.
+      // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+      // of the sending event because uploadMultiple is set to true.
+      this.on("sendingmultiple", function() {
+        // Gets triggered when the form is actually being sent.
+        // Hide the success button or the complete form.
 
-          console.log(response);
-        });
-        this.on("errormultiple", function(files, response) {
-          // Gets triggered when there was an error sending the files.
-          // Maybe show form again, and notify user of error
-          console.log(response);
-        });
-      }
+      });
+      this.on("successmultiple", function(files, response) {
+        // Gets triggered when the files have successfully been sent.
+        // Redirect user or notify of success.
 
-    }
-  </script>
-  <script>
-    function addThousandSeparator(input) {
-      // Menambahkan pemisah ribuan ke input
-      return input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        console.log(response);
+      });
+      this.on("errormultiple", function(files, response) {
+        // Gets triggered when there was an error sending the files.
+        // Maybe show form again, and notify user of error
+        console.log(response);
+      });
     }
 
-    // Ambil elemen input pertama dengan kelas "formatted-input"
-    const inputElement = document.querySelector(".formatted-input");
+  }
+</script>
+<script>
+  function addThousandSeparator(input) {
+    // Menambahkan pemisah ribuan ke input
+    return input.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 
-    let hasUserEdited = false; // Variabel untuk melacak apakah pengguna telah mengubah input
+  // Ambil elemen input pertama dengan kelas "formatted-input"
+  const inputElement = document.querySelector(".formatted-input");
 
-    inputElement.addEventListener("input", function() {
-      hasUserEdited = true; // Set variabel hasUserEdited menjadi true saat pengguna mengubah input
+  let hasUserEdited = false; // Variabel untuk melacak apakah pengguna telah mengubah input
 
-      // Ambil nilai dari input
-      const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
+  inputElement.addEventListener("input", function() {
+    hasUserEdited = true; // Set variabel hasUserEdited menjadi true saat pengguna mengubah input
 
-      // Pastikan nilaiInput adalah angka valid
-      if (!isNaN(nilaiInput)) {
-        // Tambahkan pemisah ribuan ke nilaiInput
-        const nilaiFormat = addThousandSeparator(nilaiInput.toString());
+    // Ambil nilai dari input
+    const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
 
-        // Masukkan nilai yang diformat kembali ke input
-        inputElement.value = nilaiFormat;
-      }
-    });
+    // Pastikan nilaiInput adalah angka valid
+    if (!isNaN(nilaiInput)) {
+      // Tambahkan pemisah ribuan ke nilaiInput
+      const nilaiFormat = addThousandSeparator(nilaiInput.toString());
 
-    // Ketika input kehilangan fokus, perbarui nilai asli jika pengguna telah mengubahnya
-    inputElement.addEventListener("blur", function() {
-      if (hasUserEdited) {
-        // Jika pengguna telah mengubah input, perbarui nilai asli
-        inputElement.setAttribute("value", inputElement.value.replace(/,/g, ""));
-      }
-    });
-  </script>
-  <script>
-    // Mendapatkan elemen input file
-    var inputFile = document.getElementById('exampleFormControlFile1');
+      // Masukkan nilai yang diformat kembali ke input
+      inputElement.value = nilaiFormat;
+    }
+  });
 
-    // Mendapatkan elemen gambar untuk menampilkan preview
-    var previewImage = document.getElementById('previewImage');
+  // Ketika input kehilangan fokus, perbarui nilai asli jika pengguna telah mengubahnya
+  inputElement.addEventListener("blur", function() {
+    if (hasUserEdited) {
+      // Jika pengguna telah mengubah input, perbarui nilai asli
+      inputElement.setAttribute("value", inputElement.value.replace(/,/g, ""));
+    }
+  });
+</script>
+<script>
+  // Mendapatkan elemen input file
+  var inputFile = document.getElementById('exampleFormControlFile1');
 
-    // Menambahkan event listener untuk menghandle perubahan input file
-    inputFile.addEventListener('change', function() {
-      var file = inputFile.files[0];
+  // Mendapatkan elemen gambar untuk menampilkan preview
+  var previewImage = document.getElementById('previewImage');
 
-      if (file) {
-        // Membaca file sebagai URL data
-        var reader = new FileReader();
+  // Menambahkan event listener untuk menghandle perubahan input file
+  inputFile.addEventListener('change', function() {
+    var file = inputFile.files[0];
 
-        reader.onload = function(e) {
-          // Menampilkan gambar pada elemen gambar
-          previewImage.src = e.target.result;
-          // Menampilkan elemen gambar
-          previewImage.style.display = 'block';
-        };
+    if (file) {
+      // Membaca file sebagai URL data
+      var reader = new FileReader();
 
-        reader.readAsDataURL(file);
-      } else {
-        // Menghapus elemen gambar jika tidak ada file yang dipilih
-        previewImage.src = "";
-      }
-    });
-  </script>
-  <?= $this->endSection(); ?>
+      reader.onload = function(e) {
+        // Menampilkan gambar pada elemen gambar
+        previewImage.src = e.target.result;
+        // Menampilkan elemen gambar
+        previewImage.style.display = 'block';
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      // Menghapus elemen gambar jika tidak ada file yang dipilih
+      previewImage.src = "";
+    }
+  });
+</script>
+<?= $this->endSection(); ?>
