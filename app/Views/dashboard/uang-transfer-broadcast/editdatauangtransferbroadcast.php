@@ -57,6 +57,7 @@
             <option value="<?= $data['jenis_transfer'] ?>" selected><?= $data['jenis_transfer'] ?></option>
             <option value="Iklan">Iklan</option>
             <option value="Broadcast">Broadcast</option>
+            <option value="Broadcast Iklan">Broadcast Iklan</option>
           </select>
         </div>
         <div class="form-group">
