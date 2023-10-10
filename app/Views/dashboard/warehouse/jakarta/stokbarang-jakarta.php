@@ -227,7 +227,7 @@
                 {
                     data: 'upload_bukti'
                 },
-                <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?> {
+                <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?> {
                         data: 'action'
                     }
                 <?php endif ?>
