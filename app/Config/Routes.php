@@ -65,6 +65,15 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->post('delete', 'Dashboard\SettingController::delete');
     });
 
+    $routes->group('rekap', function ($routes) {
+        // rekap
+        $routes->get('/', 'Dashboard\RekapController::index');
+        $routes->get('download-template', 'Dashboard\RekapController::downloadFile');
+        $routes->post('import', 'Dashboard\RekapController::import');
+        $routes->post('list-rekap', 'Dashboard\RekapController::list');
+        $routes->post('detail-pengiriman', 'Dashboard\RekapController::detailPengiriman');
+    });
+
 
     $routes->group('advertiser', ['filter' => 'AdvertiserFilter'],  function ($routes) {
         // pengeluaran adv
