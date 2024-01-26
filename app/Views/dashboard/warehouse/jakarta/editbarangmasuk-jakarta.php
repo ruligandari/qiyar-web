@@ -31,6 +31,10 @@
             <label for="formGroupExampleInput">Qty</label>
             <input type="text" name="qty" placeholder="Jumlah" class="form-control" value="<?= $data['qty'] ?>" required>
           </div>
+          <div class="form-group">
+            <label for="formGroupExampleInput">HPP</label>
+            <input type="text" name="hpp" placeholder="HPP" class="form-control formatted-input" value="<?= $data['hpp'] ?>" required>
+          </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
@@ -66,6 +70,29 @@
       } else {
         // Menghapus elemen gambar jika tidak ada file yang dipilih
         previewImage.src = "";
+      }
+    });
+  </script>
+  <script>
+    function addThousandSeparator(input) {
+      // Menambahkan pemisah ribuan ke input
+      return input.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Ambil elemen input pertama dengan kelas "formatted-input"
+    const inputElement = document.querySelector(".formatted-input");
+
+    inputElement.addEventListener("input", function() {
+      // Ambil nilai dari input
+      const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
+
+      // Pastikan nilaiInput adalah angka valid
+      if (!isNaN(nilaiInput)) {
+        // Tambahkan pemisah ribuan ke nilaiInput
+        const nilaiFormat = addThousandSeparator(nilaiInput.toString());
+
+        // Masukkan nilai yang diformat kembali ke input
+        inputElement.value = nilaiFormat;
       }
     });
   </script>

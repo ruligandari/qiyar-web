@@ -18,6 +18,19 @@ class RekapController extends BaseController
         return view('dashboard/rekap/index', $data);
     }
 
+    public function dataRekap()
+    {
+        $rekapIklanModel = new RekapIklanModel();
+        $dates = $this->request->getVar('dates');
+        $id_adv = $this->request->getPost('id_adv');
+        $dates = explode(' - ', $dates);
+        $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
+        $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
+
+        $data = $rekapIklanModel->where('tanggal >=', $min)->where('tanggal <=', $max)->where('id_adv', $id_adv)->find();
+        return json_encode($data);
+    }
+
     function detailPengiriman()
     {
         $id_order = $this->request->getPost('id_order');

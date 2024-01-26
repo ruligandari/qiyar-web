@@ -94,11 +94,6 @@
                         <i class="fas fa-fw fa-file"></i>
                         <span>Pengeluaran Advertiser</span></a>
                 </li>
-                <!-- <li class="nav-item <?= $title == 'Budget Iklan' ? 'active' : '' ?>">
-                    <a class="nav-link" href="<?= base_url('dashboard/rekap') ?>">
-                        <i class="fas fa-fw fa-file"></i>
-                        <span>Rekap Iklan</span></a>
-                </li> -->
             <?php endif; ?>
             <?php if (session()->get('role') == '1' || session()->get('role') == '4' || session()->get('role') == '3') : ?>
                 <li class="nav-item <?= $title == 'Pemasukan Advertiser' ? 'active' : '' ?>">

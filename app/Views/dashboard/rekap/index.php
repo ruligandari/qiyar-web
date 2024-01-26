@@ -82,6 +82,72 @@
             </div>
         </div>
     </div> -->
+    <div class="row">
+        <div class="col-3">
+            <div class="card mb-4 py-1 border-bottom-success">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-m font-weight-bold text-success text-uppercase mb-1">
+                                Terkirim</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="dash_terkirim"></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card mb-4 py-1 border-bottom-danger">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-m font-weight-bold text-danger text-uppercase mb-1">
+                                Return</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="dash_return"></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-sync fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card mb-4 py-1 border-bottom-warning">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-m font-weight-bold text-warning text-uppercase mb-1">
+                                Proses Delivery</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="dash_proses_delivery"></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-truck fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card mb-4 py-1 border-bottom-secondary">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-m font-weight-bold text-secondary text-uppercase mb-1">
+                                Cancel</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="dash_cancel"></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-times fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <div class="">
@@ -288,6 +354,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script>
         // membuta funnction detailPemngeriman, yang nantinya mengirimkan id_order ke controller
+
         function detailPengiriman(id_order) {
             $.ajax({
                 url: '<?= base_url('dashboard/rekap/detail-pengiriman') ?>',
@@ -452,11 +519,43 @@
                         $('#totalSetelahDiskon').html(formattedSumSetelahDiskon);
                     }
 
+                    // fungsi untuk melakukan jumlah status terkirim
+
+                    function DashboardOrder() {
+                        let dashTerkirim = table.column(10, {
+                            search: 'applied'
+                        }).data().filter(function(value, index) {
+                            return value == 'terkirim';
+                        }).length;
+                        let dashReturn = table.column(10, {
+                            search: 'applied'
+                        }).data().filter(function(value, index) {
+                            return value == 'return';
+                        }).length;
+                        let dashDilevery = table.column(10, {
+                            search: 'applied'
+                        }).data().filter(function(value, index) {
+                            return value == 'proses delevry';
+                        }).length;
+                        let dashCancel = table.column(10, {
+                            search: 'applied'
+                        }).data().filter(function(value, index) {
+                            return value == 'cancel';
+                        }).length;
+                        $('#dash_terkirim').html(dashTerkirim);
+                        $('#dash_return').html(dashReturn);
+                        $('#dash_proses_delivery').html(dashDilevery);
+                        $('#dash_cancel').html(dashCancel);
+                    }
+
                     // Panggil fungsi sumColumn saat tabel selesai dimuat
                     sumColumn();
-
+                    DashboardOrder();
                     // Panggil fungsi sumColumn lagi ketika tabel di-filter atau di-sort
-                    table.on('search.dt draw.dt', sumColumn);
+                    table.on('search.dt draw.dt', function() {
+                        sumColumn();
+                        DashboardOrder();
+                    });
                 },
             });
             $('#status_pengiriman').change(function(event) {

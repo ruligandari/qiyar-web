@@ -41,11 +41,13 @@ class WarehouseJakartaController extends BaseController
         $tanggal = $this->request->getPost('tanggal');
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
-
+        $hpp = $this->request->getPost('hpp');
+        $hppString = str_replace(',', '', $hpp);
         $data = [
             'tanggal' => $tanggal,
             'nama_barang' => $nama_barang,
             'qty' => $qty,
+            'hpp' => $hppString,
         ];
 
         if ($data) {
@@ -98,10 +100,13 @@ class WarehouseJakartaController extends BaseController
         $id = $this->request->getPost('id');
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
+        $hpp = $this->request->getPost('hpp');
+        $hppString = str_replace(',', '', $hpp);
 
         $data = [
             'nama_barang' => $nama_barang,
             'qty' => $qty,
+            'hpp' => $hppString,
         ];
 
         if ($data) {
@@ -570,7 +575,7 @@ class WarehouseJakartaController extends BaseController
     public function listBarangMasuk()
     {
         $db = db_connect();
-        $builder = $db->table('barang_masuk_jkt')->select('id, tanggal, nama_barang, qty');
+        $builder = $db->table('barang_masuk_jkt')->select('id, tanggal, nama_barang, qty, hpp');
         return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
             // cek data diterima atau tidak
             if ($request->dates) {
@@ -581,6 +586,11 @@ class WarehouseJakartaController extends BaseController
                 $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
             }
         })->format('qty', function ($value) {
+            return number_format($value, 0, ',', '.');
+        })->format('hpp', function ($value) {
+            if ($value == '') {
+                $value = '0';
+            }
             return number_format($value, 0, ',', '.');
         })->add('action', function ($row) {
             return '<div class="text-center"><a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/warehouse-jakarta/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>

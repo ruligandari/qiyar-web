@@ -72,6 +72,7 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
         $routes->post('import', 'Dashboard\RekapController::import');
         $routes->post('list-rekap', 'Dashboard\RekapController::list');
         $routes->post('detail-pengiriman', 'Dashboard\RekapController::detailPengiriman');
+        $routes->post('data-rekap', 'Dashboard\RekapController::dataRekap');
     });
 
 
