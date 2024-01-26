@@ -55,6 +55,10 @@
                         <input type="text" class="form-control" id="formGroupExampleInput" name="nama_barang" placeholder="Masukan Nama Barang" required>
                     </div>
                     <div class="form-group">
+                        <label for="formGroupExampleInput">HPP</label>
+                        <input type="text" class="form-control formatted-input" id="hpp" name="hpp" placeholder="Masukan HPP Barang">
+                    </div>
+                    <div class="form-group">
                         <label for="formGroupExampleInput">Qty</label>
                         <input type="text" class="form-control formatted-input" id="harga" name="qty" placeholder="Masukan Qty" required>
                     </div>
@@ -95,6 +99,29 @@
                 // Menghapus elemen gambar jika tidak ada file yang dipilih
                 previewImage.parentNode.removeChild(previewImage);
                 jarak.parentNode.removeChild(jarak);
+            }
+        });
+    </script>
+    <script>
+        function addThousandSeparator(input) {
+            // Menambahkan pemisah ribuan ke input
+            return input.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Ambil elemen input pertama dengan kelas "formatted-input"
+        const inputElement = document.querySelector(".formatted-input");
+
+        inputElement.addEventListener("input", function() {
+            // Ambil nilai dari input
+            const nilaiInput = parseFloat(inputElement.value.replace(/,/g, ""));
+
+            // Pastikan nilaiInput adalah angka valid
+            if (!isNaN(nilaiInput)) {
+                // Tambahkan pemisah ribuan ke nilaiInput
+                const nilaiFormat = addThousandSeparator(nilaiInput.toString());
+
+                // Masukkan nilai yang diformat kembali ke input
+                inputElement.value = nilaiFormat;
             }
         });
     </script>

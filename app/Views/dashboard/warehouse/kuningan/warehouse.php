@@ -90,6 +90,7 @@
                                     <th>No</th>
                                     <th>Tanggal</th>
                                     <th>Nama Barang</th>
+                                    <th>HPP (Rp)</th>
                                     <th>Qty</th>
                                     <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
                                         <th>Aksi</th>
@@ -98,15 +99,12 @@
                             </thead>
                             <tfoot>
                                 <tr>
+                                    <th colspan="2"></th>
+                                    <th>Total (HPP x Qty/Produk): </th>
+                                    <th id="totalHPP" class="export-number"></th>
+                                    <th id="totalSum" class="export-number"></th>
                                     <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?>
-                                        <td colspan="2"></td>
-                                        <td><b>Total Qty :</b></td>
-                                        <td id="totalSum"></td>
-                                        <td></td>
-                                    <?php else : ?>
-                                        <td colspan="2"></td>
-                                        <td><b>Total Qty :</b></td>
-                                        <td id="totalSum"></td>
+                                        <th></th>
                                     <?php endif; ?>
                                 </tr>
                             </tfoot>
@@ -237,8 +235,6 @@
 
     var urlTable = $('#urlBarangMasuk').val();
     var urlDelete = $('#urlDelete').val();
-    console.log(urlDelete);
-    console.log(urlTable);
 
     $(document).ready(function() {
         let table = $('#table1').DataTable({
@@ -257,7 +253,18 @@
                     footer: true,
                     title: 'Data Barang Masuk - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3],
+                        columns: [0, 1, 2, 3, 4],
+                    },
+                    customizeData: function(data) {
+                        // Memperbaiki format angka pada kolom tertentu
+                        for (var i = 0; i < data.body.length; i++) {
+                            for (var j = 0; j < data.body[i].length; j++) {
+                                // Kolom hpp dan qty (ganti dengan indeks yang sesuai)
+                                if (j === 3 || j === 4) {
+                                    data.body[i][j] = parseFloat(data.body[i][j].replace(/\./g, '').replace(',', '.')) || 0;
+                                }
+                            }
+                        }
                     },
                     className: 'mb-2',
                     // ubah nama file ketika di download
@@ -281,6 +288,9 @@
                 }, {
                     data: 'nama_barang'
                 }, {
+                    data: 'hpp'
+                },
+                {
                     data: 'qty'
                 },
                 <?php if (in_array(session()->get('role'), ['2', '3', '6'])) : ?> {
@@ -301,7 +311,7 @@
             initComplete: function() {
                 // Fungsi untuk menghitung jumlah total kolom "jumlah"
                 function sumColumn() {
-                    let columnData = table.column(3, {
+                    let columnData = table.column(4, {
                         search: 'applied'
                     }).data();
 
@@ -319,11 +329,38 @@
                         });
 
                         // Tampilkan jumlah total di elemen HTML dengan ID "totalSum"
-                        $('#totalSum').html(formattedSum);
+                        $('#totalSum').html('( ' + formattedSum + ' )');
                     } else {
                         // If columnData is undefined or empty, display a default value
                         $('#totalSum').html('0');
                     }
+
+                    // jumlah hpp
+                    let hppColumnIndex = 1; // Ganti dengan indeks kolom hpp pada DataTables Anda
+                    let qtyColumnIndex = 1; // Ganti dengan indeks kolom qty pada DataTables Anda
+
+                    let rowsData = table.rows({
+                        search: 'applied'
+                    }).data();
+                    let totalHPP = 0;
+
+                    rowsData.each(function(data) {
+                        let hpp = parseFloat(data.hpp.replace(/\./g, '').replace(',', '.'));
+                        let qty = parseFloat(data.qty.replace(/\./g, '').replace(',', '.'));
+                        // Perkalian hpp dengan qty untuk setiap baris
+                        let subtotal = hpp * qty;
+
+                        // Menambahkan hasil perkalian ke totalHPP
+                        totalHPP += subtotal;
+                    });
+                    // Format totalHPP sebagai mata uang Indonesia
+                    let formattedTotalHPP = totalHPP.toLocaleString('id-ID', {
+                        minimumFractionDigits: 0, // Atur ini ke 0 untuk menghilangkan angka di belakang koma
+                        maximumFractionDigits: 2
+                    });
+
+                    // Tampilkan totalHPP di elemen HTML dengan ID "totalHPP"
+                    $('#totalHPP').html('Rp. ' + formattedTotalHPP);
                 }
 
 
