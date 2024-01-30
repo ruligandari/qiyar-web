@@ -50,6 +50,11 @@ class WarehouseJakartaController extends BaseController
             'hpp' => $hppString,
         ];
 
+        // cek hpp adalah number
+        if (!is_numeric($hppString)) {
+            return redirect()->to('/dashboard/warehouse-jakarta/tambah')->withInput()->with('error', 'HPP harus berupa angka');
+        }
+
         if ($data) {
             // insert data 
             $this->barang_masuk->insert($data);
