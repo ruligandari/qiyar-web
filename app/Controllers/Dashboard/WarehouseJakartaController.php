@@ -588,7 +588,7 @@ class WarehouseJakartaController extends BaseController
         })->format('qty', function ($value) {
             return number_format($value, 0, ',', '.');
         })->format('hpp', function ($value) {
-            if ($value == '') {
+            if ($value == null) {
                 $value = '0';
             }
             return number_format($value, 0, ',', '.');
