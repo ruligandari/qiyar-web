@@ -31,10 +31,12 @@
             <label for="formGroupExampleInput">Qty</label>
             <input type="text" name="qty" placeholder="Jumlah" class="form-control" value="<?= $data['qty'] ?>" required>
           </div>
-          <div class="form-group">
-            <label for="formGroupExampleInput">HPP</label>
-            <input type="text" name="hpp" placeholder="HPP" class="form-control formatted-input" value="<?= $data['hpp'] ?>" required>
-          </div>
+          <?php if (session()->get('role') == '2' || session()->get('role') == '3') : ?>
+            <div class="form-group">
+              <label for="formGroupExampleInput">HPP</label>
+              <input type="text" name="hpp" placeholder="HPP" class="form-control formatted-input" value="<?= $data['hpp'] ?>" required>
+            </div>
+          <?php endif ?>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>

@@ -54,10 +54,10 @@
                         <label for="formGroupExampleInput">Nama Barang</label>
                         <input type="text" class="form-control" id="formGroupExampleInput" name="nama_barang" placeholder="Masukan Nama Barang" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="formGroupExampleInput">HPP</label>
                         <input type="text" class="form-control formatted-input" id="hpp" name="hpp" placeholder="Masukan HPP Barang">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="formGroupExampleInput">Qty</label>
                         <input type="text" class="form-control formatted-input" id="harga" name="qty" placeholder="Masukan Qty" required>

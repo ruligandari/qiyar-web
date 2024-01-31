@@ -45,17 +45,24 @@ class WarehouseKuninganController extends BaseController
         $hpp = $this->request->getVar('hpp');
         $hppConvert = str_replace(',', '', $hpp);
 
+        if ($hpp != '') {
+            $data = [
+                'tanggal' => $tanggal,
+                'nama_barang' => $nama_barang,
+                'qty' => $qty,
+                'hpp' => $hppConvert
+            ];
 
-        $data = [
-            'tanggal' => $tanggal,
-            'nama_barang' => $nama_barang,
-            'qty' => $qty,
-            'hpp' => $hppConvert
-        ];
-
-        // cek hpp adalah number
-        if (!is_numeric($hppConvert)) {
-            return redirect()->to('/dashboard/warehouse-jakarta/tambah')->withInput()->with('error', 'HPP harus berupa angka');
+            // cek hpp adalah number
+            if (!is_numeric($hppConvert)) {
+                return redirect()->to('/dashboard/warehouse-jakarta/tambah')->withInput()->with('error', 'HPP harus berupa angka');
+            }
+        } else {
+            $data = [
+                'tanggal' => $tanggal,
+                'nama_barang' => $nama_barang,
+                'qty' => $qty,
+            ];
         }
         if ($data) {
             // insert data 
@@ -110,12 +117,24 @@ class WarehouseKuninganController extends BaseController
         $hpp = $this->request->getVar('hpp');
         $hppString = str_replace(',', '', $hpp);
 
-        $data = [
-            'nama_barang' => $nama_barang,
-            'qty' => $qty,
-            'hpp' => $hppString
+        if ($hpp != '') {
 
-        ];
+            if (!is_numeric($hpp)) {
+                return redirect()->to('/dashboard/warehouse-kuningan/edit/' . $id)->withInput()->with('error', 'Data HPP harus berupa angka');
+            }
+            $data = [
+                'nama_barang' => $nama_barang,
+                'qty' => $qty,
+                'hpp' => $hppString
+
+            ];
+        } else {
+            $data = [
+                'nama_barang' => $nama_barang,
+                'qty' => $qty,
+
+            ];
+        }
 
         if ($data) {
             // insert data 
