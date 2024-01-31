@@ -42,28 +42,13 @@ class WarehouseKuninganController extends BaseController
         $tanggal = $this->request->getPost('tanggal');
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
-        $hpp = $this->request->getVar('hpp');
-        $hppConvert = str_replace(',', '', $hpp);
 
-        if ($hpp != '') {
-            $data = [
-                'tanggal' => $tanggal,
-                'nama_barang' => $nama_barang,
-                'qty' => $qty,
-                'hpp' => $hppConvert
-            ];
+        $data = [
+            'tanggal' => $tanggal,
+            'nama_barang' => $nama_barang,
+            'qty' => $qty,
+        ];
 
-            // cek hpp adalah number
-            if (!is_numeric($hppConvert)) {
-                return redirect()->to('/dashboard/warehouse-jakarta/tambah')->withInput()->with('error', 'HPP harus berupa angka');
-            }
-        } else {
-            $data = [
-                'tanggal' => $tanggal,
-                'nama_barang' => $nama_barang,
-                'qty' => $qty,
-            ];
-        }
         if ($data) {
             // insert data 
             $this->barang_masuk->insert($data);
