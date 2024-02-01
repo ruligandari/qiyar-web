@@ -275,7 +275,7 @@
                     footer: true,
                     title: 'Data Barang Masuk - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3],
+                        columns: [0, 1, 2, 3, 4],
                     },
                     className: 'mb-2',
                 }
