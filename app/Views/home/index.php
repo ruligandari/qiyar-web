@@ -60,7 +60,7 @@
             </nav>
             <!-- End Nav Menu -->
 
-            <a class="btn-getstarted" href="https://wa.me/6285931946578">Contact</a>
+            <a class="btn-getstarted" href="https://wa.me/62895622835833">Contact</a>
         </div>
     </header>
     <!-- End Header -->
