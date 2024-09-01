@@ -56,8 +56,8 @@
                     <div id="reader" width="600px" class=""></div>
                     <div class="form-group">
                         <label class="form-label" for="message">Nama Barang</label>
-                        <input class="form-control" id="message" name="nama_barang" placeholder="Scan Kode QR" value="" readonly>
-                        <input class="form-control" id="message" name="id_barang" placeholder="Masukan Qty" value="" hidden>
+                        <input class="form-control" id="nama_barang" name="nama_barang" placeholder="Scan Kode QR" value="" readonly>
+                        <input class="form-control" id="id_barang" name="id_barang" placeholder="Masukan Qty" value="" hidden>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="message">Qty</label>
@@ -121,30 +121,22 @@
     function onScanSuccess(decodedText, decodedResult) {
         // handle the scanned code as you like, for example:
         console.log(`Code matched = ${decodedText}`, decodedResult);
-        // request ke server
-        fetch('<?= base_url('stok-opname/barang-keluar/scan/') ?>', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    kode_barang: decodedText
-                })
-            }).then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.querySelector('input[name=nama_barang]').value = data.data.nama_barang;
-                    document.querySelector('input[name=id_barang]').value = data.data.id;
 
-                    // reload halaman ini
-                    //window.location.reload();
-                } else {
-                    alert('Data tidak ditemukan');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        // data array
+        var dataMaster = <?php echo json_encode($data); ?>;
+        // cari data berdasarkan id dan ambil nama barang
+        var data = dataMaster.find(x => x.id == decodedText);
+        if (!data) {
+            alert('Data tidak ditemukan');
+            document.getElementById('nama_barang').value = '';
+            document.getElementById('id_barang').value = '';
+            return;
+        }
+        var nama_barang = data.nama_barang;
+        // set value input dengan name nama_barang
+        document.getElementById('nama_barang').value = nama_barang;
+        document.getElementById('id_barang').value = data.id;
+
     }
 
     function onScanFailure(error) {

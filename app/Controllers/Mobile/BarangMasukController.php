@@ -155,8 +155,12 @@ class BarangMasukController extends BaseController
     }
     public function scaner()
     {
+        // find data ke master_jkt
+        $master = $this->master_jkt->findAll();
+
         $data = [
-            'title' => 'Scan Barang Masuk'
+            'title' => 'Scan Barang Masuk',
+            'data' => $master
         ];
         return view('mobile/barang_masuk/scaner', $data);
     }
