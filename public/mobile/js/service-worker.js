@@ -12,19 +12,19 @@ var REQUIRED_FILES = [
   '/',
   'https://cdn.jsdelivr.net/npm/sweetalert2@11',
   'https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js',
-  'mobile/js/bootstrap.bundle.min.js',
-  'mobile/js/slideToggle.min.js',
-  'mobile/js/internet-status.js',
-  'mobile/js/tiny-slider.js',
-  'mobile/js/venobox.min.js',
-  'mobile/js/countdown.js',
-  'mobile/js/rangeslider.min.js',
-  'mobile/js/index.js',
-  'mobile/js/imagesloaded.pkgd.min.js',
-  'mobile/js/isotope.pkgd.min.js',
-  'mobile/js/dark-rtl.js',
-  'mobile/js/active.js',
-  'mobile/style.css'
+  'bootstrap.bundle.min.js',
+  'slideToggle.min.js',
+  'internet-status.js',
+  'tiny-slider.js',
+  'venobox.min.js',
+  'countdown.js',
+  'rangeslider.min.js',
+  'index.js',
+  'imagesloaded.pkgd.min.js',
+  'isotope.pkgd.min.js',
+  'dark-rtl.js',
+  'active.js',
+  '../style.css'
 ];
 
 self.addEventListener('install', function(event) {
