@@ -46,7 +46,7 @@
 <div class="page-content-wrapper py-3">
     <!-- Add New Contact -->
     <div class="add-new-contact-wrap">
-        <a class="shadow" href="#" data-bs-toggle="modal" data-bs-target="#addBarang">
+        <a class="shadow" href="<?= base_url('stok-opname/barang-masuk/scan') ?>">
             <i class="bi bi-qr-code-scan"></i>
         </a>
     </div>

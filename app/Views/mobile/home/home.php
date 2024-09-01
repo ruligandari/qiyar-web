@@ -81,20 +81,6 @@
     </div>
 </div>
 <div class="page-content-wrapper py-3">
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="toast toast-autohide custom-toast-1 toast-success home-page-toast" role="alert" aria-live="assertive"
-            aria-atomic="true" data-bs-delay="7000" data-bs-autohide="true">
-            <div class="toast-body">
-                <i class="bi bi-bookmark-check text-white h1 mb-0"></i>
-                <div class="toast-text ms-3 me-2">
-                    <p class="mb-0 text-white"><?= session()->getFlashdata('success') ?></p>
-                </div>
-            </div>
-
-            <button class="btn btn-close btn-close-white position-absolute p-1" type="button" data-bs-dismiss="toast"
-                aria-label="Close"></button>
-        </div>
-    <?php endif; ?>
     <!-- Tiny Slider One Wrapper -->
     <div class="container">
         <div class="card card-bg-img bg-img bg-success mb-3">

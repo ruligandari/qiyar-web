@@ -3,6 +3,20 @@
 <?= $this->section('content'); ?>
 <!-- Login Wrapper Area -->
 <div class="login-wrapper d-flex align-items-center justify-content-center">
+    <?php if (session()->getFlashdata('gagal')): ?>
+        <div class="toast toast-autohide custom-toast-1 toast-warning home-page-toast" role="alert" aria-live="assertive"
+            aria-atomic="true" data-bs-delay="7000" data-bs-autohide="true">
+            <div class="toast-body">
+                <i class="bi bi-exclamation-circle-fill text-white h1 mb-0"></i>
+                <div class="toast-text ms-3 me-2">
+                    <p class="mb-0 text-white"><?= session()->getFlashdata('gagal') ?></p>
+                </div>
+            </div>
+
+            <button class="btn btn-close btn-close-white position-absolute p-1" type="button" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
     <div class="custom-container">
         <div class="text-center px-4">
             <h4 class="mb-3 text-center">Stok Opname Qiyarmedia</h4>

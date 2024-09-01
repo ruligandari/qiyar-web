@@ -46,7 +46,7 @@
 <div class="page-content-wrapper py-3">
     <!-- Add New Contact -->
     <div class="add-new-contact-wrap">
-        <a class="shadow" href="#" data-bs-toggle="modal" data-bs-target="#addBarang">
+        <a class="shadow" href="<?= base_url('stok-opname/barang-keluar/scan') ?>">
             <i class="bi bi-qr-code-scan"></i>
         </a>
     </div>
@@ -307,57 +307,5 @@
             }
         })
     }
-</script>
-<?= $this->endsection(); ?>
-
-<?= $this->section('script'); ?>
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-<script>
-    function onScanSuccess(decodedText, decodedResult) {
-        // handle the scanned code as you like, for example:
-        console.log(`Code matched = ${decodedText}`, decodedResult);
-        // request ke server
-        fetch('<?= base_url('stok-opname/barang-keluar/scan/') ?>', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    kode_barang: decodedText
-                })
-            }).then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.querySelector('input[name=nama_barang]').value = data.data.nama_barang;
-                    document.querySelector('input[name=id_barang]').value = data.data.id;
-
-                    // reload halaman ini
-                    //window.location.reload();
-                } else {
-                    alert('Data tidak ditemukan');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-
-    function onScanFailure(error) {
-        // handle scan failure, usually better to ignore and keep scanning.
-        // for example:
-        console.warn(`Code scan error = ${error}`);
-    }
-
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader", {
-            fps: 10,
-            qrbox: {
-                width: 250,
-                height: 250
-            }
-        },
-        /* verbose= */
-        false);
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 </script>
 <?= $this->endsection(); ?>

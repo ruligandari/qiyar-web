@@ -153,4 +153,11 @@ class BarangMasukController extends BaseController
         $this->barang_masuk_jkt->update($id, $data);
         return redirect()->to(base_url('stok-opname/barang-masuk'))->with('success', 'Data berhasil diupdate');
     }
+    public function scaner()
+    {
+        $data = [
+            'title' => 'Scan Barang Masuk'
+        ];
+        return view('mobile/barang_masuk/scaner', $data);
+    }
 }

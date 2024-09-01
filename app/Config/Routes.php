@@ -231,6 +231,7 @@ $routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
 
     $routes->get('barang-masuk', 'Mobile\BarangMasukController::index');
     $routes->post('barang-masuk/scan', 'Mobile\BarangMasukController::scan');
+    $routes->get('barang-masuk/scan', 'Mobile\BarangMasukController::scaner');
     $routes->post('barang-masuk/add', 'Mobile\BarangMasukController::add');
     $routes->post('barang-masuk/edit', 'Mobile\BarangMasukController::edit');
     $routes->post('barang-masuk/update', 'Mobile\BarangMasukController::update');
@@ -238,6 +239,7 @@ $routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
 
     $routes->get('barang-keluar', 'Mobile\BarangKeluarController::index');
     $routes->post('barang-keluar/scan', 'Mobile\BarangKeluarController::scan');
+    $routes->get('barang-keluar/scan', 'Mobile\BarangKeluarController::scaner');
     $routes->post('barang-keluar/add', 'Mobile\BarangKeluarController::add');
     $routes->post('barang-keluar/edit', 'Mobile\BarangKeluarController::edit');
     $routes->post('barang-keluar/update', 'Mobile\BarangKeluarController::update');
