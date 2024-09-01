@@ -102,17 +102,19 @@ class MasterBarangController extends BaseController
         if ($err) {
             echo "cURL Error #:" . $err;
         } else {
-            // Path untuk menyimpan file dengan nama yang aman
+            // Simpan file ke server
             $filePath = FCPATH . 'qrcodes/' . $nama_barang . '.png';
             file_put_contents($filePath, $response);
 
-            // Set header untuk mengunduh file PNG
-            header('Content-Type: image/png');
-            header('Content-Disposition: attachment; filename="' . $nama_barang . '.png"');
-            header('Content-Length: ' . filesize($filePath));
-
-            // Pastikan tidak ada output sebelum header
-            readfile($filePath);
+            // Header untuk pengunduhan file
+            if (file_exists($filePath)) {
+                header('Content-Type: image/png');
+                header('Content-Disposition: attachment; filename="' . $nama_barang . '.png"');
+                header('Content-Length: ' . filesize($filePath));
+                readfile($filePath);
+            } else {
+                echo 'File tidak ditemukan!';
+            }
         }
     }
 
