@@ -212,6 +212,38 @@ $routes->group('dashboard', ['filter' => 'authFilter'], function ($routes) {
     });
 });
 
+// routes group app
+$routes->get('m/login', 'Mobile\AuthController::index');
+$routes->post('m/logout', 'Mobile\AuthController::logout');
+$routes->post('m/auth', 'Mobile\AuthController::login');
+$routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
+    // app
+    $routes->get('/', 'Mobile\HomeController::index');
+
+    $routes->get('profile', 'Mobile\HomeController::profile');
+
+    $routes->get('master-barang', 'Mobile\MasterBarangController::index');
+    $routes->post('master-barang/add', 'Mobile\MasterBarangController::add');
+    $routes->post('master-barang/edit', 'Mobile\MasterBarangController::edit');
+    $routes->post('master-barang/update', 'Mobile\MasterBarangController::update');
+    $routes->post('master-barang/delete', 'Mobile\MasterBarangController::delete');
+    $routes->get('master-barang/qr/(:any)', 'Mobile\MasterBarangController::generateQr/$1');
+
+    $routes->get('barang-masuk', 'Mobile\BarangMasukController::index');
+    $routes->post('barang-masuk/scan', 'Mobile\BarangMasukController::scan');
+    $routes->post('barang-masuk/add', 'Mobile\BarangMasukController::add');
+    $routes->post('barang-masuk/edit', 'Mobile\BarangMasukController::edit');
+    $routes->post('barang-masuk/update', 'Mobile\BarangMasukController::update');
+    $routes->post('barang-masuk/delete', 'Mobile\BarangMasukController::delete');
+
+    $routes->get('barang-keluar', 'Mobile\BarangKeluarController::index');
+    $routes->post('barang-keluar/scan', 'Mobile\BarangKeluarController::scan');
+    $routes->post('barang-keluar/add', 'Mobile\BarangKeluarController::add');
+    $routes->post('barang-keluar/edit', 'Mobile\BarangKeluarController::edit');
+    $routes->post('barang-keluar/update', 'Mobile\BarangKeluarController::update');
+    $routes->post('barang-keluar/delete', 'Mobile\BarangKeluarController::delete');
+});
+
 // restricted page
 $routes->get('restrictedpage', 'Admin\LoginController::restrictedpage');
 

@@ -22,6 +22,7 @@ class Filters extends BaseConfig
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'authFilter' => \App\Filters\UserFilter::class,
+        'mobileFilter' => \App\Filters\MobileFilter::class,
         'roleFilter' => \App\Filters\RoleFilter::class,
         'advFilter' => \App\Filters\AdvFilter::class,
         'AdvertiserFilter' => \App\Filters\AdvertiserFilter::class,
