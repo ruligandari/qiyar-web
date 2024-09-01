@@ -47,12 +47,12 @@ class MasterBarangController extends BaseController
 
     public function generateQr($id)
     {
-        // cari ke barang_masuk_jkt
+        // Cari ke barang_masuk_jkt
         $data = $this->barang_masuk_jkt->find($id);
-        // dapatkan nama barang
-        $nama_barang = $data['nama_barang'];
-        $curl = curl_init();
+        // Dapatkan nama barang dan ganti spasi dengan underscore
+        $nama_barang = str_replace(' ', '_', $data['nama_barang']);
 
+        $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => "https://qrcode3.p.rapidapi.com/qrcode/text",
             CURLOPT_RETURNTRANSFER => true,
@@ -97,24 +97,25 @@ class MasterBarangController extends BaseController
 
         $response = curl_exec($curl);
         $err = curl_error($curl);
-
         curl_close($curl);
 
         if ($err) {
             echo "cURL Error #:" . $err;
         } else {
+            // Path untuk menyimpan file dengan nama yang aman
             $filePath = FCPATH . 'qrcodes/' . $nama_barang . '.png';
             file_put_contents($filePath, $response);
 
-            // Set header untuk file PNG
+            // Set header untuk mengunduh file PNG
             header('Content-Type: image/png');
-            header('Content-Disposition: attachment; filename="' . basename($nama_barang) . '.png"');
+            header('Content-Disposition: attachment; filename="' . $nama_barang . '.png"');
             header('Content-Length: ' . filesize($filePath));
 
-            // Pastikan tidak ada spasi sebelum atau setelah tag PHP di file ini
+            // Pastikan tidak ada output sebelum header
             readfile($filePath);
         }
     }
+
 
     public function add()
     {
