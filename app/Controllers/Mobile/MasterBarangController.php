@@ -105,9 +105,11 @@ class MasterBarangController extends BaseController
         } else {
             $filePath = FCPATH . 'qrcodes/' . $nama_barang . '.png';
             file_put_contents($filePath, $response);
-            //  download langsung oleh user
-            header('Content-Type: application/octet-stream');
+
+            // Pastikan tidak ada output sebelum header, atau header tidak akan dikirim dengan benar
+            header('Content-Type: image/png'); // Menggunakan MIME type yang tepat untuk file PNG
             header('Content-Disposition: attachment; filename="' . $nama_barang . '.png"');
+            header('Content-Length: ' . filesize($filePath)); // Menambahkan panjang file untuk membantu penanganan browser
             readfile($filePath);
         }
     }
