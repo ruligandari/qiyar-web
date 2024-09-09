@@ -47,10 +47,6 @@ class MasterBarangController extends BaseController
 
     public function generateQr($id)
     {
-        // Cari ke barang_masuk_jkt
-        $data = $this->barang_masuk_jkt->find($id);
-        // Dapatkan nama barang dan ganti spasi dengan underscore
-        $nama_barang = str_replace(' ', '_', $data['nama_barang']);
 
         $curl = curl_init();
         curl_setopt_array($curl, [
@@ -103,19 +99,29 @@ class MasterBarangController extends BaseController
             echo "cURL Error #:" . $err;
         } else {
             // Simpan file ke server
-            $filePath = FCPATH . 'qrcodes/' . $nama_barang . '.png';
+            $filePath = FCPATH . 'qrcodes/' . $id . '.png';
             file_put_contents($filePath, $response);
 
-            // Header untuk pengunduhan file
-            if (file_exists($filePath)) {
-                header('Content-Type: image/png');
-                header('Content-Disposition: attachment; filename="' . $nama_barang . '.png"');
-                header('Content-Length: ' . filesize($filePath));
-                readfile($filePath);
-            } else {
-                echo 'File tidak ditemukan!';
-            }
+            // Redirect ke halaman detail
+            return redirect()->to(base_url('stok-opname/master-barang/qrcode/' . $id));
         }
+    }
+
+    public function detail_qrcode($id)
+    {
+        // cari ke master barang dengan id, kemudian ambil nama barang
+        $barang = $this->barang_masuk_jkt->find($id);
+        // jika barang tidak ditemukan
+        $fileQr = 'qrcodes/' . $id . '.png';
+        $data = [
+            'title' => 'QR Code',
+            'id' => $id,
+            'fileQr' => $fileQr,
+            'barang' => $barang['nama_barang']
+
+        ];
+
+        return view('mobile/master_barang/detail_qrcode', $data);
     }
 
 

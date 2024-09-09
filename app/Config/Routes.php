@@ -228,6 +228,7 @@ $routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
     $routes->post('master-barang/update', 'Mobile\MasterBarangController::update');
     $routes->post('master-barang/delete', 'Mobile\MasterBarangController::delete');
     $routes->get('master-barang/qr/(:any)', 'Mobile\MasterBarangController::generateQr/$1');
+    $routes->get('master-barang/qrcode/(:any)', 'Mobile\MasterBarangController::detail_qrcode/$1');
 
     $routes->get('barang-masuk', 'Mobile\BarangMasukController::index');
     $routes->post('barang-masuk/scan', 'Mobile\BarangMasukController::scan');
