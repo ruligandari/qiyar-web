@@ -105,7 +105,7 @@
         }
 
         // Download PDF
-        doc.save('qrcodes.pdf');
+        doc.save('qrcodes-' + nama_barang + 'pdf');
     });
 </script>
 
