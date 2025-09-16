@@ -182,19 +182,33 @@ class UangTransferBroadcastController extends BaseController
         $db = db_connect();
         $builder = $db->table('uang_transfer_broadcast')->where('jenis_transfer', 'Iklan')->select('id, tanggal, nama_konsumen, bank_penerima, jenis_transfer, harga_total, upload_bukti');
         return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
-            // cek data diterima atau tidak
-            if ($request->dates) {
-                // ambil rentang tanggal 09/01/2023 - 09/01/2023
+            if (isset($request->dates) && $request->dates) {
                 $dates = explode(' - ', $request->dates);
-                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
-                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
-                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
+                if (count($dates) == 2) {
+                    $min = DateTime::createFromFormat('m/d/Y', $dates[0]);
+                    $max = DateTime::createFromFormat('m/d/Y', $dates[1]);
+                    if ($min && $max) {
+                        $builder->where('tanggal >=', $min->format('Y-m-d'))
+                            ->where('tanggal <=', $max->format('Y-m-d'));
+                    }
+                }
             }
         })->format('harga_total', function ($value) {
-            return number_format($value, 0, ',', '.');
+            if (is_numeric($value) && $value !== '') {
+                return number_format($value, 0, ',', '.');
+            } else {
+                return '0';
+            }
         })->format('upload_bukti', function ($value) {
-            return '<a href="' . base_url('bukti_pemasukan_broadcast/') . $value . '" target="_blank">
+            $path = FCPATH . 'bukti_pemasukan_broadcast/' . $value;
+            if ($value && file_exists($path)) {
+                return '<a href="' . base_url('bukti_pemasukan_broadcast/') . $value . '" target="_blank">
             <img src="' . base_url('bukti_pemasukan_broadcast/') . $value . '" alt="" style="height:50px; width:50px"></a>';
+            } else {
+                return '<span class="text-danger">Bukti tidak ditemukan</span>';
+                // Atau bisa pakai gambar default:
+                // return '<img src="' . base_url('img/no-image.png') . '" alt="not found" style="height:50px; width:50px">';
+            }
         })->toJson(true);
     }
 
@@ -202,23 +216,43 @@ class UangTransferBroadcastController extends BaseController
     {
         $db = db_connect();
         $builder = $db->table('uang_transfer_broadcast')->select('id, tanggal, nama_konsumen, bank_penerima, jenis_transfer, harga_total, upload_bukti');
-        return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
-            // cek data diterima atau tidak
-            if ($request->dates) {
-                // ambil rentang tanggal 09/01/2023 - 09/01/2023
-                $dates = explode(' - ', $request->dates);
-                $min = DateTime::createFromFormat('m/d/Y', $dates[0])->format('Y-m-d');
-                $max = DateTime::createFromFormat('m/d/Y', $dates[1])->format('Y-m-d');
-                $builder->where('tanggal >=', $min)->where('tanggal <=', $max);
-            }
-        })->format('harga_total', function ($value) {
-            return number_format($value, 0, ',', '.');
-        })->add('action', function ($row) {
-            return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/broadcast/uang-transfer-broadcast/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
-            <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
-        }, 'last')->format('upload_bukti', function ($value) {
-            return '<a href="' . base_url('bukti_pemasukan_broadcast/') . $value . '" target="_blank">
-            <img src="' . base_url('bukti_pemasukan_broadcast/') . $value . '" alt="" style="height:50px; width:50px"></a>';
-        })->toJson(true);
+        return DataTable::of($builder)
+            ->addNumbering('no')
+            ->filter(function ($builder, $request) {
+                if (isset($request->dates) && $request->dates) {
+                    $dates = explode(' - ', $request->dates);
+                    if (count($dates) == 2) {
+                        $min = DateTime::createFromFormat('m/d/Y', trim($dates[0]));
+                        $max = DateTime::createFromFormat('m/d/Y', trim($dates[1]));
+                        if ($min && $max) {
+                            $builder->where('tanggal >=', $min->format('Y-m-d'));
+                            $builder->where('tanggal <=', $max->format('Y-m-d'));
+                        }
+                    }
+                }
+            })
+            ->format('harga_total', function ($value) {
+                if (is_numeric($value) && $value !== '') {
+                    return number_format($value, 0, ',', '.');
+                } else {
+                    return '0';
+                }
+            })
+            ->add('action', function ($row) {
+                return '<a class="btn btn-success" title="Edit Bray" href="' . base_url('dashboard/broadcast/uang-transfer-broadcast/edit/') . $row->id . '" role="button"><i class="fas fa-sm fa-pen"></i></a>
+                <button class="btn btn-danger delete-pengeluaran" title="Hapus Bray" onclick="deleteRecord(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button>';
+            }, 'last')
+            ->format('upload_bukti', function ($value) {
+                $path = FCPATH . 'bukti_pemasukan_broadcast/' . $value;
+                if ($value && file_exists($path)) {
+                    return '<a href="' . base_url('bukti_pemasukan_broadcast/') . $value . '" target="_blank">
+                <img src="' . base_url('bukti_pemasukan_broadcast/') . $value . '" alt="" style="height:50px; width:50px"></a>';
+                } else {
+                    return '<span class="text-danger">Bukti tidak ditemukan</span>';
+                    // Atau bisa pakai gambar default:
+                    // return '<img src="' . base_url('img/no-image.png') . '" alt="not found" style="height:50px; width:50px">';
+                }
+            })
+            ->toJson(true);
     }
 }
