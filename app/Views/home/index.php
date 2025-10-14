@@ -67,16 +67,16 @@
 
     <main id="main">
         <!-- Hero Section - Home Page -->
-        <section id="hero" class="hero">
-            <img src="<?= base_url('front/') ?>assets/img/background.jpeg" alt="" data-aos="fade-in" />
+        <section id="hero" class="hero hero-mobile">
+            <img src="<?= base_url('front/') ?>assets/img/background.webp" alt="" data-aos="fade-in" />
 
             <div class="container">
                 <div class="row">
                     <div class="col-lg-10">
-                        <h2 data-aos="fade-up" data-aos-delay="100" style="font-size: 60px; font-weight: bold">
+                        <h2 data-aos="fade-up" data-aos-delay="100">
                             CV. QIYAR MEDIA
                         </h2>
-                        <p data-aos="fade-up" data-aos-delay="200" style="font-size: 40px; font-weight: bold">
+                        <p data-aos="fade-up" data-aos-delay="200">
                             Bersatu Maju
                         </p>
                     </div>

@@ -816,6 +816,89 @@ section {
   justify-content: center;
 }
 
+/* Alternative background approach for better control */
+.hero.hero-bg {
+  background-image: url("../img/background.webp");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #2c3e50; /* Dark background color for areas not covered by image */
+}
+
+/* Full coverage for desktop, contain for mobile */
+.hero.hero-bg-full {
+  background-image: url("../img/background.webp");
+  background-size: 100% 100%; /* Full stretch on desktop */
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #2c3e50; /* Dark background color for areas not covered by image */
+}
+
+.hero.hero-bg img,
+.hero.hero-bg-full img {
+  display: none; /* Hide img tag when using CSS background */
+}
+
+/* Desktop gets full coverage, mobile gets proper proportions */
+@media (min-width: 769px) {
+  .hero.hero-bg-full {
+    background-size: 100% 100%; /* Full stretch on desktop for complete coverage */
+    min-height: 100vh;
+  }
+
+  .hero.hero-bg {
+    background-size: cover; /* Cover for hero-bg on desktop */
+  }
+
+  .hero.hero-mobile img {
+    display: none; /* Hide img on desktop */
+  }
+}
+
+/* Mobile shows img tag like original */
+@media (max-width: 768px) {
+  .hero.hero-mobile {
+    background-image: none; /* Remove background on mobile */
+  }
+
+  .hero.hero-mobile img {
+    display: block; /* Show img on mobile */
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    z-index: 1;
+  }
+}
+
+/* Alternative for img tag with better control */
+.hero.hero-img img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%; /* Adjust this to focus on specific part of image */
+  z-index: 1;
+  filter: brightness(
+    0.8
+  ); /* Optional: darken image for better text readability */
+}
+
+/* Mobile uses img tag like original, desktop uses background CSS */
+.hero.hero-mobile {
+  background-image: url("../img/background.webp");
+  background-size: 100% 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 .hero img {
   position: absolute;
   inset: 0;
@@ -824,7 +907,10 @@ section {
   height: 100%;
   -o-object-fit: cover;
   object-fit: cover;
+  object-position: center center;
   z-index: 1;
+  max-width: 100%;
+  /* Alternatif untuk background yang lebih responsif */
 }
 
 .hero:before {
@@ -885,11 +971,38 @@ section {
 
 @media (max-width: 768px) {
   .hero h2 {
-    font-size: 32px;
+    font-size: 22px;
   }
 
   .hero p {
-    font-size: 18px;
+    font-size: 14px;
+  }
+
+  .hero.hero-bg,
+  .hero.hero-bg-full {
+    background-attachment: scroll; /* Fixed background can cause issues on mobile */
+    min-height: 100vh; /* Full height to accommodate the full image */
+    background-size: contain; /* Show full image without cropping or stretching */
+    background-position: center center;
+    background-color: #2c3e50; /* Dark background color for areas not covered by image */
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h2 {
+    font-size: 18px; /* Much smaller font for small mobile screens */
+  }
+
+  .hero p {
+    font-size: 12px; /* Much smaller subtitle for small mobile screens */
+  }
+
+  .hero.hero-bg,
+  .hero.hero-bg-full {
+    background-position: center center;
+    min-height: 100vh; /* Full height for small mobile too */
+    background-size: contain; /* Full image without stretching */
+    background-color: #2c3e50; /* Dark background color for uncovered areas */
   }
 }
 
