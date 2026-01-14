@@ -133,7 +133,7 @@
                         <div class="feature-card mx-auto text-center">
                             <div class="card mx-auto bg-gray">
                                 <a href="<?= base_url('stok-opname/bulk-barcode') ?>">
-                                    <img src="<?= base_url('mobile') ?>/assets/barcode.png" alt=""> 
+                                    <img src="<?= base_url('mobile') ?>/assets/barcode.webp" alt=""> 
                                     <!-- Note: using barcode.png as placeholder, assuming asset might not exist yet, but link works -->
                                 </a>
                             </div>

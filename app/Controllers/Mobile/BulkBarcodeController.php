@@ -16,11 +16,11 @@ class BulkBarcodeController extends BaseController
 
     public function index()
     {
-        // Should probably use pagination if there are many items, but for now findAll() 
-        // as per valid implementation patterns in this codebase (see Scaner.php)
+        // Client-side search requested to persist selections. 
+        // Returning all data so JS can filter.
         $data = [
             'title' => 'Cetak Barcode Massal',
-            'products' => $this->master_jkt->orderBy('nama_barang', 'ASC')->findAll()
+            'products' => $this->master_jkt->orderBy('nama_barang', 'ASC')->findAll(),
         ];
         return view('mobile/bulk_barcode/index', $data);
     }
@@ -28,6 +28,7 @@ class BulkBarcodeController extends BaseController
     public function print()
     {
         $selectedIds = $this->request->getPost('selected_ids');
+        $quantities = $this->request->getPost('qty'); // Array of [id => qty]
 
         if (empty($selectedIds)) {
             return redirect()->back()->with('error', 'Pilih setidaknya satu barang untuk dicetak.');
@@ -35,10 +36,22 @@ class BulkBarcodeController extends BaseController
 
         // Fetch details for selected items
         $products = $this->master_jkt->whereIn('id', $selectedIds)->findAll();
+        
+        // Prepare data with repetition
+        $printData = [];
+        foreach ($products as $product) {
+            $count = isset($quantities[$product['id']]) ? (int)$quantities[$product['id']] : 1;
+            if($count < 1) $count = 1;
+
+            // Add the product object to the list $count times
+            for($i = 0; $i < $count; $i++) {
+                $printData[] = $product;
+            }
+        }
 
         $data = [
             'title' => 'Cetak Barcode',
-            'products' => $products
+            'products' => $printData 
         ];
         return view('mobile/bulk_barcode/print', $data);
     }

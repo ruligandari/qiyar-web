@@ -64,8 +64,8 @@
                         <input class="form-control" id="message" name="qty" placeholder="Masukan Qty">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="message">Total Resi</label>
-                        <input class="form-control" id="message" name="resi" placeholder="Masukan Total Resi">
+                        <label class="form-label" for="message">Nomor Resi</label>
+                        <input class="form-control" id="message" name="resi" placeholder="Masukan Nomor Resi" required>
                     </div>
                     <!-- <div class="form-group">
                         <label class="form-label" for="message">Jenis Barang Masuk</label>

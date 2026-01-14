@@ -50,8 +50,11 @@
                     
                     <div class="form-group mb-3">
                         <label class="form-label" for="qrcode">Scan Barcode / QR Code</label>
-                        <input class="form-control" id="qrcode" name="qrcode" placeholder="Arahkan kursor kesini & Scan..." autofocus>
-                        <small class="text-muted">Tekan otomatis submit setelah scan jika menggunakan scanner.</small>
+                        <div class="input-group">
+                            <input class="form-control" id="qrcode" name="qrcode" placeholder="Scan atau ketik ID..." autofocus>
+                            <button class="btn btn-outline-secondary" type="button" id="btn-search"><i class="bi bi-search"></i> Cari</button>
+                        </div>
+                        <small class="text-muted">Tekan Enter atau klik tombol Cari setelah mengetik manual.</small>
                     </div>
 
                     <hr>
@@ -68,8 +71,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="resi">Total Resi</label>
-                        <input class="form-control" id="resi" name="resi" placeholder="Masukan Total Resi">
+                        <label class="form-label" for="resi">Nomor Resi</label>
+                        <input class="form-control" id="resi" name="resi" placeholder="Masukan Nomor Resi" required>
                     </div>
 
                     <button class="btn btn-primary w-100 mt-3" type="submit">Simpan</button>
@@ -82,59 +85,83 @@
 <?= $this->endsection(); ?>
 
 <?= $this->section('script'); ?>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
     // Data Master Barang dari Server
     var dataMaster = <?php echo json_encode($data); ?>;
 
+    // Check if jQuery is loaded
+    if (typeof jQuery === 'undefined') {
+        alert("Error: jQuery not loaded! Please refresh or check connection.");
+    }
+
     $(document).ready(function() {
+        console.log("Data Master Loaded:", dataMaster.length, "items");
+        if(dataMaster.length > 0) {
+            console.log("Sample Data:", dataMaster[0]);
+        } else {
+            console.log("Data Master is EMPTY!");
+        }
+        
         // Fokus otomatis ke input scan
         $('#qrcode').focus();
 
-        // Event ketika input berubah (biasanya scanner mengirim Enter di akhir)
-        $('#qrcode').on('change', function() {
-            var code = $(this).val();
-            processScan(code);
+        // 1. Handle Enter key (Keyboard & Scanner)
+        $('#qrcode').on('keypress', function(e) {
+            if (e.which == 13 || e.keyCode == 13) {
+                e.preventDefault(); 
+                var code = $(this).val();
+                processScan(code);
+            }
         });
 
-        // Prevent submit form saat enter di field qrcode, tapi jalankan processScan
-        $('#qrcode').on('keypress', function(e) {
-            if (e.which == 13) {
-                e.preventDefault();
-                processScan($(this).val());
-            }
+        // 2. Handle Search Button Click
+        $('#btn-search').on('click', function() {
+             var code = $('#qrcode').val();
+             processScan(code);
         });
     });
 
     function processScan(code) {
-        if(!code) return;
+        if(!code) {
+             Swal.fire({icon: 'info', title: 'Input Kosong', text: 'Silakan scan atau ketik ID barang', timer: 1500});
+             return;
+        }
 
-        console.log("Scanned:", code);
+        // Clean input
+        code = code.toString().trim();
+        console.log("Processing Code:", code);
         
         // Cari data di master
-        var data = dataMaster.find(x => x.id == code); // Asumsi QR berisi ID. Nanti bisa diganti code item.
+        // Ensure robust comparison using loose equality for ID
+        var data = dataMaster.find(x => x.id == code); 
         
         if (!data) {
+            console.warn("Item not found. Checking alternate codes...");
+            // Optional: Backup check if user scanned a 'kode_barang' field instead of 'id'?
+            // var data = dataMaster.find(x => x.kode_barang == code);
+            
             Swal.fire({
-                icon: 'warning',
-                title: 'Data tidak ditemukan',
-                text: 'Kode: ' + code,
-                timer: 1500
+                icon: 'error',
+                title: 'Tidak Ditemukan',
+                text: 'ID ' + code + ' tidak ada di data master. (Total item: '+dataMaster.length+')',
+                timer: 3000,
+                showConfirmButton: true
             });
             $('#nama_barang').val('');
             $('#id_barang').val('');
-            $('#qrcode').val(''); // Clear input untuk scan berikutnya
+            $('#qrcode').select();
             return;
         }
 
-        // Isi field
+        // FOUND!
+        console.log("Item Found:", data);
         $('#nama_barang').val(data.nama_barang);
         $('#id_barang').val(data.id);
         
-        // Pindah fokus ke qty agar user bisa input qty
-        $('#qty').focus();
-
-        // Optional: Reset field scan jika ingin scan resi nanti
-        // $('#qrcode').val(''); 
+        // Move focus
+        $('#qty').focus(); 
+        $('#qty').select(); 
     }
 </script>
 <?= $this->endsection(); ?>
