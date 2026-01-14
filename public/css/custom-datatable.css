@@ -1,0 +1,8 @@
+.button-container .dt-buttons {
+    margin-left: 1rem;
+}
+
+div.dataTables_wrapper .button-container div.dataTables_length select {
+    width: 5rem;
+    
+}
