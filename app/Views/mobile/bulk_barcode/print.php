@@ -25,10 +25,22 @@
         <?php foreach ($products as $p): ?>
             <div class="item">
                 <div class="name"><?= esc($p['nama_barang']) ?></div>
-                <!-- Generate Barcode using bwip-js API -->
-                <img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=<?= $p['id'] ?>&scale=3&includetext" alt="Barcode <?= $p['id'] ?>">
+                <!-- Generate Barcode using local JsBarcode -->
+                <svg class="barcode" 
+                    jsbarcode-format="code128" 
+                    jsbarcode-value="<?= $p['id'] ?>" 
+                    jsbarcode-width="2" 
+                    jsbarcode-height="50" 
+                    jsbarcode-fontSize="14"
+                ></svg>
             </div>
         <?php endforeach; ?>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+    <script>
+        // Init all barcodes
+        JsBarcode(".barcode").init();
+    </script>
 </body>
 </html>

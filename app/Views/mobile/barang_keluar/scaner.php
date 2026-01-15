@@ -48,6 +48,18 @@
         <!-- User Meta Data-->
         <div class="card user-data-card">
             <div class="card-body">
+                
+                <!-- Scan Mode Toggle -->
+                <div class="d-flex justify-content-center mb-3">
+                    <div class="btn-group" role="group" aria-label="Scan Mode">
+                        <input type="radio" class="btn-check" name="scan_mode" id="mode_barang" value="barang" checked>
+                        <label class="btn btn-outline-primary" for="mode_barang">Scan Barang</label>
+
+                        <input type="radio" class="btn-check" name="scan_mode" id="mode_resi" value="resi">
+                        <label class="btn btn-outline-primary" for="mode_resi">Scan Resi</label>
+                    </div>
+                </div>
+
                 <form action="<?= base_url('stok-opname/barang-keluar/add') ?>" method="POST">
                     <!-- <div class="input-group mb-3">
                         <span class="input-group-text" id="to">To</span>
@@ -55,17 +67,17 @@
                     </div> -->
                     <div id="reader" width="600px" class=""></div>
                     <div class="form-group">
-                        <label class="form-label" for="message">Nama Barang</label>
+                        <label class="form-label" for="nama_barang">Nama Barang</label>
                         <input class="form-control" id="nama_barang" name="nama_barang" placeholder="Scan Kode QR" value="" readonly>
-                        <input class="form-control" id="id_barang" name="id_barang" placeholder="Masukan Qty" value="" hidden>
+                        <input class="form-control" id="id_barang" name="id_barang" value="" hidden>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="message">Qty</label>
-                        <input class="form-control" id="message" name="qty" placeholder="Masukan Qty">
+                        <label class="form-label" for="qty">Qty</label>
+                        <input class="form-control" id="qty" name="qty" placeholder="Masukan Qty">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="message">Nomor Resi</label>
-                        <input class="form-control" id="message" name="resi" placeholder="Masukan Nomor Resi" required>
+                        <label class="form-label" for="resi">Nomor Resi</label>
+                        <input class="form-control" id="resi" name="resi" placeholder="Masukan Nomor Resi" required>
                     </div>
                     <!-- <div class="form-group">
                         <label class="form-label" for="message">Jenis Barang Masuk</label>
@@ -118,13 +130,39 @@
     function onScanSuccess(decodedText, decodedResult) {
         // handle the scanned code as you like, for example:
         console.log(`Code matched = ${decodedText}`, decodedResult);
-        // request ke server
+        
+        // Cek Mode Scan
+        var scanMode = document.querySelector('input[name="scan_mode"]:checked').value;
+
+        if(scanMode === 'resi') {
+            // Mode Scan Resi
+            document.getElementById('resi').value = decodedText;
+            
+            // Visual feedback agar user tau scan berhasil
+            Swal.fire({
+                icon: 'success',
+                title: 'Resi Ter-scan',
+                text: 'Nomor: ' + decodedText,
+                timer: 1000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+            return;
+        }
+
+        // Mode Scan Barang
         // data array
         var dataMaster = <?php echo json_encode($data); ?>;
         // cari data berdasarkan id dan ambil nama barang
         var data = dataMaster.find(x => x.id == decodedText);
         if (!data) {
-            alert('Data tidak ditemukan');
+            Swal.fire({
+                icon: 'error',
+                title: 'Tidak Ditemukan',
+                text: 'Barang tidak terdaftar di sistem',
+                timer: 2000
+            });
             document.getElementById('nama_barang').value = '';
             document.getElementById('id_barang').value = '';
             return;
@@ -133,12 +171,15 @@
         // set value input dengan name nama_barang
         document.getElementById('nama_barang').value = nama_barang;
         document.getElementById('id_barang').value = data.id;
+        
+        // Pindah fokus ke Qty setelah scan barang berhasil
+        document.getElementById('qty').focus();
     }
 
     function onScanFailure(error) {
         // handle scan failure, usually better to ignore and keep scanning.
         // for example:
-        console.warn(`Code scan error = ${error}`);
+        // console.warn(`Code scan error = ${error}`);
     }
 
     let html5QrcodeScanner = new Html5QrcodeScanner(

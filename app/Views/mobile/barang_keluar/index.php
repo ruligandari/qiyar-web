@@ -62,7 +62,7 @@
             <div class="card-body p-2">
                 <div class="chat-search-box">
                     <!-- Search Form -->
-                    <form action="<?= base_url('/stok-opname/barang-masuk') ?>" method="get">
+                    <form action="<?= base_url('/stok-opname/barang-keluar') ?>" method="get">
                         <div class="input-group">
                             <span class="input-group-text" id="searchbox">
                                 <i class="bi bi-search"></i>
