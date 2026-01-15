@@ -62,13 +62,13 @@
             <div class="card-body p-2">
                 <div class="chat-search-box">
                     <!-- Search Form -->
-                    <form action="<?= base_url('/stok-opname/barang-keluar') ?>" method="get">
+                    <form id="searchForm" onsubmit="event.preventDefault(); loadData(1);">
                         <div class="input-group">
                             <span class="input-group-text" id="searchbox">
                                 <i class="bi bi-search"></i>
                             </span>
                             <input class="form-control" type="search" placeholder="Cari barang"
-                                aria-describedby="searchbox" name="q" value="<?= isset($_GET['q']) ? $_GET['q'] : '' ?>">
+                                aria-describedby="searchbox" id="searchInput" name="q">
                         </div>
                     </form>
                     
@@ -85,58 +85,26 @@
             </div>
         </div>
 
+        <!-- Loader -->
+        <div id="loader-spinner" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Memuat data...</p>
+        </div>
+
         <!-- Chat User List -->
-        <ul class="ps-0 chat-user-list">
-
-            <!-- Single Chat User -->
-            <?php foreach ($data as $item): ?>
-                <li class="p-3 chat-unread">
-                    <a class="d-flex" href="#">
-                        <!-- Thumbnail -->
-                        <!-- <div class="chat-user-thumbnail me-3 shadow">
-                        <img class="img-circle" src="img/bg-img/user1.png" alt="">
-                        <span class="active-status"></span>
-                    </div> -->
-                        <!-- Info -->
-                        <div class="chat-user-info">
-                            <h6 class="text-truncate mb-0"><?= $item['nama_barang'] ?></h6>
-                            <div class="last-chat">
-                                <div class="col d-flex justify-content-between">
-                                    <p class="mb-0 text-truncate">
-                                        <span class="badge rounded-pill bg-success"><?= $item['tanggal'] ?></span>
-                                    </p>
-                                    <p class="mb-0 text-truncate">Qty:
-                                        <span class="badge rounded-pill bg-primary"><?= $item['qty'] ?></span>
-                                    </p>
-                                    <p class="mb-0 text-truncate">Resi:
-                                        <span class="badge rounded-pill bg-primary"><?= $item['total_resi'] ?></span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Options -->
-                    <div class="dropstart chat-options-btn">
-                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" onclick="editBarang(<?= $item['id'] ?>)"><i class="bi bi-pencil"></i>Edit</a></li>
-                            <li><a href="#" onclick="deleteBarang(<?= $item['id'] ?>)"><i class="bi bi-trash"></i>Hapus</a></li>
-                        </ul>
-                    </div>
-                </li>
-            <?php endforeach ?>
+        <ul class="ps-0 chat-user-list" id="dataList" style="display: none;">
+            <!-- Data loaded via JS -->
         </ul>
+        
         <div class="card mt-2">
             <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <?= $pager->links('stok_barang', 'bootstrap_pagination') ?>
+                <div class="d-flex align-items-center justify-content-between" id="pagerContainer">
+                    <!-- Pager loaded via JS -->
                 </div>
             </div>
         </div>
-        <!-- pager -->
     </div>
 </div>
 
@@ -229,6 +197,115 @@
 
 <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+    $(document).ready(function() {
+        // Initial Load
+        loadData(1);
+
+        // Live Search with Debounce
+        let debounceTimer;
+        $('#searchInput').on('keyup', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function() {
+                loadData(1);
+            }, 500); // Delay 500ms
+        });
+    });
+
+    function loadData(page) {
+        var query = $('#searchInput').val();
+        
+        // Show Loader, Hide List
+        $('#loader-spinner').show();
+        $('#dataList').hide();
+        $('#pagerContainer').hide();
+
+        $.ajax({
+            url: '<?= base_url('stok-opname/barang-keluar/list-data') ?>',
+            type: 'POST',
+            data: {
+                q: query,
+                page: page
+            },
+            success: function(response) {
+                // Hide Loader
+                $('#loader-spinner').hide();
+                $('#dataList').empty().show();
+                $('#pagerContainer').empty().show().html(response.pager);
+
+                if (response.data.length === 0) {
+                    $('#dataList').html('<div class="text-center p-3 text-muted">Tidak ada data.</div>');
+                    return;
+                }
+
+                // Helper Escape function
+                function escapeHtml(text) {
+                    if (text == null) return '';
+                    return String(text)
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                }
+
+                // Render List
+                $.each(response.data, function(index, item) {
+                    var html = `
+                        <li class="p-3 chat-unread">
+                            <a class="d-flex" href="#">
+                                <div class="chat-user-info">
+                                    <h6 class="text-truncate mb-0">${escapeHtml(item.nama_barang)}</h6>
+                                    <div class="last-chat">
+                                        <div class="col d-flex justify-content-between">
+                                            <p class="mb-0 text-truncate">
+                                                <span class="badge rounded-pill bg-success">${escapeHtml(item.tanggal)}</span>
+                                            </p>
+                                            <p class="mb-0 text-truncate">Qty:
+                                                <span class="badge rounded-pill bg-primary">${escapeHtml(item.qty)}</span>
+                                            </p>
+                                            <p class="mb-0 text-truncate">Resi:
+                                                <span class="badge rounded-pill bg-primary">${escapeHtml(item.total_resi)}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div class="dropstart chat-options-btn">
+                                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" onclick="editBarang(${item.id})"><i class="bi bi-pencil"></i>Edit</a></li>
+                                    <li><a href="#" onclick="deleteBarang(${item.id})"><i class="bi bi-trash"></i>Hapus</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    `;
+                    $('#dataList').append(html);
+                });
+
+                // Re-bind click events for pagination links
+                $('#pagerContainer a').on('click', function(e) {
+                    e.preventDefault();
+                    var href = $(this).attr('href');
+                    if(href) {
+                        // Extract page number from URL ?page_stok_barang=X
+                        var urlParams = new URLSearchParams(href.split('?')[1]);
+                        var pageNum = urlParams.get('page_stok_barang'); 
+                        if(pageNum) {
+                            loadData(pageNum);
+                        }
+                    }
+                });
+            },
+            error: function() {
+                $('#loader-spinner').hide();
+                Swal.fire('Gagal', 'Terjadi kesalahan memuat data', 'error');
+            }
+        });
+    }
+
     function deleteBarang(id) {
         Swal.fire({
             title: 'Apakah anda yakin?',
@@ -255,7 +332,8 @@
                                 'Data berhasil dihapus.',
                                 'success'
                             ).then(() => {
-                                location.reload();
+                                // Reload Data CSR
+                                loadData(1);
                             })
                         } else {
                             Swal.fire(
@@ -263,7 +341,8 @@
                                 response.message,
                                 'warning'
                             ).then(() => {
-                                location.reload();
+                                // Reload Data CSR
+                                loadData(1);
                             })
                         }
                     },

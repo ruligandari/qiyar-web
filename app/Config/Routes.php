@@ -223,6 +223,7 @@ $routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
     $routes->get('profile', 'Mobile\HomeController::profile');
 
     $routes->get('master-barang', 'Mobile\MasterBarangController::index');
+    $routes->post('master-barang/get-list', 'Mobile\MasterBarangController::listData');
     $routes->post('master-barang/add', 'Mobile\MasterBarangController::add');
     $routes->post('master-barang/edit', 'Mobile\MasterBarangController::edit');
     $routes->post('master-barang/update', 'Mobile\MasterBarangController::update');
@@ -231,14 +232,18 @@ $routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
     $routes->get('master-barang/qrcode/(:any)', 'Mobile\MasterBarangController::detail_qrcode/$1');
 
     $routes->get('barang-masuk', 'Mobile\BarangMasukController::index');
+    $routes->post('barang-masuk/get-list', 'Mobile\BarangMasukController::listData');
     $routes->post('barang-masuk/scan', 'Mobile\BarangMasukController::scan');
     $routes->get('barang-masuk/scan', 'Mobile\BarangMasukController::scaner');
+    $routes->get('barang-masuk/scan-manual', 'Mobile\BarangMasukController::scanManual');
+    $routes->post('barang-masuk/addBulk', 'Mobile\BarangMasukController::addBulk');
     $routes->post('barang-masuk/add', 'Mobile\BarangMasukController::add');
     $routes->post('barang-masuk/edit', 'Mobile\BarangMasukController::edit');
     $routes->post('barang-masuk/update', 'Mobile\BarangMasukController::update');
     $routes->post('barang-masuk/delete', 'Mobile\BarangMasukController::delete');
 
     $routes->get('barang-keluar', 'Mobile\BarangKeluarController::index');
+    $routes->post('barang-keluar/list-data', 'Mobile\BarangKeluarController::listData');
     $routes->get('barang-keluar/scan-manual', 'Mobile\BarangKeluarController::scanManual');
     $routes->post('barang-keluar/scan', 'Mobile\BarangKeluarController::scan');
     $routes->get('barang-keluar/scan', 'Mobile\BarangKeluarController::scaner');

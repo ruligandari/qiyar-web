@@ -20,29 +20,39 @@ class MasterBarangController extends BaseController
     }
     public function index()
     {
-        // Ambil query pencarian dari input
-        $search = $this->request->getGet('q');
-
-        // Inisialisasi model
-        $stokModel = $this->barang_masuk_jkt;
-
-        if ($search) {
-            // Jika ada pencarian, filter data berdasarkan pencarian
-            $stokModel->like('nama_barang', $search);
-        }
-
-        // Pagination dengan pencarian
-        $stok = $stokModel->orderBy('id', 'DESC')
-            ->paginate(30, 'stok_barang');
-
+        // CSR Implementation
         $data = [
             'title' => 'Master Barang',
-            'data' => $stok,
-            'pager' => $stokModel->pager,  // Untuk pagination
-            'search' => $search            // Untuk mempertahankan input pencarian di view
         ];
 
         return view('mobile/master_barang/index', $data);
+    }
+
+    public function listData()
+    {
+        $search = $this->request->getPost('q');
+        $page = (int) ($this->request->getPost('page') ?? 1);
+
+        $stokModel = $this->barang_masuk_jkt;
+
+        if ($search) {
+            $stokModel->like('nama_barang', $search);
+        }
+
+        $stokModel->orderBy('id', 'DESC');
+        
+        $data = $stokModel->paginate(30, 'stok_barang', $page);
+        
+        $pager = $stokModel->pager;
+        $pager->setPath(base_url('stok-opname/master-barang'));
+
+        return $this->response
+            ->setContentType('application/json')
+            ->setJSON([
+                'status' => 'success',
+                'data' => $data,
+                'pager' => $pager->links('stok_barang', 'bootstrap_pagination'),
+            ]);
     }
 
     public function generateQr($id)
@@ -151,7 +161,7 @@ class MasterBarangController extends BaseController
         // hapus data dengan data id
         $this->barang_masuk_jkt->delete($id);
         // kirim response json dengan status sukses
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil dihapus', 'data', $id]);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil dihapus', 'data' => $id]);
     }
 
     public function edit()

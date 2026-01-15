@@ -15,27 +15,41 @@ class BarangKeluarController extends BaseController
     }
     public function index()
     {
-        // same as barang masuk
-        $search = $this->request->getGet('q');
-        // Inisialisasi model
+        // CSR Implementation: Just return the view container
+        // Data will be fetched via AJAX to listData()
+        $data = [
+            'title' => 'Barang Keluar',
+        ];
+        return view('mobile/barang_keluar/index', $data);
+    }
+
+    public function listData()
+    {
+        $search = $this->request->getPost('q');
+        $page = (int) ($this->request->getPost('page') ?? 1);
+
         $stokModel = $this->barang_keluar_jkt;
 
         if ($search) {
-            // Jika ada pencarian, filter data berdasarkan pencarian
             $stokModel->like('nama_barang', $search);
         }
 
-        // Pagination dengan pencarian
-        $stok = $stokModel->orderBy('id', 'DESC')
-            ->paginate(30, 'stok_barang');
+        // Use standard pagination
+        $stokModel->orderBy('id', 'DESC');
+        
+        // Pass manual 'page' index (3rd arg) because we use POST.
+        $data = $stokModel->paginate(30, 'stok_barang', $page);
+        
+        $pager = $stokModel->pager;
+        // Fix for AJAX: Set the base path so links don't point to 'list-data'
+        // and ostensibly to help Pager resolve context if needed.
+        $pager->setPath(base_url('stok-opname/barang-keluar'));
 
-        $data = [
-            'title' => 'Barang Keluar',
-            'data' => $stok,
-            'pager' => $stokModel->pager,  // Untuk pagination
-            'search' => $search            // Untuk mempertahankan input pencarian di view
-        ];
-        return view('mobile/barang_keluar/index', $data);
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data' => $data,
+            'pager' => $pager->links('stok_barang', 'bootstrap_pagination'),
+        ]);
     }
     // scan
     public function scan()
