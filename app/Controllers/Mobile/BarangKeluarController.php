@@ -27,11 +27,18 @@ class BarangKeluarController extends BaseController
     {
         $search = $this->request->getPost('q');
         $page = (int) ($this->request->getPost('page') ?? 1);
+        
+        $startDate = $this->request->getPost('start_date');
+        $endDate = $this->request->getPost('end_date');
 
         $stokModel = $this->barang_keluar_jkt;
 
         if ($search) {
             $stokModel->like('nama_barang', $search);
+        }
+        
+        if ($startDate && $endDate) {
+            $stokModel->where("tanggal >=", $startDate)->where("tanggal <=", $endDate);
         }
 
         // Use standard pagination
@@ -75,6 +82,88 @@ class BarangKeluarController extends BaseController
             ];
         }
         return $this->response->setJSON($response);
+    }
+
+    public function addBulk()
+    {
+        // Accept JSON because we will send complex data
+        $input = json_decode($this->request->getBody(), true);
+        
+        if (!$input || !isset($input['items'])) {
+            return $this->response->setStatusCode(400)->setJSON(['status' => 'error', 'message' => 'Invalid Data']);
+        }
+
+        $items = $input['items'];
+        $resi = $input['resi'];
+        $date = date('Y-m-d');
+        
+        if (empty($resi)) {
+             return $this->response->setJSON(['status' => 'error', 'message' => 'Resi wajib diisi']);
+        }
+
+        $successCount = 0;
+        $errors = [];
+        
+        // Start Transaction
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        foreach($items as $item) {
+            $idMaster = $item['id_barang'];
+            $qty = $item['qty'];
+            $nama_barang = $item['nama_barang'];
+
+            // 1. Get Master Stock
+            // We use share lock or just simple find
+            $masterData = $this->master_jkt->find($idMaster);
+            
+            if(!$masterData) {
+                $errors[] = "$nama_barang tidak ditemukan.";
+                continue;
+            }
+
+            // 2. Check Stock Availability
+            if($masterData['qty'] < $qty) {
+                 $errors[] = "Stok $nama_barang tidak cukup (Sisa: {$masterData['qty']}).";
+                 continue; // Skip this item or rollback all? Strategy: Skip & Report
+            }
+
+            // 3. Insert to Barang Keluar Log
+            $data = [
+                'nama_barang' => $nama_barang,
+                'qty' => $qty,
+                'tanggal' => $date,
+                'total_resi' => 1, 
+                'resi' => $resi,
+            ];
+            $this->barang_keluar_jkt->insert($data);
+
+            // 4. Update Master Stock
+            $newQty = $masterData['qty'] - $qty;
+            $this->master_jkt->where('id', $idMaster)->set('qty', $newQty)->update();
+
+            $successCount++;
+        }
+        
+        // Commit transaction if no fatal errors (stock check is handled gracefully above)
+        // If strict mode, we should rollback if any error.
+        // For now, let's commit what succeeds and report errors? 
+        // Actually best practice for "Order" is all or nothing. 
+        // Let's do partial success for flexibility unless user wants strict.
+        $db->transComplete();
+
+        if (count($errors) > 0) {
+             return $this->response->setJSON([
+                'status' => 'partial', 
+                'message' => "$successCount barang berhasil disimpan. " . count($errors) . " gagal.",
+                'errors' => $errors
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status' => 'success', 
+            'message' => "$successCount barang berhasil disimpan."
+        ]);
     }
 
     public function add()

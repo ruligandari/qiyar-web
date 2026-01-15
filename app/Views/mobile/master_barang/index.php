@@ -46,11 +46,7 @@
 <div class="page-content-wrapper py-3">
 
     <!-- Add New Contact -->
-    <div class="add-new-contact-wrap">
-        <a class="shadow" href="#" data-bs-toggle="modal" data-bs-target="#addBarang">
-            <i class="bi bi-plus-lg"></i>
-        </a>
-    </div>
+
 
     <div id="loader-container" class="container" style="display: none;">
         <div class="card bg-primary">
@@ -81,6 +77,15 @@
                     </form>
 
                 </div>
+            </div>
+        </div>
+
+        <!-- Add Button Static -->
+        <div class="card mb-2">
+            <div class="card-body p-2">
+                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#addBarang">
+                    <i class="bi bi-plus-lg"></i> Tambah Barang
+                </button>
             </div>
         </div>
 

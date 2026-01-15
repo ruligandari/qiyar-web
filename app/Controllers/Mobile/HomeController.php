@@ -8,8 +8,26 @@ class HomeController extends BaseController
 {
     public function index()
     {
+        // Note: StokBarangJktModel is actually the Log for Barang Masuk in this project structure
+        $barangMasukLogModel = new \App\Models\StokBarangJktModel(); 
+        $barangKeluarModel = new \App\Models\BarangKeluarJktModel();
+        
+        $today = date('Y-m-d');
+
+        // Stats Default (Today)
+        $totalMasukBeli = $barangMasukLogModel->where('jenis_barang_masuk', 'Barang Beli')->where('tanggal', $today)->selectSum('qty')->first()['qty'] ?? 0;
+        $totalMasukReturn = $barangMasukLogModel->where('jenis_barang_masuk', 'Barang Return')->where('tanggal', $today)->selectSum('qty')->first()['qty'] ?? 0;
+        $totalKeluar = $barangKeluarModel->where('tanggal', $today)->selectSum('qty')->first()['qty'] ?? 0;
+        $totalResi = $barangKeluarModel->where('tanggal', $today)->groupBy('resi')->countAllResults();
+
         $data = [
             'title' => 'Beranda',
+            'stats' => [
+                'masuk_beli' => $totalMasukBeli,
+                'masuk_return' => $totalMasukReturn,
+                'keluar' => $totalKeluar,
+                'resi' => $totalResi
+            ]
         ];
         return view('mobile/home/home', $data);
     }
@@ -46,5 +64,42 @@ class HomeController extends BaseController
         $this->$user->update($data);
 
         return redirect()->to('/mobile/profile')->with('success', 'Data berhasil diupdate');
+    }
+    public function getStats()
+    {
+        $start = $this->request->getPost('start_date');
+        $end = $this->request->getPost('end_date');
+
+        if(!$start || !$end) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Tanggal tidak valid']);
+        }
+
+        $barangMasukLogModel = new \App\Models\StokBarangJktModel(); 
+        $barangKeluarModel = new \App\Models\BarangKeluarJktModel();
+
+        // Calculate Stats with Range
+        $totalMasukBeli = $barangMasukLogModel->where('jenis_barang_masuk', 'Barang Beli')
+                            ->where("tanggal >=", $start)->where("tanggal <=", $end)
+                            ->selectSum('qty')->first()['qty'] ?? 0;
+                            
+        $totalMasukReturn = $barangMasukLogModel->where('jenis_barang_masuk', 'Barang Return')
+                            ->where("tanggal >=", $start)->where("tanggal <=", $end)
+                            ->selectSum('qty')->first()['qty'] ?? 0;
+
+        $totalKeluar = $barangKeluarModel->where("tanggal >=", $start)->where("tanggal <=", $end)
+                            ->selectSum('qty')->first()['qty'] ?? 0;
+
+        $totalResi = $barangKeluarModel->where("tanggal >=", $start)->where("tanggal <=", $end)
+                            ->groupBy('resi')->countAllResults();
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'stats' => [
+                'masuk_beli' => (int)$totalMasukBeli,
+                'masuk_return' => (int)$totalMasukReturn,
+                'keluar' => (int)$totalKeluar,
+                'resi' => (int)$totalResi
+            ]
+        ]);
     }
 }

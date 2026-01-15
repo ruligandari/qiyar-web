@@ -219,6 +219,7 @@ $routes->post('m/auth', 'Mobile\AuthController::login');
 $routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
     // app
     $routes->get('/', 'Mobile\HomeController::index');
+    $routes->post('home/get-stats', 'Mobile\HomeController::getStats');
 
     $routes->get('profile', 'Mobile\HomeController::profile');
 
@@ -247,6 +248,7 @@ $routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
     $routes->get('barang-keluar/scan-manual', 'Mobile\BarangKeluarController::scanManual');
     $routes->post('barang-keluar/scan', 'Mobile\BarangKeluarController::scan');
     $routes->get('barang-keluar/scan', 'Mobile\BarangKeluarController::scaner');
+    $routes->post('barang-keluar/add-bulk', 'Mobile\BarangKeluarController::addBulk');
     $routes->post('barang-keluar/add', 'Mobile\BarangKeluarController::add');
     $routes->post('barang-keluar/edit', 'Mobile\BarangKeluarController::edit');
     $routes->post('barang-keluar/update', 'Mobile\BarangKeluarController::update');

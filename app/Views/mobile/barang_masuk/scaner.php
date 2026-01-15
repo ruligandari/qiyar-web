@@ -102,6 +102,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <button class="btn btn-primary w-100 mt-3" type="button" id="btn-save-bulk">
+                        <i class="bi bi-save"></i> Simpan Terpilih
+                    </button>
                 </div>
             </div>
         </div>

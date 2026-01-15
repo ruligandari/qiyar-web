@@ -197,7 +197,16 @@
 
 <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+    // Global variables to hold filter state
+    let globalStart = null;
+    let globalEnd = null;
+
     $(document).ready(function() {
+        // Parse URL Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        globalStart = urlParams.get('start_date');
+        globalEnd = urlParams.get('end_date');
+
         // Initial Load
         loadData(1);
 
@@ -224,7 +233,9 @@
             type: 'POST',
             data: {
                 q: query,
-                page: page
+                page: page,
+                start_date: globalStart,
+                end_date: globalEnd
             },
             success: function(response) {
                 // Hide Loader

@@ -46,37 +46,69 @@
         <!-- User Meta Data-->
         <div class="card user-data-card">
             <div class="card-body">
-                <form action="<?= base_url('stok-opname/barang-keluar/add') ?>" method="POST" id="form-scan">
-                    
-                    <div class="form-group mb-3">
-                        <label class="form-label" for="qrcode">Scan Barcode / QR Code</label>
-                        <div class="input-group">
-                            <input class="form-control" id="qrcode" name="qrcode" placeholder="Scan atau ketik ID..." autofocus>
-                            <button class="btn btn-outline-secondary" type="button" id="btn-search"><i class="bi bi-search"></i> Cari</button>
+                <!-- 1. Sticky Resi -->
+                <div class="form-group mb-3">
+                    <label class="form-label fw-bold" for="resi">Nomor Resi (Satu resi banyak barang)</label>
+                    <div class="input-group">
+                        <input class="form-control" id="resi" name="resi" placeholder="Scan/Input Resi Awal..." required>
+                        <button class="btn btn-outline-danger" type="button" id="btnResetResi" onclick="resetResi()">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <hr class="my-2">
+
+                <!-- 2. Input Barang -->
+                <div class="form-group mb-2">
+                    <label class="form-label" for="qrcode">Scan / Cari Barang</label>
+                    <div class="input-group">
+                        <input class="form-control" id="qrcode" name="qrcode" placeholder="Scan atau ketik ID..." autofocus>
+                        <button class="btn btn-outline-secondary" type="button" id="btn-search"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-8">
+                         <div class="form-group">
+                            <!-- <label class="form-label" for="nama_barang">Nama Barang</label> -->
+                            <input class="form-control" id="nama_barang" name="nama_barang" placeholder="Nama Barang..." readonly style="background-color: #f8f9fa;">
+                            <input class="form-control" id="id_barang" name="id_barang" value="" hidden>
                         </div>
-                        <small class="text-muted">Tekan Enter atau klik tombol Cari setelah mengetik manual.</small>
                     </div>
-
-                    <hr>
-
-                    <div class="form-group">
-                        <label class="form-label" for="nama_barang">Nama Barang</label>
-                        <input class="form-control" id="nama_barang" name="nama_barang" placeholder="Nama Barang" value="" readonly>
-                        <input class="form-control" id="id_barang" name="id_barang" value="" hidden>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <!-- <label class="form-label" for="qty">Qty</label> -->
+                            <input type="number" class="form-control" id="qty" name="qty" placeholder="Qty">
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="qty">Qty</label>
-                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Masukan Qty">
-                    </div>
+                </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="resi">Nomor Resi</label>
-                        <input class="form-control" id="resi" name="resi" placeholder="Masukan Nomor Resi" required>
-                    </div>
+                <button class="btn btn-secondary w-100 mb-3" type="button" id="btn-add-item" onclick="addItemToCart()">
+                    <i class="bi bi-plus-lg"></i> Tambah ke List
+                </button>
 
-                    <button class="btn btn-primary w-100 mt-3" type="submit">Simpan</button>
-                </form>
+                <!-- 3. Cart List -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" style="font-size: 0.9rem;">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Barang</th>
+                                <th width="15%">Qty</th>
+                                <th width="10%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-body">
+                            <!-- Cart Items -->
+                        </tbody>
+                    </table>
+                    <div id="empty-cart-msg" class="text-center text-muted fst-italic p-2">Belum ada barang di list.</div>
+                </div>
+
+                <button class="btn btn-primary w-100 mt-3" type="button" id="btn-save-all" onclick="submitBulk()">
+                    <i class="bi bi-save"></i> Simpan Semua Barang
+                </button>
+
             </div>
         </div>
     </div>
@@ -122,46 +154,225 @@
         });
     });
 
+    // State
+    var dataMaster = <?php echo json_encode($data); ?>;
+    var cart = []; 
+
+    // Sticky Resi Logic
+    function initStickyResi() {
+        var savedResi = localStorage.getItem('current_resi');
+        if (savedResi) {
+            $('#resi').val(savedResi);
+        }
+        
+        $('#resi').on('change', function() {
+            localStorage.setItem('current_resi', $(this).val());
+        });
+    }
+
+    function resetResi() {
+        if(confirm('Reset Resi?')) {
+            localStorage.removeItem('current_resi');
+            $('#resi').val('');
+            $('#resi').focus();
+        }
+    }
+
+    $(document).ready(function() {
+        console.log("Master Items:", dataMaster.length);
+        initStickyResi();
+        
+        // 1. Initial Focus Logic
+        if($('#resi').val() == '') {
+            $('#resi').focus();
+        } else {
+            $('#qrcode').focus();
+        }
+
+        // 2. Resi Enter Handler (Move to Barcode)
+        $('#resi').on('keypress', function(e) {
+            if (e.which == 13) {
+                e.preventDefault(); 
+                if($(this).val()) {
+                    $('#qrcode').focus();
+                }
+            }
+        });
+
+        // 3. Handle Enter on QR Code (Rapid Scan)
+        $('#qrcode').on('keypress', function(e) {
+            if (e.which == 13) {
+                e.preventDefault(); 
+                processScan($(this).val());
+            }
+        });
+
+        $('#btn-search').on('click', function() {
+            processScan($('#qrcode').val());
+        });
+
+        // Handle Enter on Qty -> Trigger Add
+        $('#qty').on('keypress', function(e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                addItemToCart();
+            }
+        });
+    });
+
     function processScan(code) {
-        if(!code) {
-             Swal.fire({icon: 'info', title: 'Input Kosong', text: 'Silakan scan atau ketik ID barang', timer: 1500});
+        if(!code) return;
+        code = code.toString().trim();
+        
+        var data = dataMaster.find(x => x.id == code);
+        
+        if (!data) {
+             Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'Barang tidak terdaftar', timer: 1000, showConfirmButton: false});
+             $('#nama_barang').val('');
+             $('#id_barang').val('');
+             $('#qrcode').select();
              return;
         }
 
-        // Clean input
-        code = code.toString().trim();
-        console.log("Processing Code:", code);
+        // Found -> Auto Add Mode
+        $('#nama_barang').val(data.nama_barang);
+        $('#id_barang').val(data.id);
+        $('#qty').val(1);
         
-        // Cari data di master
-        // Ensure robust comparison using loose equality for ID
-        var data = dataMaster.find(x => x.id == code); 
+        // Execute Add Immediately
+        addItemToCart();
         
-        if (!data) {
-            console.warn("Item not found. Checking alternate codes...");
-            // Optional: Backup check if user scanned a 'kode_barang' field instead of 'id'?
-            // var data = dataMaster.find(x => x.kode_barang == code);
-            
-            Swal.fire({
-                icon: 'error',
-                title: 'Tidak Ditemukan',
-                text: 'ID ' + code + ' tidak ada di data master. (Total item: '+dataMaster.length+')',
-                timer: 3000,
-                showConfirmButton: true
-            });
-            $('#nama_barang').val('');
-            $('#id_barang').val('');
-            $('#qrcode').select();
+        // Visual Feedback (Toast) instead of Alert
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true
+        });
+        Toast.fire({
+            icon: 'success',
+            title: data.nama_barang + ' (1)'
+        });
+    }
+
+    function addItemToCart() {
+        var id = $('#id_barang').val();
+        var nama = $('#nama_barang').val();
+        var qty = parseInt($('#qty').val());
+
+        if(!id || !nama || !qty || qty <= 0) {
+            Swal.fire({icon: 'warning', title: 'Data Belum Lengkap', text: 'Pastikan barang discan dan qty valid', timer: 1500});
             return;
         }
 
-        // FOUND!
-        console.log("Item Found:", data);
-        $('#nama_barang').val(data.nama_barang);
-        $('#id_barang').val(data.id);
+        // Check if exists
+        var existing = cart.find(x => x.id_barang == id);
+        if(existing) {
+            existing.qty += qty;
+        } else {
+            cart.push({
+                id_barang: id,
+                nama_barang: nama,
+                qty: qty
+            });
+        }
+
+        renderCart();
         
-        // Move focus
-        $('#qty').focus(); 
-        $('#qty').select(); 
+        // Reset Inputs for Next Scan
+        $('#qrcode').val('');
+        $('#nama_barang').val('');
+        $('#id_barang').val('');
+        $('#qty').val('');
+        $('#qrcode').focus();
+    }
+
+    function deleteItem(index) {
+        cart.splice(index, 1);
+        renderCart();
+    }
+
+    function renderCart() {
+        var html = '';
+        if(cart.length === 0) {
+            $('#empty-cart-msg').show();
+        } else {
+            $('#empty-cart-msg').hide();
+            cart.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${item.nama_barang}</td>
+                        <td class="text-center">${item.qty}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-danger py-0 px-2" onclick="deleteItem(${index})"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        $('#cart-body').html(html);
+    }
+
+    function submitBulk() {
+        var resi = $('#resi').val();
+        if(!resi) {
+            Swal.fire('Error', 'Resi wajib diisi!', 'error');
+            return;
+        }
+        if(cart.length === 0) {
+            Swal.fire('Error', 'List barang kosong!', 'error');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Simpan Semua?',
+            text: `Akan menyimpan ${cart.length} jenis barang ke Resi ${resi}.`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Simpan'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.showLoading();
+                $.ajax({
+                    url: '<?= base_url('stok-opname/barang-keluar/add-bulk') ?>',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        resi: resi,
+                        items: cart
+                    }),
+                    success: function(response) {
+                        if(response.status === 'success') {
+                            Swal.fire('Berhasil', response.message, 'success').then(() => {
+                                // Clear cart
+                                cart = [];
+                                renderCart();
+                                
+                                // Clear Resi (Transaction Completed)
+                                localStorage.removeItem('current_resi');
+                                $('#resi').val('');
+                                
+                                // Reset inputs
+                                $('#qrcode').focus();
+                            });
+                        } else {
+                            // Partial or Error
+                             Swal.fire('Info', response.message, 'warning');
+                             // If partial success, we might want to clear cart or only keep failed? 
+                             // For simplicity: Clear all for now or let user manually fix.
+                             // Let's clear nothing on error so user can fix.
+                             if(response.status === 'partial') {
+                                 // Maybe remove successful ones? Too complex for now.
+                             }
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Gagal', 'Terjadi kesalahan sistem', 'error');
+                    }
+                });
+            }
+        });
     }
 </script>
 <?= $this->endsection(); ?>

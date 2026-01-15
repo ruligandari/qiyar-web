@@ -31,11 +31,23 @@ class BarangMasukController extends BaseController
     {
         $search = $this->request->getPost('q');
         $page = (int) ($this->request->getPost('page') ?? 1);
+        
+        $startDate = $this->request->getPost('start_date');
+        $endDate = $this->request->getPost('end_date');
+        $jenis = $this->request->getPost('jenis_barang_masuk');
 
         $stokModel = $this->barang_masuk_jkt;
 
         if ($search) {
             $stokModel->like('nama_barang', $search);
+        }
+        
+        if ($startDate && $endDate) {
+            $stokModel->where("tanggal >=", $startDate)->where("tanggal <=", $endDate);
+        }
+
+        if ($jenis) {
+            $stokModel->where('jenis_barang_masuk', $jenis);
         }
 
         $stokModel->orderBy('id', 'DESC');
