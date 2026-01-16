@@ -13,6 +13,12 @@
         @media print {
             .no-print { display: none; }
         }
+        .qrcode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -25,22 +31,44 @@
         <?php foreach ($products as $p): ?>
             <div class="item">
                 <div class="name"><?= esc($p['nama_barang']) ?></div>
-                <!-- Generate Barcode using local JsBarcode -->
-                <svg class="barcode" 
-                    jsbarcode-format="code128" 
-                    jsbarcode-value="<?= $p['id'] ?>" 
-                    jsbarcode-width="2" 
-                    jsbarcode-height="50" 
-                    jsbarcode-fontSize="14"
-                ></svg>
+                
+                <?php if($type == 'qrcode'): ?>
+                    <!-- QR Code Container -->
+                    <div class="qrcode" data-text="<?= $p['id'] ?>"></div>
+                <?php else: ?>
+                    <!-- Barcode Container -->
+                    <svg class="barcode" 
+                        jsbarcode-format="code128" 
+                        jsbarcode-value="<?= $p['id'] ?>" 
+                        jsbarcode-width="2" 
+                        jsbarcode-height="50" 
+                        jsbarcode-fontSize="14"
+                    ></svg>
+                <?php endif; ?>
             </div>
         <?php endforeach; ?>
     </div>
 
+    <?php if($type == 'qrcode'): ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        // Init QR Codes
+        var qrcodes = document.querySelectorAll('.qrcode');
+        qrcodes.forEach(function(el) {
+            var text = el.getAttribute('data-text');
+            new QRCode(el, {
+                text: text,
+                width: 100,
+                height: 100
+            });
+        });
+    </script>
+    <?php else: ?>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
     <script>
-        // Init all barcodes
+        // Init Barcodes
         JsBarcode(".barcode").init();
     </script>
+    <?php endif; ?>
 </body>
 </html>

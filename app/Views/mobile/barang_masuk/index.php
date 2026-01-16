@@ -185,7 +185,7 @@
                     
                     var html = `
                         <li class="p-3 chat-unread">
-                            <a class="d-flex" href="#">
+                            <a class="d-flex" href="javascript:void(0)" onclick="showDetail(${item.id})">
                                 <div class="chat-user-info">
                                     <h6 class="text-truncate mb-0">${escapeHtml(item.nama_barang)}</h6>
                                     <div class="last-chat">
@@ -281,6 +281,45 @@
         </div>
     </div>
 </div>
+<!-- Detail Modal -->
+<div class="add-new-contact-modal modal fade px-0" id="detailBarang" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="detaillabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h6 class="modal-title" id="detaillabel">Detail Barang Masuk</h6>
+                    <button class="btn btn-close p-1 ms-auto me-0" type="button" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tanggal</label>
+                    <input type="text" class="form-control" name="tanggal" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nama Barang</label>
+                    <input class="form-control" name="nama_barang" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Qty</label>
+                    <input type="text" class="form-control" name="qty" readonly>
+                </div>
+                <!-- Resi is optional depending on type, but good to show if exists -->
+                <div class="form-group">
+                    <label class="form-label">Jenis</label>
+                    <input type="text" class="form-control" name="jenis_barang_masuk" readonly>
+                </div>
+                <div class="form-group" id="detail-resi-group">
+                    <label class="form-label">Nomor Resi</label>
+                    <input type="text" class="form-control" name="resi" readonly>
+                </div>
+                <button class="btn btn-secondary w-100" type="button" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- edit Modal -->
 <div class="add-new-contact-modal modal fade px-0" id="editBarang" data-bs-backdrop="static"
     data-bs-keyboard="false" tabindex="-1" aria-labelledby="addnewcontactlabel" aria-hidden="true">
@@ -397,8 +436,6 @@
                 $('#editBarang input[name="id"]').val(response.id);
                 // jenis barang masuk
                 $('#editBarang select[name="jenis_barang_masuk"]').val(response.jenis_barang_masuk);
-
-
             },
             error: function() {
                 Swal.fire(
@@ -408,6 +445,31 @@
                 )
             }
         })
+    }
+
+    function showDetail(id) {
+        $.ajax({
+            url: '<?= base_url('stok-opname/barang-masuk/edit') ?>', 
+            type: 'POST',
+            data: { id: id },
+            success: function(response) {
+                $('#detailBarang').modal('show');
+                $('#detailBarang input[name="nama_barang"]').val(response.nama_barang);
+                $('#detailBarang input[name="qty"]').val(response.qty);
+                $('#detailBarang input[name="tanggal"]').val(response.tanggal);
+                $('#detailBarang input[name="jenis_barang_masuk"]').val(response.jenis_barang_masuk);
+                
+                if(response.resi) {
+                    $('#detailBarang input[name="resi"]').val(response.resi);
+                    $('#detail-resi-group').show();
+                } else {
+                    $('#detail-resi-group').hide();
+                }
+            },
+            error: function() {
+                Swal.fire('Gagal!', 'Gagal mengambil detail data', 'error');
+            }
+        });
     }
 </script>
 <?= $this->endsection(); ?>

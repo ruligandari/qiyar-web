@@ -164,12 +164,21 @@
 
             if (data) {
                 // Success
-                document.getElementById('message').value = data.nama_barang;
-                document.getElementById('id_barang').value = data.id;
-                $('#single-item-container').removeClass('d-none');
-                // document.getElementById('qty').focus(); 
-                // Play success sound or vibrate?
-                // alert("Barang Ditemukan!");
+                if(html5QrcodeScanner) html5QrcodeScanner.pause(); // Pause camera
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: data.nama_barang,
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                }).then(() => {
+                    document.getElementById('message').value = data.nama_barang;
+                    document.getElementById('id_barang').value = data.id;
+                    $('#single-item-container').removeClass('d-none');
+                    // document.getElementById('qty').focus(); 
+                    if(html5QrcodeScanner) html5QrcodeScanner.resume(); // Resume camera
+                });
             } else {
                 Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'Barang tidak terdaftar', timer: 1500});
             }
@@ -344,10 +353,8 @@
     let html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
             fps: 10,
-            qrbox: {
-                width: 250,
-                height: 250
-            }
+            qrbox: { width: 250, height: 150 },
+            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13 ]
         },
         /* verbose= */
         false);

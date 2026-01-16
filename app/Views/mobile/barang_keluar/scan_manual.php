@@ -68,25 +68,7 @@
                     </div>
                 </div>
 
-                <div class="row g-2 mb-3">
-                    <div class="col-8">
-                         <div class="form-group">
-                            <!-- <label class="form-label" for="nama_barang">Nama Barang</label> -->
-                            <input class="form-control" id="nama_barang" name="nama_barang" placeholder="Nama Barang..." readonly style="background-color: #f8f9fa;">
-                            <input class="form-control" id="id_barang" name="id_barang" value="" hidden>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <!-- <label class="form-label" for="qty">Qty</label> -->
-                            <input type="number" class="form-control" id="qty" name="qty" placeholder="Qty">
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-secondary w-100 mb-3" type="button" id="btn-add-item" onclick="addItemToCart()">
-                    <i class="bi bi-plus-lg"></i> Tambah ke List
-                </button>
+                <!-- Manual inputs removed for streamlined flow -->
 
                 <!-- 3. Cart List -->
                 <div class="table-responsive">
@@ -210,14 +192,6 @@
         $('#btn-search').on('click', function() {
             processScan($('#qrcode').val());
         });
-
-        // Handle Enter on Qty -> Trigger Add
-        $('#qty').on('keypress', function(e) {
-            if (e.which == 13) {
-                e.preventDefault();
-                addItemToCart();
-            }
-        });
     });
 
     function processScan(code) {
@@ -228,21 +202,14 @@
         
         if (!data) {
              Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'Barang tidak terdaftar', timer: 1000, showConfirmButton: false});
-             $('#nama_barang').val('');
-             $('#id_barang').val('');
              $('#qrcode').select();
              return;
         }
 
-        // Found -> Auto Add Mode
-        $('#nama_barang').val(data.nama_barang);
-        $('#id_barang').val(data.id);
-        $('#qty').val(1);
+        // Found -> Direct Add Mode
+        addToCart(data.id, data.nama_barang, 1);
         
-        // Execute Add Immediately
-        addItemToCart();
-        
-        // Visual Feedback (Toast) instead of Alert
+        // Visual Feedback (Toast)
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -252,20 +219,15 @@
         });
         Toast.fire({
             icon: 'success',
-            title: data.nama_barang + ' (1)'
+            title: data.nama_barang + ' (+1)'
         });
+
+        // Reset Scan Input
+        $('#qrcode').val('');
+        $('#qrcode').focus();
     }
 
-    function addItemToCart() {
-        var id = $('#id_barang').val();
-        var nama = $('#nama_barang').val();
-        var qty = parseInt($('#qty').val());
-
-        if(!id || !nama || !qty || qty <= 0) {
-            Swal.fire({icon: 'warning', title: 'Data Belum Lengkap', text: 'Pastikan barang discan dan qty valid', timer: 1500});
-            return;
-        }
-
+    function addToCart(id, nama, qty) {
         // Check if exists
         var existing = cart.find(x => x.id_barang == id);
         if(existing) {
@@ -277,15 +239,23 @@
                 qty: qty
             });
         }
-
         renderCart();
-        
-        // Reset Inputs for Next Scan
-        $('#qrcode').val('');
-        $('#nama_barang').val('');
-        $('#id_barang').val('');
-        $('#qty').val('');
-        $('#qrcode').focus();
+    }
+
+    function updateQty(index, newQty) {
+        newQty = parseInt(newQty);
+        if(newQty <= 0 || isNaN(newQty)) {
+            // Optional: Ask confirmation to delete if 0? Or just reset to 1?
+            // Let's reset to 1 for safety or delete if 0. 
+            // Better behavior: minimum 1.
+            cart[index].qty = 1;
+            renderCart(); // re-render to fix input value
+            return;
+        }
+        cart[index].qty = newQty;
+        // No full re-render needed if we trust the input, but safe to re-render or just update data
+        // Optimization: Don't re-render entire table to avoid losing focus if user is typing fast
+        // But since onchange triggers on blur/enter, re-render is fine.
     }
 
     function deleteItem(index) {
@@ -302,10 +272,16 @@
             cart.forEach((item, index) => {
                 html += `
                     <tr>
-                        <td>${item.nama_barang}</td>
-                        <td class="text-center">${item.qty}</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-danger py-0 px-2" onclick="deleteItem(${index})"><i class="bi bi-trash"></i></button>
+                        <td class="align-middle">${item.nama_barang}</td>
+                        <td class="text-center" width="25%">
+                            <input type="number" class="form-control form-control-sm text-center" 
+                                value="${item.qty}" 
+                                min="1" 
+                                onchange="updateQty(${index}, this.value)"
+                            >
+                        </td>
+                        <td class="text-center align-middle">
+                            <button class="btn btn-sm btn-danger py-1 px-2" onclick="deleteItem(${index})"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
                 `;

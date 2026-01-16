@@ -39,9 +39,14 @@
                             <input class="form-check-input" type="checkbox" id="selectAll">
                             <label class="form-check-label" for="selectAll">Pilih Semua</label>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="bi bi-printer"></i> Generate
-                        </button>
+                        <div class="">
+                            <button type="submit" name="type" value="barcode" class="btn btn-primary btn-sm me-1">
+                                <i class="bi bi-upc-scan"></i> Barcode
+                            </button>
+                            <button type="submit" name="type" value="qrcode" class="btn btn-dark btn-sm">
+                                <i class="bi bi-qr-code"></i> QR Code
+                            </button>
+                        </div>
                     </div>
 
                     <?php if (session()->getFlashdata('error')) : ?>

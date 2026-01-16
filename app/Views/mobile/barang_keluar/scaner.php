@@ -71,25 +71,9 @@
                 </div>
 
                 <!-- 2. Input Barang Results -->
-                <div class="row g-2 mb-3">
-                    <div class="col-8">
-                         <div class="form-group">
-                            <label class="form-label" for="nama_barang">Barang</label>
-                            <input class="form-control" id="nama_barang" name="nama_barang" placeholder="Scan Barcode..." readonly style="background-color: #f8f9fa;">
-                            <input class="form-control" id="id_barang" name="id_barang" value="" hidden>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label class="form-label" for="qty">Qty</label>
-                            <input type="number" class="form-control" id="qty" name="qty" placeholder="Qty">
-                        </div>
-                    </div>
-                </div>
+                <!-- Manual inputs removed for streamlined flow -->
 
-                <button class="btn btn-secondary w-100 mb-3" type="button" id="btn-add-item" onclick="addItemToCart()">
-                    <i class="bi bi-plus-lg"></i> Tambah ke List
-                </button>
+                <!-- 3. Cart List -->
 
                 <!-- 3. Cart List -->
                 <div class="table-responsive">
@@ -166,14 +150,6 @@
         document.getElementById('resi').addEventListener('change', function() {
             localStorage.setItem('current_resi', this.value);
         });
-
-        // Qty Enter Handler
-        document.getElementById('qty').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addItemToCart();
-            }
-        });
     });
 
     function resetResi() {
@@ -187,6 +163,13 @@
     }
 
     function onScanSuccess(decodedText, decodedResult) {
+        // Pause Camera
+        try {
+            html5QrcodeScanner.pause(true); 
+        } catch(e) {
+            console.error("Pause failed", e);
+        }
+
         // Logic: If Resi is empty => Mode Resi. Else => Mode Barang.
         var currentResi = document.getElementById('resi').value;
 
@@ -196,8 +179,13 @@
             localStorage.setItem('current_resi', decodedText);
             
             Swal.fire({
-                icon: 'success', title: 'Resi Tersimpan', text: 'Nomor: ' + decodedText,
-                timer: 1000, showConfirmButton: false, toast: true, position: 'top-end'
+                icon: 'success', 
+                title: 'Resi Tersimpan', 
+                text: 'Nomor: ' + decodedText,
+                confirmButtonText: 'Lanjut Scan Barang'
+            }).then(() => {
+                resumeCamera();
+                // Focus qty or next logic if needed
             });
             return;
         }
@@ -205,33 +193,43 @@
         // Mode Scan Barang
         // data array
         var dataMaster = <?php echo json_encode($data); ?>;
-        // cari data berdasarkan id dan ambil nama barang
         var data = dataMaster.find(x => x.id == decodedText);
+        
         if (!data) {
             Swal.fire({
-                icon: 'error', title: 'Tidak Ditemukan', text: 'Barang tidak terdaftar', timer: 1000, showConfirmButton: false, toast: true
+                icon: 'error', 
+                title: 'Tidak Ditemukan', 
+                text: 'Barang tidak terdaftar', 
+                confirmButtonText: 'OK'
+            }).then(() => {
+                resumeCamera();
             });
             return;
         }
 
-        // Found
-        document.getElementById('nama_barang').value = data.nama_barang;
-        document.getElementById('id_barang').value = data.id;
-        document.getElementById('qty').value = 1;
-        document.getElementById('qty').focus();
-        document.getElementById('qty').select();
+        // Found -> Direct Add
+        addToCart(data.id, data.nama_barang, 1);
+        
+        Swal.fire({
+            icon: 'success', 
+            title: 'Berhasil',
+            text: data.nama_barang + ' ditambahkan',
+            confirmButtonText: 'Lanjut Scan'
+        }).then(() => {
+            resumeCamera();
+        });
     }
 
-    function addItemToCart() {
-        var id = document.getElementById('id_barang').value;
-        var nama = document.getElementById('nama_barang').value;
-        var qty = parseInt(document.getElementById('qty').value);
-
-        if(!id || !nama || !qty || qty <= 0) {
-            Swal.fire({icon: 'warning', title: 'Data Belum Lengkap', text: 'Scan barang dan isi qty', timer: 1000});
-            return;
+    function resumeCamera() {
+        try {
+            html5QrcodeScanner.resume();
+        } catch(e) {
+            console.error("Resume failed", e);
+            // Fallback if needed
         }
+    }
 
+    function addToCart(id, nama, qty) {
         // Check if exists
         var existing = cart.find(x => x.id_barang == id);
         if(existing) {
@@ -243,15 +241,17 @@
                 qty: qty
             });
         }
-
         renderCart();
-        
-        // Reset Inputs
-        document.getElementById('nama_barang').value = '';
-        document.getElementById('id_barang').value = '';
-        document.getElementById('qty').value = '';
-        
-        Swal.fire({icon: 'success', title: 'Masuk List', timer: 700, showConfirmButton: false, toast: true, position: 'bottom'});
+    }
+
+    function updateQty(index, newQty) {
+        newQty = parseInt(newQty);
+        if(newQty <= 0 || isNaN(newQty)) {
+            cart[index].qty = 1;
+            renderCart(); 
+            return;
+        }
+        cart[index].qty = newQty;
     }
 
     function deleteItem(index) {
@@ -272,10 +272,16 @@
             cart.forEach((item, index) => {
                 html += `
                     <tr>
-                        <td>${item.nama_barang}</td>
-                        <td class="text-center">${item.qty}</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-danger py-0 px-2" onclick="deleteItem(${index})"><i class="bi bi-trash"></i></button>
+                        <td class="align-middle">${item.nama_barang}</td>
+                        <td class="text-center" width="25%">
+                            <input type="number" class="form-control form-control-sm text-center" 
+                                value="${item.qty}" 
+                                min="1" 
+                                onchange="updateQty(${index}, this.value)"
+                            >
+                        </td>
+                        <td class="text-center align-middle">
+                            <button class="btn btn-sm btn-danger py-1 px-2" onclick="deleteItem(${index})"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -327,11 +333,9 @@
                                 // Clear Resi & Reset Mode
                                 localStorage.removeItem('current_resi');
                                 document.getElementById('resi').value = '';
-                                document.getElementById('mode_resi').checked = true;
 
-                                document.getElementById('nama_barang').value = '';
-                                document.getElementById('id_barang').value = '';
-                                document.getElementById('qty').value = '';
+                                document.getElementById('resi').value = '';
+                                // Reset other variables if needed
                             });
                         } else {
                              Swal.fire('Info', response.message, 'warning');
@@ -352,11 +356,10 @@
     let html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
             fps: 10,
-            qrbox: {
-                width: 250,
-                height: 150 
-            }
+            qrbox: { width: 250, height: 150 },
+            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13 ]
         },
+        /* verbose= */
         false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 </script>

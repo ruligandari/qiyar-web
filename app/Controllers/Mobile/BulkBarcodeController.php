@@ -49,9 +49,12 @@ class BulkBarcodeController extends BaseController
             }
         }
 
+        $type = $this->request->getPost('type') ?? 'barcode';
+
         $data = [
-            'title' => 'Cetak Barcode',
-            'products' => $printData 
+            'title' => 'Cetak ' . ($type == 'qrcode' ? 'QR Code' : 'Barcode'),
+            'products' => $printData,
+            'type' => $type
         ];
         return view('mobile/bulk_barcode/print', $data);
     }
