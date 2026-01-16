@@ -170,7 +170,7 @@
                 $.each(response.data, function(index, item) {
                     var html = `
                         <li class="p-3 chat-unread">
-                            <a class="d-flex" href="#">
+                            <a class="d-flex" href="#" onclick="showDetail(${item.id}); return false;">
                                 <div class="chat-user-info">
                                     <h6 class="text-truncate mb-0">${escapeHtml(item.nama_barang)}</h6>
                                     <div class="last-chat">
@@ -290,6 +290,38 @@
 </div>
 
 
+
+<!-- Detail Modal -->
+<div class="add-new-contact-modal modal fade px-0" id="detailBarang" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h6 class="modal-title" id="detailLabel">Detail Barang</h6>
+                    <button class="btn btn-close p-1 ms-auto me-0" type="button" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tanggal Input</label>
+                    <input type="text" class="form-control" name="tanggal" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nama Barang</label>
+                    <input class="form-control" name="nama_barang" readonly>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Stok Tersedia</label>
+                    <input type="text" class="form-control" name="qty" readonly>
+                </div>
+                
+                <button class="btn btn-secondary w-100" type="button" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     function deleteBarang(id) {
@@ -359,5 +391,33 @@
             }
         })
     }
+    
+    function showDetail(id) {
+        Swal.showLoading();
+        $.ajax({
+            url: '<?= base_url('stok-opname/master-barang/edit') ?>', // Reusing edit endpoint because it returns the same data
+            type: 'POST',
+            data: { id: id },
+            success: function(response) {
+                Swal.close();
+                // Check if response is JSON (it should be)
+                if(typeof response === 'string') {
+                     // In case server returns string for some error
+                     try { response = JSON.parse(response); } catch(e){}
+                }
+
+                $('#detailBarang input[name="tanggal"]').val(response.tanggal);
+                $('#detailBarang input[name="nama_barang"]').val(response.nama_barang);
+                $('#detailBarang input[name="qty"]').val(response.qty);
+                
+                $('#detailBarang').modal('show');
+            },
+            error: function() {
+                Swal.close();
+                Swal.fire('Gagal', 'Gagal memuat detail', 'error');
+            }
+        });
+    }
+
 </script>
 <?= $this->endsection(); ?>
