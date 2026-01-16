@@ -218,13 +218,18 @@
         // Show loader
         Swal.showLoading();
         
+        var csrfName = '<?= csrf_token() ?>';
+        var csrfHash = '<?= csrf_hash() ?>';
+
         $.ajax({
             url: '<?= base_url('stok-opname/barang-masuk/scan') ?>', 
             type: 'POST',
             contentType: 'application/json',
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
             data: JSON.stringify({
                 kode_barang: resi, 
-                mode: 'return'
+                mode: 'return',
+                [csrfName]: csrfHash
             }),
             success: function(response) {
                 Swal.close();

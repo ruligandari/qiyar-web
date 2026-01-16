@@ -185,16 +185,27 @@
 
         } else {
             // Logic Barang Return: Server lookup by Resi
-            fetch('<?= base_url('stok-opname/barang-masuk/scan/') ?>', {
+            // Get CSRF Token
+            var csrfName = '<?= csrf_token() ?>';
+            var csrfHash = '<?= csrf_hash() ?>'; // This should ideally be dynamic if using regeneration
+
+            fetch('<?= base_url('stok-opname/barang-masuk/scan') ?>', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify({
                     kode_barang: decodedText,
-                    mode: 'return'
+                    mode: 'return',
+                    [csrfName]: csrfHash
                 })
-            }).then(response => response.json())
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.status === 'success') {
                     if(html5QrcodeScanner) html5QrcodeScanner.pause(); // Pause camera while showing alert
