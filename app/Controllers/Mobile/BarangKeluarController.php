@@ -133,8 +133,8 @@ class BarangKeluarController extends BaseController
 
             // 2. Check Stock Availability
             if($masterData['qty'] < $qty) {
-                 $errors[] = "Stok $nama_barang tidak cukup (Sisa: {$masterData['qty']}).";
-                 continue; // Skip this item or rollback all? Strategy: Skip & Report
+                 $errors[] = "stok barang $nama_barang sisa {$masterData['qty']} silahkan perbarui stok di master barang";
+                 continue; 
             }
 
             // 3. Insert to Barang Keluar Log
@@ -148,23 +148,24 @@ class BarangKeluarController extends BaseController
             $this->barang_keluar_jkt->insert($data);
 
             // 4. Update Master Stock (Atomic Update)
-            // Use set(key, value, false) to prevent escaping and allow 'qty - X'
             $this->master_jkt->where('id', $idMaster)->set('qty', 'qty - ' . $qty, false)->update();
 
             $successCount++;
         }
         
-        // Commit transaction if no fatal errors (stock check is handled gracefully above)
-        // If strict mode, we should rollback if any error.
-        // For now, let's commit what succeeds and report errors? 
-        // Actually best practice for "Order" is all or nothing. 
-        // Let's do partial success for flexibility unless user wants strict.
         $db->transComplete();
 
         if (count($errors) > 0) {
+             // If absolute failure (0 successes), show just errors
+             // If partial, show errors + success info
+             $msg = implode("\n", $errors);
+             if($successCount > 0) {
+                 $msg .= "\n($successCount barang berhasil disimpan)";
+             }
+
              return $this->response->setJSON([
                 'status' => 'partial', 
-                'message' => "$successCount barang berhasil disimpan. " . count($errors) . " gagal.",
+                'message' => $msg,
                 'errors' => $errors
             ]);
         }
@@ -298,6 +299,12 @@ class BarangKeluarController extends BaseController
         $startDate = $this->request->getGet('start_date');
         $endDate = $this->request->getGet('end_date');
 
+        // Create Period Info String
+        $periodeInfo = 'Periode: Semua Data';
+        if ($startDate && $endDate) {
+            $periodeInfo = "Periode: $startDate s/d $endDate";
+        }
+
         $spreadsheet = new Spreadsheet();
         
         // Define Header Style
@@ -333,13 +340,22 @@ class BarangKeluarController extends BaseController
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Barang Keluar');
         
-        // Main Table Headers
+        // Timestamp Header
+        $exportTime = 'Waktu Export: ' . date('d-m-Y H:i:s');
+        $sheet1->setCellValue('A1', $exportTime);
+        $sheet1->mergeCells('A1:E1');
+
+        // Periode Header
+        $sheet1->setCellValue('A2', $periodeInfo);
+        $sheet1->mergeCells('A2:E2');
+
+        // Main Table Headers (Shifted to Row 4)
         $headers1 = ['No', 'Tanggal', 'Nama Barang', 'Qty', 'Resi', 'Total Resi'];
-        $sheet1->fromArray($headers1, NULL, 'A1');
-        $sheet1->getStyle('A1:F1')->applyFromArray($headerStyle);
+        $sheet1->fromArray($headers1, NULL, 'A4');
+        $sheet1->getStyle('A4:F4')->applyFromArray($headerStyle);
 
         // Data & Summary Logic
-        $row1 = 2;
+        $row1 = 5;
         $no1 = 1;
         $summaryKeluar = [];
 
@@ -363,23 +379,23 @@ class BarangKeluarController extends BaseController
         }
         
         // Apply Borders to Main Table
-        if ($row1 > 2) {
-             $sheet1->getStyle('A2:F' . ($row1 - 1))->applyFromArray($tableBodyStyle);
+        if ($row1 > 5) {
+             $sheet1->getStyle('A5:F' . ($row1 - 1))->applyFromArray($tableBodyStyle);
         }
 
         // Summary Table (Column H)
-        $sumStartRow = 1;
+        $sumStartRow = 4; // Shifted to align with main table header
         $sheet1->setCellValue('H' . $sumStartRow, 'REKAP DATA');
-        $sheet1->mergeCells('H1:K1');
-        $sheet1->getStyle('H1:K1')->applyFromArray(array_merge($headerStyle, ['fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF2196F3']]])); // Blue header
+        $sheet1->mergeCells('H4:K4');
+        $sheet1->getStyle('H4:K4')->applyFromArray(array_merge($headerStyle, ['fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF2196F3']]])); // Blue header
 
-        $sheet1->setCellValue('H2', 'No');
-        $sheet1->setCellValue('I2', 'Nama Barang');
-        $sheet1->setCellValue('J2', 'Total Qty');
-        $sheet1->setCellValue('K2', 'Total Resi');
-        $sheet1->getStyle('H2:K2')->applyFromArray($headerStyle);
+        $sheet1->setCellValue('H5', 'No');
+        $sheet1->setCellValue('I5', 'Nama Barang');
+        $sheet1->setCellValue('J5', 'Total Qty');
+        $sheet1->setCellValue('K5', 'Total Resi');
+        $sheet1->getStyle('H5:K5')->applyFromArray($headerStyle);
 
-        $rowSum1 = 3;
+        $rowSum1 = 6;
         $noSum1 = 1;
         foreach ($summaryKeluar as $nama => $stats) {
             $sheet1->setCellValue('H' . $rowSum1, $noSum1++);
@@ -390,8 +406,8 @@ class BarangKeluarController extends BaseController
         }
         
         // Apply Borders to Summary Table
-        if ($rowSum1 > 3) {
-            $sheet1->getStyle('H3:K' . ($rowSum1 - 1))->applyFromArray($tableBodyStyle);
+        if ($rowSum1 > 6) {
+            $sheet1->getStyle('H6:K' . ($rowSum1 - 1))->applyFromArray($tableBodyStyle);
         }
 
         // Auto Size Columns
@@ -413,12 +429,20 @@ class BarangKeluarController extends BaseController
         $sheet2 = $spreadsheet->createSheet();
         $sheet2->setTitle('Barang Masuk');
 
-        // Main Table Headers
-        $headers2 = ['No', 'Tanggal', 'Nama Barang', 'Qty', 'Jenis Masuk'];
-        $sheet2->fromArray($headers2, NULL, 'A1');
-        $sheet2->getStyle('A1:E1')->applyFromArray($headerStyle);
+        // Timestamp Header
+        $sheet2->setCellValue('A1', $exportTime);
+        $sheet2->mergeCells('A1:E1');
+        
+        // Periode Header
+        $sheet2->setCellValue('A2', $periodeInfo);
+        $sheet2->mergeCells('A2:E2');
 
-        $row2 = 2;
+        // Main Table Headers (Shifted to Row 4)
+        $headers2 = ['No', 'Tanggal', 'Nama Barang', 'Qty', 'Jenis Masuk'];
+        $sheet2->fromArray($headers2, NULL, 'A4');
+        $sheet2->getStyle('A4:E4')->applyFromArray($headerStyle);
+
+        $row2 = 5;
         $no2 = 1;
         $summaryMasuk = [];
 
@@ -444,23 +468,23 @@ class BarangKeluarController extends BaseController
         }
 
         // Apply Borders to Main Table
-        if ($row2 > 2) {
-             $sheet2->getStyle('A2:E' . ($row2 - 1))->applyFromArray($tableBodyStyle);
+        if ($row2 > 5) {
+             $sheet2->getStyle('A5:E' . ($row2 - 1))->applyFromArray($tableBodyStyle);
         }
 
         // Summary Table (Column G)
-        $sumStartRow2 = 1;
+        $sumStartRow2 = 4;
         $sheet2->setCellValue('G' . $sumStartRow2, 'REKAP DATA');
-        $sheet2->mergeCells('G1:J1'); // Adjusted range
-        $sheet2->getStyle('G1:J1')->applyFromArray(array_merge($headerStyle, ['fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF2196F3']]]));
+        $sheet2->mergeCells('G4:J4');
+        $sheet2->getStyle('G4:J4')->applyFromArray(array_merge($headerStyle, ['fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF2196F3']]]));
 
-        $sheet2->setCellValue('G2', 'No');
-        $sheet2->setCellValue('H2', 'Nama Barang');
-        $sheet2->setCellValue('I2', 'Jenis Masuk');
-        $sheet2->setCellValue('J2', 'Total Qty');
-        $sheet2->getStyle('G2:J2')->applyFromArray($headerStyle);
+        $sheet2->setCellValue('G5', 'No');
+        $sheet2->setCellValue('H5', 'Nama Barang');
+        $sheet2->setCellValue('I5', 'Jenis Masuk');
+        $sheet2->setCellValue('J5', 'Total Qty');
+        $sheet2->getStyle('G5:J5')->applyFromArray($headerStyle);
 
-        $rowSum2 = 3;
+        $rowSum2 = 6;
         $noSum2 = 1;
         
         // Sort summary by name for better readability
@@ -475,19 +499,74 @@ class BarangKeluarController extends BaseController
         }
 
         // Apply Borders to Summary Table
-        if ($rowSum2 > 3) {
-            $sheet2->getStyle('G3:J' . ($rowSum2 - 1))->applyFromArray($tableBodyStyle);
+        if ($rowSum2 > 6) {
+            $sheet2->getStyle('G6:J' . ($rowSum2 - 1))->applyFromArray($tableBodyStyle);
         }
 
         foreach (range('A', 'J') as $col) {
             $sheet2->getColumnDimension($col)->setAutoSize(true);
         }
 
+        // ==========================================
+        // SHEET 3: SISA STOK
+        // ==========================================
+        // 1. Get unique items involved in Barang Keluar
+        $includedItems = array_unique(array_column($dataKeluar, 'nama_barang'));
+        
+        // 2. Fetch Current Stock for these items
+        if (!empty($includedItems)) {
+            $currentStocks = $this->master_jkt->whereIn('nama_barang', $includedItems)->findAll();
+        } else {
+            $currentStocks = [];
+        }
+
+        $sheet3 = $spreadsheet->createSheet();
+        $sheet3->setTitle('Sisa Stok');
+
+        // Timestamp Header
+        $sheet3->setCellValue('A1', $exportTime);
+        $sheet3->mergeCells('A1:C1');
+
+        // Periode Header
+        $sheet3->setCellValue('A2', $periodeInfo);
+        $sheet3->mergeCells('A2:C2');
+
+        // Headers (Shifted to Row 4)
+        $headers3 = ['No', 'Nama Barang', 'Sisa Stok Saat Ini'];
+        $sheet3->fromArray($headers3, NULL, 'A4');
+        $sheet3->getStyle('A4:C4')->applyFromArray($headerStyle);
+
+        $row3 = 5;
+        $no3 = 1;
+
+        // Map stocks for easy lookup or just iterate result if it matches 1-to-1 unique names
+        // But better to loop through $currentStocks as that is the source of truth for Qty
+        foreach ($currentStocks as $stock) {
+            $sheet3->setCellValue('A' . $row3, $no3++);
+            $sheet3->setCellValue('B' . $row3, $stock['nama_barang']);
+            $sheet3->setCellValue('C' . $row3, $stock['qty']);
+            $row3++;
+        }
+
+        // Apply Borders
+        if ($row3 > 5) {
+             $sheet3->getStyle('A5:C' . ($row3 - 1))->applyFromArray($tableBodyStyle);
+        }
+
+        foreach (range('A', 'C') as $col) {
+            $sheet3->getColumnDimension($col)->setAutoSize(true);
+        }
+
         // Reset Active Sheet
         $spreadsheet->setActiveSheetIndex(0);
 
         $writer = new Xlsx($spreadsheet);
-        $filename = 'Laporan_Stok_Lengkap_' . date('Y-m-d_H-i-s');
+        
+        if ($startDate && $endDate) {
+            $filename = "Laporan_Stok_Periode_{$startDate}_sd_{$endDate}";
+        } else {
+            $filename = 'Laporan_Stok_All_' . date('Y-m-d_H-i-s');
+        }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
