@@ -172,9 +172,8 @@ class BarangMasukController extends BaseController
             ];
             $this->barang_masuk_jkt->insert($logData);
 
-            // 3. Update Master Stock
-            $newQty = $masterData['qty'] + $qty;
-            $this->master_jkt->where('id', $idMaster)->set('qty', $newQty)->update();
+            // 3. Update Master Stock (Atomic Update)
+            $this->master_jkt->where('id', $idMaster)->set('qty', 'qty + ' . $qty, false)->update();
 
             $successCount++;
         }

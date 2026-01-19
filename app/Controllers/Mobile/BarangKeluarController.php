@@ -147,9 +147,9 @@ class BarangKeluarController extends BaseController
             ];
             $this->barang_keluar_jkt->insert($data);
 
-            // 4. Update Master Stock
-            $newQty = $masterData['qty'] - $qty;
-            $this->master_jkt->where('id', $idMaster)->set('qty', $newQty)->update();
+            // 4. Update Master Stock (Atomic Update)
+            // Use set(key, value, false) to prevent escaping and allow 'qty - X'
+            $this->master_jkt->where('id', $idMaster)->set('qty', 'qty - ' . $qty, false)->update();
 
             $successCount++;
         }
