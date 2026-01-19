@@ -3,15 +3,24 @@
 namespace App\Controllers\Mobile;
 
 use App\Controllers\BaseController;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class BarangKeluarController extends BaseController
 {
     protected $barang_keluar_jkt;
     protected $master_jkt;
+    protected $stok_barang_jkt;
+
     public function __construct()
     {
         $this->barang_keluar_jkt = new \App\Models\BarangKeluarJktModel();
         $this->master_jkt = new \App\Models\BarangMasukJktModel();
+        $this->stok_barang_jkt = new \App\Models\StokBarangJktModel();
     }
     public function index()
     {
@@ -282,5 +291,209 @@ class BarangKeluarController extends BaseController
             'data' => $master
         ];
         return view('mobile/barang_keluar/scan_manual', $data);
+    }
+
+    public function exportExcel()
+    {
+        $startDate = $this->request->getGet('start_date');
+        $endDate = $this->request->getGet('end_date');
+
+        $spreadsheet = new Spreadsheet();
+        
+        // Define Header Style
+        $headerStyle = [
+            'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FF4CAF50'], // Green
+            ],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+            'borders' => [
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN],
+            ],
+        ];
+
+        $tableBodyStyle = [
+            'borders' => [
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN],
+            ],
+        ];
+
+        // ==========================================
+        // SHEET 1: BARANG KELUAR
+        // ==========================================
+        $builderKeluar = $this->barang_keluar_jkt->builder();
+        $builderKeluar->select('id, tanggal, nama_barang, qty, total_resi, resi');
+
+        if ($startDate && $endDate) {
+            $builderKeluar->where('tanggal >=', $startDate)->where('tanggal <=', $endDate);
+        }
+        $dataKeluar = $builderKeluar->get()->getResultArray();
+
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('Barang Keluar');
+        
+        // Main Table Headers
+        $headers1 = ['No', 'Tanggal', 'Nama Barang', 'Qty', 'Resi', 'Total Resi'];
+        $sheet1->fromArray($headers1, NULL, 'A1');
+        $sheet1->getStyle('A1:F1')->applyFromArray($headerStyle);
+
+        // Data & Summary Logic
+        $row1 = 2;
+        $no1 = 1;
+        $summaryKeluar = [];
+
+        foreach ($dataKeluar as $item) {
+            $sheet1->setCellValue('A' . $row1, $no1++);
+            $sheet1->setCellValue('B' . $row1, $item['tanggal']);
+            $sheet1->setCellValue('C' . $row1, $item['nama_barang']);
+            $sheet1->setCellValue('D' . $row1, $item['qty']);
+            $sheet1->setCellValue('E' . $row1, $item['resi']);
+            $sheet1->setCellValue('F' . $row1, $item['total_resi']);
+            
+            // Calculate Summary
+            $nama = $item['nama_barang'];
+            if (!isset($summaryKeluar[$nama])) {
+                $summaryKeluar[$nama] = ['qty' => 0, 'total_resi' => 0];
+            }
+            $summaryKeluar[$nama]['qty'] += $item['qty'];
+            $summaryKeluar[$nama]['total_resi'] += $item['total_resi'];
+
+            $row1++;
+        }
+        
+        // Apply Borders to Main Table
+        if ($row1 > 2) {
+             $sheet1->getStyle('A2:F' . ($row1 - 1))->applyFromArray($tableBodyStyle);
+        }
+
+        // Summary Table (Column H)
+        $sumStartRow = 1;
+        $sheet1->setCellValue('H' . $sumStartRow, 'REKAP DATA');
+        $sheet1->mergeCells('H1:K1');
+        $sheet1->getStyle('H1:K1')->applyFromArray(array_merge($headerStyle, ['fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF2196F3']]])); // Blue header
+
+        $sheet1->setCellValue('H2', 'No');
+        $sheet1->setCellValue('I2', 'Nama Barang');
+        $sheet1->setCellValue('J2', 'Total Qty');
+        $sheet1->setCellValue('K2', 'Total Resi');
+        $sheet1->getStyle('H2:K2')->applyFromArray($headerStyle);
+
+        $rowSum1 = 3;
+        $noSum1 = 1;
+        foreach ($summaryKeluar as $nama => $stats) {
+            $sheet1->setCellValue('H' . $rowSum1, $noSum1++);
+            $sheet1->setCellValue('I' . $rowSum1, $nama);
+            $sheet1->setCellValue('J' . $rowSum1, $stats['qty']);
+            $sheet1->setCellValue('K' . $rowSum1, $stats['total_resi']);
+            $rowSum1++;
+        }
+        
+        // Apply Borders to Summary Table
+        if ($rowSum1 > 3) {
+            $sheet1->getStyle('H3:K' . ($rowSum1 - 1))->applyFromArray($tableBodyStyle);
+        }
+
+        // Auto Size Columns
+        foreach (range('A', 'K') as $col) {
+            $sheet1->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // ==========================================
+        // SHEET 2: BARANG MASUK
+        // ==========================================
+        $builderMasuk = $this->stok_barang_jkt->builder();
+        $builderMasuk->select('id, tanggal, nama_barang, qty, jenis_barang_masuk');
+
+        if ($startDate && $endDate) {
+            $builderMasuk->where('tanggal >=', $startDate)->where('tanggal <=', $endDate);
+        }
+        $dataMasuk = $builderMasuk->get()->getResultArray();
+
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Barang Masuk');
+
+        // Main Table Headers
+        $headers2 = ['No', 'Tanggal', 'Nama Barang', 'Qty', 'Jenis Masuk'];
+        $sheet2->fromArray($headers2, NULL, 'A1');
+        $sheet2->getStyle('A1:E1')->applyFromArray($headerStyle);
+
+        $row2 = 2;
+        $no2 = 1;
+        $summaryMasuk = [];
+
+        foreach ($dataMasuk as $item) {
+            $sheet2->setCellValue('A' . $row2, $no2++);
+            $sheet2->setCellValue('B' . $row2, $item['tanggal']);
+            $sheet2->setCellValue('C' . $row2, $item['nama_barang']);
+            $sheet2->setCellValue('D' . $row2, $item['qty']);
+            $sheet2->setCellValue('E' . $row2, $item['jenis_barang_masuk']);
+
+            // Calculate Summary (Group by Name AND Type)
+            $key = $item['nama_barang'] . '||' . $item['jenis_barang_masuk'];
+            if (!isset($summaryMasuk[$key])) {
+                $summaryMasuk[$key] = [
+                    'nama' => $item['nama_barang'],
+                    'jenis' => $item['jenis_barang_masuk'],
+                    'qty' => 0
+                ];
+            }
+            $summaryMasuk[$key]['qty'] += $item['qty'];
+
+            $row2++;
+        }
+
+        // Apply Borders to Main Table
+        if ($row2 > 2) {
+             $sheet2->getStyle('A2:E' . ($row2 - 1))->applyFromArray($tableBodyStyle);
+        }
+
+        // Summary Table (Column G)
+        $sumStartRow2 = 1;
+        $sheet2->setCellValue('G' . $sumStartRow2, 'REKAP DATA');
+        $sheet2->mergeCells('G1:J1'); // Adjusted range
+        $sheet2->getStyle('G1:J1')->applyFromArray(array_merge($headerStyle, ['fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF2196F3']]]));
+
+        $sheet2->setCellValue('G2', 'No');
+        $sheet2->setCellValue('H2', 'Nama Barang');
+        $sheet2->setCellValue('I2', 'Jenis Masuk');
+        $sheet2->setCellValue('J2', 'Total Qty');
+        $sheet2->getStyle('G2:J2')->applyFromArray($headerStyle);
+
+        $rowSum2 = 3;
+        $noSum2 = 1;
+        
+        // Sort summary by name for better readability
+        ksort($summaryMasuk);
+
+        foreach ($summaryMasuk as $stats) {
+            $sheet2->setCellValue('G' . $rowSum2, $noSum2++);
+            $sheet2->setCellValue('H' . $rowSum2, $stats['nama']);
+            $sheet2->setCellValue('I' . $rowSum2, $stats['jenis']);
+            $sheet2->setCellValue('J' . $rowSum2, $stats['qty']);
+            $rowSum2++;
+        }
+
+        // Apply Borders to Summary Table
+        if ($rowSum2 > 3) {
+            $sheet2->getStyle('G3:J' . ($rowSum2 - 1))->applyFromArray($tableBodyStyle);
+        }
+
+        foreach (range('A', 'J') as $col) {
+            $sheet2->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Reset Active Sheet
+        $spreadsheet->setActiveSheetIndex(0);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Laporan_Stok_Lengkap_' . date('Y-m-d_H-i-s');
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
     }
 }

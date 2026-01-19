@@ -98,8 +98,14 @@
         <div class="card mb-3">
             <div class="card-body p-2 d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 fw-bold text-dark px-2">Data Stok Gudang</h6>
-                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 8px;" class="shadow-sm">
-                    <i class="bi bi-funnel-fill text-primary" style="font-size: 1.2rem;"></i>
+                <div class="d-flex align-items-center">
+                    <!-- Export Button -->
+                     <button class="btn btn-success btn-sm me-2" onclick="exportData()">
+                        <i class="bi bi-file-earmark-excel"></i> Export
+                    </button>
+                    <div id="reportrange" style="background: #fff; cursor: pointer; padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 8px;" class="shadow-sm">
+                        <i class="bi bi-funnel-fill text-primary" style="font-size: 1.2rem;"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -342,6 +348,13 @@
                 // Swal.fire('Error', 'Gagal mengambil data', 'error');
             }
         });
+    }
+
+    function exportData() {
+        let url = '<?= base_url('stok-opname/barang-keluar/export') ?>' + 
+                  '?start_date=' + currentStart + 
+                  '&end_date=' + currentEnd;
+        window.location.href = url;
     }
 
     function logout() {

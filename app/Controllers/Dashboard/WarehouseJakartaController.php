@@ -6,6 +6,8 @@ use App\Controllers\BaseController;
 use \Hermawan\DataTables\DataTable;
 
 use DateTime;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class WarehouseJakartaController extends BaseController
 {
@@ -649,4 +651,5 @@ class WarehouseJakartaController extends BaseController
             <button class="btn btn-danger" title="Hapus Bray" onclick="deleteStokJkt(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
         }, 'last')->toJson(true);
     }
+
 }
