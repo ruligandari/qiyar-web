@@ -305,6 +305,14 @@ class BarangKeluarController extends BaseController
             $periodeInfo = "Periode: $startDate s/d $endDate";
         }
 
+        // FETCH DATA USING HELPER
+        $dataExport = $this->_getDataForExport($startDate, $endDate);
+        $dataKeluar = $dataExport['dataKeluar'];
+        $summaryKeluar = $dataExport['summaryKeluar'];
+        $dataMasuk = $dataExport['dataMasuk'];
+        $summaryMasuk = $dataExport['summaryMasuk'];
+        $currentStocks = $dataExport['currentStocks'];
+
         $spreadsheet = new Spreadsheet();
         
         // Define Header Style
@@ -329,14 +337,6 @@ class BarangKeluarController extends BaseController
         // ==========================================
         // SHEET 1: BARANG KELUAR
         // ==========================================
-        $builderKeluar = $this->barang_keluar_jkt->builder();
-        $builderKeluar->select('id, tanggal, nama_barang, qty, total_resi, resi');
-
-        if ($startDate && $endDate) {
-            $builderKeluar->where('tanggal >=', $startDate)->where('tanggal <=', $endDate);
-        }
-        $dataKeluar = $builderKeluar->get()->getResultArray();
-
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Barang Keluar');
         
@@ -357,7 +357,6 @@ class BarangKeluarController extends BaseController
         // Data & Summary Logic
         $row1 = 5;
         $no1 = 1;
-        $summaryKeluar = [];
 
         foreach ($dataKeluar as $item) {
             $sheet1->setCellValue('A' . $row1, $no1++);
@@ -366,15 +365,6 @@ class BarangKeluarController extends BaseController
             $sheet1->setCellValue('D' . $row1, $item['qty']);
             $sheet1->setCellValue('E' . $row1, $item['resi']);
             $sheet1->setCellValue('F' . $row1, $item['total_resi']);
-            
-            // Calculate Summary
-            $nama = $item['nama_barang'];
-            if (!isset($summaryKeluar[$nama])) {
-                $summaryKeluar[$nama] = ['qty' => 0, 'total_resi' => 0];
-            }
-            $summaryKeluar[$nama]['qty'] += $item['qty'];
-            $summaryKeluar[$nama]['total_resi'] += $item['total_resi'];
-
             $row1++;
         }
         
@@ -418,14 +408,6 @@ class BarangKeluarController extends BaseController
         // ==========================================
         // SHEET 2: BARANG MASUK
         // ==========================================
-        $builderMasuk = $this->stok_barang_jkt->builder();
-        $builderMasuk->select('id, tanggal, nama_barang, qty, jenis_barang_masuk');
-
-        if ($startDate && $endDate) {
-            $builderMasuk->where('tanggal >=', $startDate)->where('tanggal <=', $endDate);
-        }
-        $dataMasuk = $builderMasuk->get()->getResultArray();
-
         $sheet2 = $spreadsheet->createSheet();
         $sheet2->setTitle('Barang Masuk');
 
@@ -444,7 +426,6 @@ class BarangKeluarController extends BaseController
 
         $row2 = 5;
         $no2 = 1;
-        $summaryMasuk = [];
 
         foreach ($dataMasuk as $item) {
             $sheet2->setCellValue('A' . $row2, $no2++);
@@ -452,18 +433,6 @@ class BarangKeluarController extends BaseController
             $sheet2->setCellValue('C' . $row2, $item['nama_barang']);
             $sheet2->setCellValue('D' . $row2, $item['qty']);
             $sheet2->setCellValue('E' . $row2, $item['jenis_barang_masuk']);
-
-            // Calculate Summary (Group by Name AND Type)
-            $key = $item['nama_barang'] . '||' . $item['jenis_barang_masuk'];
-            if (!isset($summaryMasuk[$key])) {
-                $summaryMasuk[$key] = [
-                    'nama' => $item['nama_barang'],
-                    'jenis' => $item['jenis_barang_masuk'],
-                    'qty' => 0
-                ];
-            }
-            $summaryMasuk[$key]['qty'] += $item['qty'];
-
             $row2++;
         }
 
@@ -487,9 +456,6 @@ class BarangKeluarController extends BaseController
         $rowSum2 = 6;
         $noSum2 = 1;
         
-        // Sort summary by name for better readability
-        ksort($summaryMasuk);
-
         foreach ($summaryMasuk as $stats) {
             $sheet2->setCellValue('G' . $rowSum2, $noSum2++);
             $sheet2->setCellValue('H' . $rowSum2, $stats['nama']);
@@ -510,16 +476,6 @@ class BarangKeluarController extends BaseController
         // ==========================================
         // SHEET 3: SISA STOK
         // ==========================================
-        // 1. Get unique items involved in Barang Keluar
-        $includedItems = array_unique(array_column($dataKeluar, 'nama_barang'));
-        
-        // 2. Fetch Current Stock for these items
-        if (!empty($includedItems)) {
-            $currentStocks = $this->master_jkt->whereIn('nama_barang', $includedItems)->findAll();
-        } else {
-            $currentStocks = [];
-        }
-
         $sheet3 = $spreadsheet->createSheet();
         $sheet3->setTitle('Sisa Stok');
 
@@ -539,8 +495,6 @@ class BarangKeluarController extends BaseController
         $row3 = 5;
         $no3 = 1;
 
-        // Map stocks for easy lookup or just iterate result if it matches 1-to-1 unique names
-        // But better to loop through $currentStocks as that is the source of truth for Qty
         foreach ($currentStocks as $stock) {
             $sheet3->setCellValue('A' . $row3, $no3++);
             $sheet3->setCellValue('B' . $row3, $stock['nama_barang']);
@@ -584,5 +538,119 @@ class BarangKeluarController extends BaseController
         $exists = $this->barang_keluar_jkt->where('resi', $resi)->countAllResults() > 0;
         
         return $this->response->setJSON(['status' => 'success', 'exists' => $exists]);
+    }
+
+    // Helper to fetch data for exports (Excel & WA)
+    private function _getDataForExport($startDate, $endDate)
+    {
+        // 1. DATA BARANG KELUAR
+        $builderKeluar = $this->barang_keluar_jkt->builder();
+        $builderKeluar->select('id, tanggal, nama_barang, qty, total_resi, resi');
+        if ($startDate && $endDate) {
+            $builderKeluar->where('tanggal >=', $startDate)->where('tanggal <=', $endDate);
+        }
+        $dataKeluar = $builderKeluar->get()->getResultArray();
+
+        // Summary Keluar
+        $summaryKeluar = [];
+        foreach ($dataKeluar as $item) {
+            $nama = $item['nama_barang'];
+            if (!isset($summaryKeluar[$nama])) {
+                $summaryKeluar[$nama] = ['qty' => 0, 'total_resi' => 0];
+            }
+            $summaryKeluar[$nama]['qty'] += $item['qty'];
+            $summaryKeluar[$nama]['total_resi'] += $item['total_resi'];
+        }
+
+        // 2. DATA BARANG MASUK
+        $builderMasuk = $this->stok_barang_jkt->builder();
+        $builderMasuk->select('id, tanggal, nama_barang, qty, jenis_barang_masuk');
+        if ($startDate && $endDate) {
+            $builderMasuk->where('tanggal >=', $startDate)->where('tanggal <=', $endDate);
+        }
+        $dataMasuk = $builderMasuk->get()->getResultArray();
+
+        // Summary Masuk
+        $summaryMasuk = [];
+        foreach ($dataMasuk as $item) {
+            $key = $item['nama_barang'] . '||' . $item['jenis_barang_masuk'];
+            if (!isset($summaryMasuk[$key])) {
+                $summaryMasuk[$key] = [
+                    'nama' => $item['nama_barang'],
+                    'jenis' => $item['jenis_barang_masuk'],
+                    'qty' => 0
+                ];
+            }
+            $summaryMasuk[$key]['qty'] += $item['qty'];
+        }
+        ksort($summaryMasuk);
+
+        // 3. SISA STOK
+        $includedItems = array_unique(array_column($dataKeluar, 'nama_barang'));
+        $currentStocks = [];
+        if (!empty($includedItems)) {
+            $currentStocks = $this->master_jkt->whereIn('nama_barang', $includedItems)->findAll();
+        }
+
+        return [
+            'dataKeluar' => $dataKeluar,
+            'summaryKeluar' => $summaryKeluar,
+            'dataMasuk' => $dataMasuk,
+            'summaryMasuk' => $summaryMasuk,
+            'currentStocks' => $currentStocks
+        ];
+    }
+
+    public function getWhatsappText()
+    {
+        $startDate = $this->request->getPost('start_date');
+        $endDate = $this->request->getPost('end_date');
+        
+        $data = $this->_getDataForExport($startDate, $endDate);
+        $summaryKeluar = $data['summaryKeluar'];
+        $summaryMasuk = $data['summaryMasuk'];
+        $currentStocks = $data['currentStocks'];
+
+        $periodeStr = "Semua Data";
+        if($startDate && $endDate) $periodeStr = "$startDate s/d $endDate";
+
+        $text = "*LAPORAN STOK QIYAR*\n";
+        $text .= "Periode: $periodeStr\n\n";
+
+        // 1. Barang Keluar
+        $text .= "*1. BARANG KELUAR*\n";
+        if(empty($summaryKeluar)) {
+            $text .= "- Tidak ada data\n";
+        } else {
+            foreach($summaryKeluar as $nama => $stats) {
+                $text .= "- $nama: {$stats['qty']} Pcs (Total Resi: {$stats['total_resi']})\n";
+            }
+        }
+        $text .= "\n";
+
+        // 2. Barang Masuk
+        $text .= "*2. BARANG MASUK*\n";
+        if(empty($summaryMasuk)) {
+            $text .= "- Tidak ada data\n";
+        } else {
+            // Group by Name for cleaner display? Or keep detail? User asked for rekap.
+            // Let's show as in Excel summary
+            foreach($summaryMasuk as $stats) {
+                $text .= "- {$stats['nama']} ({$stats['jenis']}): {$stats['qty']} Pcs\n";
+            }
+        }
+        $text .= "\n";
+
+        // 3. Sisa Stok
+        $text .= "*3. SISA STOK*\n";
+        if(empty($currentStocks)) {
+            $text .= "- Tidak ada data terkait\n";
+        } else {
+            foreach($currentStocks as $stock) {
+                $text .= "- {$stock['nama_barang']}: {$stock['qty']} Pcs\n";
+            }
+        }
+        
+        return $this->response->setJSON(['status' => 'success', 'text' => $text]);
     }
 }

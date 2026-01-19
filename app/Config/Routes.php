@@ -255,6 +255,7 @@ $routes->group('stok-opname', ['filter' => 'mobileFilter'], function ($routes) {
     $routes->post('barang-keluar/delete', 'Mobile\BarangKeluarController::delete');
     $routes->get('barang-keluar/export', 'Mobile\BarangKeluarController::exportExcel');
     $routes->post('barang-keluar/check-resi', 'Mobile\BarangKeluarController::checkResi');
+    $routes->post('get-whatsapp-text', 'Mobile\BarangKeluarController::getWhatsappText');
 
     // bulk barcode
     $routes->group('bulk-barcode', function ($routes) {

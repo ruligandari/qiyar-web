@@ -100,9 +100,16 @@
                 <h6 class="mb-0 fw-bold text-dark px-2">Data Stok Gudang</h6>
                 <div class="d-flex align-items-center">
                     <!-- Export Button -->
-                     <button class="btn btn-success btn-sm me-2" onclick="exportData()">
-                        <i class="bi bi-file-earmark-excel"></i> Export
-                    </button>
+                    <!-- Export Dropdown -->
+                    <div class="dropdown me-2">
+                        <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-download"></i> Export
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="exportExcel(); return false;"><i class="bi bi-file-earmark-excel text-success me-2"></i> Export Excel</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="shareWhatsapp(); return false;"><i class="bi bi-whatsapp text-success me-2"></i> Share to WhatsApp</a></li>
+                        </ul>
+                    </div>
                     <div id="reportrange" style="background: #fff; cursor: pointer; padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 8px;" class="shadow-sm">
                         <i class="bi bi-funnel-fill text-primary" style="font-size: 1.2rem;"></i>
                     </div>
@@ -350,11 +357,46 @@
         });
     }
 
-    function exportData() {
+    function exportExcel() {
         let url = '<?= base_url('stok-opname/barang-keluar/export') ?>' + 
                   '?start_date=' + currentStart + 
                   '&end_date=' + currentEnd;
         window.location.href = url;
+    }
+
+    function shareWhatsapp() {
+        Swal.fire({
+             title: 'Memproses Data...',
+             text: 'Mohon tunggu sebentar',
+             allowOutsideClick: false,
+             didOpen: () => {
+                 Swal.showLoading();
+             }
+        });
+
+        $.ajax({
+            url: '<?= base_url('stok-opname/get-whatsapp-text') ?>',
+            type: 'POST',
+            data: {
+                start_date: currentStart,
+                end_date: currentEnd
+            },
+            success: function(response) {
+                Swal.close();
+                if(response.status === 'success') {
+                    // Open WhatsApp
+                    let text = response.text;
+                    let url = 'https://wa.me/?text=' + encodeURIComponent(text);
+                    window.open(url, '_blank');
+                } else {
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat memproses data', 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                Swal.close();
+                Swal.fire('Error', 'Gagal menghubungi server: ' + xhr.status + ' ' + error, 'error');
+            }
+        });
     }
 
     function logout() {
