@@ -17,7 +17,7 @@
     <title><?= $title ?></title>
 
     <!-- Favicon -->
-    <link rel="icon" href="<?= base_url('mobile') ?>/img/core-img/favicon.ico">
+    <link rel="icon" href="<?= base_url('front/') ?>assets/img/logoqiyar.png">
     <link rel="apple-touch-icon" href="<?= base_url('mobile') ?>/img/icons/icon-96x96.png">
     <link rel="apple-touch-icon" sizes="152x152" href="<?= base_url('mobile') ?>/img/icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="167x167" href="<?= base_url('mobile') ?>/img/icons/icon-167x167.png">
