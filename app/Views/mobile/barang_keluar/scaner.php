@@ -148,9 +148,43 @@
         
         // Listen to Resi changes
         document.getElementById('resi').addEventListener('change', function() {
-            localStorage.setItem('current_resi', this.value);
+            var val = this.value;
+            localStorage.setItem('current_resi', val);
+            if(val) checkResiAvailability(val);
         });
     });
+
+    function checkResiAvailability(resi) {
+        $.ajax({
+            url: '<?= base_url('stok-opname/barang-keluar/check-resi') ?>',
+            type: 'POST',
+            data: {resi: resi},
+            success: function(response) {
+                if(response.status === 'success' && response.exists) {
+                    // Pause camera if running
+                    try { html5QrcodeScanner.pause(true); } catch(e){}
+
+                    Swal.fire({
+                        title: 'Resi Sudah Ada',
+                        text: "Nomor resi ini sudah pernah digunakan sebelumnya. Apakah anda ingin melanjutkan?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Lanjutkan',
+                        cancelButtonText: 'Ganti Resi'
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                             localStorage.removeItem('current_resi');
+                             document.getElementById('resi').value = '';
+                        }
+                         // Resume camera
+                         try { html5QrcodeScanner.resume(); } catch(e){}
+                    });
+                }
+            }
+        });
+    }
 
     function resetResi() {
         if(confirm('Reset Resi?')) {
@@ -174,18 +208,53 @@
         var currentResi = document.getElementById('resi').value;
 
         if(!currentResi) {
+        if(!currentResi) {
             // Mode Scan Resi
-            document.getElementById('resi').value = decodedText;
-            localStorage.setItem('current_resi', decodedText);
+            var newResi = decodedText;
+            document.getElementById('resi').value = newResi;
+            localStorage.setItem('current_resi', newResi);
             
-            Swal.fire({
-                icon: 'success', 
-                title: 'Resi Tersimpan', 
-                text: 'Nomor: ' + decodedText,
-                confirmButtonText: 'Lanjut Scan Barang'
-            }).then(() => {
-                resumeCamera();
-                // Focus qty or next logic if needed
+            // Check availability immediately
+            $.ajax({
+                url: '<?= base_url('stok-opname/barang-keluar/check-resi') ?>',
+                type: 'POST',
+                data: {resi: newResi},
+                success: function(response) {
+                    if(response.status === 'success' && response.exists) {
+                        Swal.fire({
+                            title: 'Resi Sudah Ada',
+                            text: "Resi " + newResi + " sudah pernah digunakan. Lanjut?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Ganti'
+                        }).then((result) => {
+                            if (!result.isConfirmed) {
+                                document.getElementById('resi').value = '';
+                                localStorage.removeItem('current_resi');
+                                resumeCamera();
+                            } else {
+                                Swal.fire({
+                                    icon: 'success', 
+                                    title: 'Resi Tersimpan', 
+                                    text: 'Nomor: ' + newResi,
+                                    timer: 1000,
+                                    showConfirmButton: false
+                                }).then(() => { resumeCamera(); });
+                            }
+                        });
+                    } else {
+                        // Not exists, safe to proceed
+                        Swal.fire({
+                            icon: 'success', 
+                            title: 'Resi Tersimpan', 
+                            text: 'Nomor: ' + newResi,
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            resumeCamera();
+                        });
+                    }
+                }
             });
             return;
         }

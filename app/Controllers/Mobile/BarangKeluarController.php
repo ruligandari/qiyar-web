@@ -496,4 +496,14 @@ class BarangKeluarController extends BaseController
         $writer->save('php://output');
         exit;
     }
+
+    public function checkResi()
+    {
+        $resi = $this->request->getPost('resi');
+        if(!$resi) return $this->response->setJSON(['status' => 'error', 'message' => 'Resi empty']);
+
+        $exists = $this->barang_keluar_jkt->where('resi', $resi)->countAllResults() > 0;
+        
+        return $this->response->setJSON(['status' => 'success', 'exists' => $exists]);
+    }
 }

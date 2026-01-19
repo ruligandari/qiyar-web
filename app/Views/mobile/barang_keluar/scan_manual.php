@@ -148,7 +148,40 @@
         }
         
         $('#resi').on('change', function() {
-            localStorage.setItem('current_resi', $(this).val());
+            var val = $(this).val();
+            localStorage.setItem('current_resi', val);
+            if(val) checkResiAvailability(val);
+        });
+    }
+
+    function checkResiAvailability(resi) {
+        $.ajax({
+            url: '<?= base_url('stok-opname/barang-keluar/check-resi') ?>',
+            type: 'POST',
+            data: {resi: resi},
+            success: function(response) {
+                if(response.status === 'success' && response.exists) {
+                    Swal.fire({
+                        title: 'Resi Sudah Ada',
+                        text: "Nomor resi ini sudah pernah digunakan sebelumnya. Apakah anda ingin melanjutkan menambahkan barang ke resi ini?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Lanjutkan',
+                        cancelButtonText: 'Ganti Resi'
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                             $('#resi').val('');
+                             localStorage.removeItem('current_resi');
+                             $('#resi').focus();
+                        } else {
+                            // User wants to continue, maybe focus scanning
+                            $('#qrcode').focus();
+                        }
+                    });
+                }
+            }
         });
     }
 
