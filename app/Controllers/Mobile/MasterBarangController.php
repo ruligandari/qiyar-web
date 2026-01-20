@@ -20,75 +20,56 @@ class MasterBarangController extends BaseController
     }
     public function index()
     {
-        // Ambil query pencarian dari input
-        $search = $this->request->getGet('q');
-
-        // Inisialisasi model
-        $stokModel = $this->barang_masuk_jkt;
-
-        if ($search) {
-            // Jika ada pencarian, filter data berdasarkan pencarian
-            $stokModel->like('nama_barang', $search);
-        }
-
-        // Pagination dengan pencarian
-        $stok = $stokModel->orderBy('id', 'DESC')
-            ->paginate(30, 'stok_barang');
-
+        // CSR Implementation
         $data = [
             'title' => 'Master Barang',
-            'data' => $stok,
-            'pager' => $stokModel->pager,  // Untuk pagination
-            'search' => $search            // Untuk mempertahankan input pencarian di view
         ];
 
         return view('mobile/master_barang/index', $data);
     }
 
+    public function listData()
+    {
+        $search = $this->request->getPost('q');
+        $page = (int) ($this->request->getPost('page') ?? 1);
+
+        $stokModel = $this->barang_masuk_jkt;
+
+        if ($search) {
+            $stokModel->like('nama_barang', $search);
+        }
+
+        $stokModel->orderBy('id', 'DESC');
+        
+        $data = $stokModel->paginate(30, 'stok_barang', $page);
+        
+        $pager = $stokModel->pager;
+        $pager->setPath(base_url('stok-opname/master-barang'));
+
+        return $this->response
+            ->setContentType('application/json')
+            ->setJSON([
+                'status' => 'success',
+                'data' => $data,
+                'pager' => $pager->links('stok_barang', 'bootstrap_pagination'),
+            ]);
+    }
+
     public function generateQr($id)
     {
+        // Use bwip-js API for Barcode (Code 128)
+        // bcid=code128, text=$id, scale=3, includetext=true
+        $apiUrl = "https://bwipjs-api.metafloor.com/?bcid=code128&text=" . $id . "&scale=3&includetext";
 
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL => "https://qrcode3.p.rapidapi.com/qrcode/text",
+            CURLOPT_URL => $apiUrl,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode([
-                'data' => $id,
-                'style' => [
-                    'module' => [
-                        'color' => '#000',
-                        'shape' => 'default'
-                    ],
-                    'inner_eye' => [
-                        'shape' => 'default'
-                    ],
-                    'outer_eye' => [
-                        'shape' => 'default'
-                    ],
-                    'background' => [
-                        'color' => '#ffffff'
-                    ]
-                ],
-                'size' => [
-                    'width' => 500,
-                    'quiet_zone' => 4,
-                    'error_correction' => 'L'
-                ],
-                'output' => [
-                    'filename' => 'qrcode',
-                    'format' => 'png'
-                ]
-            ]),
-            CURLOPT_HTTPHEADER => [
-                "X-RapidAPI-Key: 786cd29387mshe57fa6c62f1f168p131b6cjsn01d22f04844a",
-                "accept: application/postscript",
-                "content-type: application/json"
-            ],
+            CURLOPT_CUSTOMREQUEST => "GET",
         ]);
 
         $response = curl_exec($curl);
@@ -99,6 +80,11 @@ class MasterBarangController extends BaseController
             echo "cURL Error #:" . $err;
         } else {
             // Simpan file ke server
+            // Ensure directory exists
+            if (!is_dir(FCPATH . 'qrcodes')) {
+                mkdir(FCPATH . 'qrcodes', 0777, true);
+            }
+            
             $filePath = FCPATH . 'qrcodes/' . $id . '.png';
             file_put_contents($filePath, $response);
 
@@ -175,7 +161,7 @@ class MasterBarangController extends BaseController
         // hapus data dengan data id
         $this->barang_masuk_jkt->delete($id);
         // kirim response json dengan status sukses
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil dihapus', 'data', $id]);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil dihapus', 'data' => $id]);
     }
 
     public function edit()

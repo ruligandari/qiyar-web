@@ -154,6 +154,7 @@
                                     <th>Tanggal</th>
                                     <th>Nama Barang</th>
                                     <th>Qty</th>
+                                    <th>Resi</th>
                                     <th>Total Resi</th>
                                     <th>Bukti Pickup</th>
                                     <?php if (in_array(session()->get('role'), ['2', '3', '7'])) : ?>
@@ -174,6 +175,7 @@
                                         <td colspan="2"></td>
                                         <td><b>Total :</b></td>
                                         <td id="totalQty"></td>
+                                        <td></td>
                                         <td id="totalResi"></td>
                                         <td></td>
                                     <?php endif ?>
@@ -490,7 +492,7 @@
                     footer: true,
                     title: 'Data Barang Keluar - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5],
+                        columns: [0, 1, 2, 3, 4, 5, 6],
                         format: {
                             body: function(data, row, column, node) {
                                 // Jika kolom adalah gambar, return elemen img
@@ -510,7 +512,7 @@
                     footer: true,
                     title: 'Data Barang Keluar - ' + formattedDate,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5],
+                        columns: [0, 1, 2, 3, 4, 5, 6],
                         format: {
                             body: function(data, row, column, node) {
                                 // Jika kolom adalah gambar, return elemen img
@@ -536,6 +538,9 @@
                 },
                 {
                     data: 'qty'
+                },
+                {
+                    data: 'resi'
                 },
                 {
                     data: 'total_resi'
@@ -567,7 +572,7 @@
                         let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka
                         return acc + numericValue;
                     }, 0);
-                    let sumResi = table.column(4, {
+                    let sumResi = table.column(5, {
                         search: 'applied'
                     }).data().reduce(function(acc, curr) {
                         let numericValue = parseFloat(curr.replace(/\./g, '').replace(',', '.')); // Parse angka

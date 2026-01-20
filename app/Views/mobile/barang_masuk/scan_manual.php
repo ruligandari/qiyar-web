@@ -25,7 +25,6 @@
 <!-- Header Area -->
 <div class="header-area" id="headerArea">
     <div class="container">
-        <!-- Header Content -->
         <div class="header-content position-relative d-flex align-items-center justify-content-between">
             <!-- Back Button -->
             <div class="back-button">
@@ -33,16 +32,15 @@
                     <i class="bi bi-arrow-left-short"></i>
                 </a>
             </div>
-
             <!-- Page Title -->
             <div class="page-heading">
                 <h6 class="mb-0"><?= $title ?></h6>
             </div>
-            <div class="setting-wrapper">
-            </div>
+            <div class="setting-wrapper"></div>
         </div>
     </div>
 </div>
+
 <div class="page-content-wrapper py-3">
     <div class="container">
         <!-- User Meta Data-->
@@ -60,26 +58,37 @@
                     </div>
                 </div>
 
-                <form action="<?= base_url('stok-opname/barang-masuk/add') ?>" method="POST">
+                <form action="<?= base_url('stok-opname/barang-masuk/add') ?>" method="POST" id="form-scan">
                     <!-- Hidden input to store mode -->
                     <input type="hidden" name="jenis_barang_masuk" id="jenis_barang_masuk" value="Barang Beli">
-                    
-                    <div id="reader" width="600px"></div>
-                    
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" id="label-scan" for="qrcode">Scan Barcode Barang</label>
+                        <div class="input-group">
+                            <input class="form-control" id="qrcode" name="qrcode" placeholder="Scan atau ketik ID/Resi..." autofocus>
+                            <button class="btn btn-outline-secondary" type="button" id="btn-search"><i class="bi bi-search"></i> Cari</button>
+                        </div>
+                        <small class="text-muted" id="help-text">Tekan Enter atau klik tombol Cari setelah mengetik ID Barang.</small>
+                    </div>
+
+                    <hr>
+
                     <div id="single-item-container">
-                        <div class="form-group mt-3">
-                            <label class="form-label" id="label-scan" for="message">Nama Barang</label>
-                            <input class="form-control" id="message" name="nama_barang" placeholder="Scan Kode QR/Resi" value="" readonly>
+                        <div class="form-group">
+                            <label class="form-label" for="nama_barang">Nama Barang</label>
+                            <input class="form-control" id="nama_barang" name="nama_barang" placeholder="Nama Barang" value="" readonly>
                             <input class="form-control" id="id_barang" name="id_barang" value="" hidden>
                         </div>
+                        
                         <div class="form-group">
                             <label class="form-label" for="qty">Qty</label>
-                            <input class="form-control" id="qty" name="qty" placeholder="Masukan Qty">
+                            <input type="number" class="form-control" id="qty" name="qty" placeholder="Masukan Qty">
                         </div>
+
                         <!-- Input Resi (Hidden by default, shown for Return) -->
                         <div class="form-group d-none" id="group-resi">
                             <label class="form-label" for="resi">Nomor Resi (Referensi)</label>
-                            <input class="form-control" id="resi" name="resi" placeholder="Nomor Resi" readonly>
+                            <input class="form-control" id="resi" name="resi" placeholder="Nomor Resi Barang Keluar" readonly>
                         </div>
 
                         <button class="btn btn-primary w-100 mt-3" type="submit">Simpan</button>
@@ -88,7 +97,7 @@
 
                 <!-- Multiple Results Container -->
                 <div id="multiple-results-area" class="mt-4 d-none">
-                    <h6 class="text-muted mb-2">Hasil Pencarian:</h6>
+                    <h6 class="text-muted mb-2">Hasil Pencarian (Pilih Salah Satu):</h6>
                     <div class="table-responsive">
                         <table class="table table-bordered table-sm">
                             <thead class="table-light">
@@ -102,153 +111,175 @@
                             </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-primary w-100 mt-3" type="button" id="btn-save-bulk">
-                        <i class="bi bi-save"></i> Simpan Terpilih
+                    <button class="btn btn-success w-100 mt-2" type="button" id="btn-save-bulk">
+                        <i class="bi bi-save"></i> Simpan Barang Terpilih
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="pb-3"></div>
 </div>
 
 <?= $this->endsection(); ?>
 
 <?= $this->section('script'); ?>
-<!-- Use CDNJS for stability -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script>
-     // Data Master (For 'Beli' Mode)
+    // Data Master (For 'Beli' Mode)
     var dataMaster = <?php echo json_encode($data); ?>;
 
-    // Handle Mode Logic Visuals
-    $('input[name="mode_switch"]').change(function() {
-        var mode = $(this).val();
-        resetForm();
+    $(document).ready(function() {
+        console.log("Data Master Loaded:", dataMaster.length);
         
-        if(mode === 'beli') {
-            $('#jenis_barang_masuk').val('Barang Beli');
-            $('#label-scan').text('Nama Barang');
-            $('#message').attr('placeholder', 'Scan Kode QR Barang...');
-            $('#group-resi').addClass('d-none');
-        } else {
-            $('#jenis_barang_masuk').val('Barang Return');
-            $('#label-scan').text('Hasil Scan Resi');
-            $('#message').attr('placeholder', 'Scan QR Resi...');
-            $('#group-resi').removeClass('d-none');
-        }
+        // Focus intial
+        $('#qrcode').focus();
+
+        // Handle Mode Switch
+        $('input[name="mode_switch"]').change(function() {
+            var mode = $(this).val();
+            resetForm();
+            
+            if(mode === 'beli') {
+                $('#jenis_barang_masuk').val('Barang Beli');
+                $('#label-scan').text('Scan Barcode Barang');
+                $('#qrcode').attr('placeholder', 'Scan atau ketik ID Barang...');
+                $('#help-text').text('Tekan Enter atau klik tombol Cari setelah mengetik ID Barang.');
+                $('#group-resi').addClass('d-none');
+                $('#qty').prop('readonly', false).val('');
+            } else {
+                $('#jenis_barang_masuk').val('Barang Return');
+                $('#label-scan').text('Scan Resi Pengiriman');
+                $('#qrcode').attr('placeholder', 'Scan atau ketik Nomor Resi...');
+                $('#help-text').text('Masukkan Resi untuk mencari data Barang Keluar.');
+                $('#group-resi').removeClass('d-none');
+                // Qty might be auto-filled from return data, but usually return qty is entered manually or capped.
+                // For now allow edit.
+            }
+            $('#qrcode').focus();
+        });
+
+        // Handle Enter key
+        $('#qrcode').on('keypress', function(e) {
+            if (e.which == 13 || e.keyCode == 13) {
+                e.preventDefault(); 
+                var code = $(this).val();
+                processScan(code);
+            }
+        });
+
+        // Handle Search Button
+        $('#btn-search').on('click', function() {
+             var code = $('#qrcode').val();
+             processScan(code);
+        });
     });
 
     function resetForm() {
-        $('#message').val('');
+        $('#nama_barang').val('');
         $('#id_barang').val('');
         $('#qty').val('');
         $('#resi').val('');
+        $('#qrcode').val('');
         $('#multiple-results-area').addClass('d-none');
         $('#multiple-results-body').empty();
-        $('#single-item-container').removeClass('d-none'); // Show single
+        $('#single-item-container').removeClass('d-none'); // Show single form
     }
 
-    function onScanSuccess(decodedText, decodedResult) {
-        console.log(`Code matched = ${decodedText}`, decodedResult);
+    function processScan(code) {
+        if(!code) {
+             Swal.fire({icon: 'info', title: 'Input Kosong', text: 'Silakan scan atau ketik kode', timer: 1500});
+             return;
+        }
+
         var mode = $('input[name="mode_switch"]:checked').val();
 
         if (mode === 'beli') {
-            // Logic Barang Beli: Match with local master data
-            var data = dataMaster.find(x => x.id == decodedText);
-            if (!data) {
-                // Try comparing Strings just in case
-                data = dataMaster.find(x => x.id == decodedText.toString());
-            }
-
-            if (data) {
-                // Success
-                if(html5QrcodeScanner) html5QrcodeScanner.pause(); // Pause camera
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: data.nama_barang,
-                    confirmButtonText: 'OK',
-                    allowOutsideClick: false
-                }).then(() => {
-                    document.getElementById('message').value = data.nama_barang;
-                    document.getElementById('id_barang').value = data.id;
-                    $('#single-item-container').removeClass('d-none');
-                    // document.getElementById('qty').focus(); 
-                    if(html5QrcodeScanner) html5QrcodeScanner.resume(); // Resume camera
-                });
-            } else {
-                Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'Barang tidak terdaftar', timer: 1500});
-            }
-
+            // Logic Barang Beli: Cari di Data Master (Client Side)
+            searchMasterBarang(code);
         } else {
-            // Logic Barang Return: Server lookup by Resi
-            // Get CSRF Token
-            var csrfName = '<?= csrf_token() ?>';
-            var csrfHash = '<?= csrf_hash() ?>'; // This should ideally be dynamic if using regeneration
+            // Logic Barang Return: Cari Resi di Server (Ajax)
+            searchResiReturn(code);
+        }
+    }
 
-            fetch('<?= base_url('stok-opname/barang-masuk/scan') ?>', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    kode_barang: decodedText,
-                    mode: 'return',
-                    [csrfName]: csrfHash
-                })
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    if(html5QrcodeScanner) html5QrcodeScanner.pause(); // Pause camera while showing alert
+    function searchMasterBarang(id) {
+        var data = dataMaster.find(x => x.id == id);
+        if (!data) {
+             Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'ID Barang tidak ada di master.', timer: 2000});
+             return;
+        }
+        $('#nama_barang').val(data.nama_barang);
+        $('#id_barang').val(data.id);
+        $('#qty').focus();
+        $('#single-item-container').removeClass('d-none');
+    }
 
-                    if(data.is_duplicate) {
-                         Swal.fire({
+    function searchResiReturn(resi) {
+        // Show loader
+        Swal.showLoading();
+        
+        var csrfName = '<?= csrf_token() ?>';
+        var csrfHash = '<?= csrf_hash() ?>';
+
+        $.ajax({
+            url: '<?= base_url('stok-opname/barang-masuk/scan') ?>', 
+            type: 'POST',
+            contentType: 'application/json',
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            data: JSON.stringify({
+                kode_barang: resi, 
+                mode: 'return',
+                [csrfName]: csrfHash
+            }),
+            success: function(response) {
+                Swal.close();
+                if(response.status === 'success') {
+                    
+                    if(response.is_duplicate) {
+                        Swal.fire({
                             icon: 'warning',
-                            title: 'SUDAH DIRETURN',
-                            text: 'Resi ini sudah tercatat sebagai Barang Return! Lanjut?',
+                            title: 'PERINGATAN: SUDAH DIRETURN',
+                            text: 'Resi ini sudah tercatat sebagai Barang Return sistem! Lanjut input lagi?',
                             showCancelButton: true,
-                            confirmButtonText: 'Ya',
+                            confirmButtonText: 'Ya, Lanjut',
                             cancelButtonText: 'Batal',
                             confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                processDisplayData(data.data, decodedText);
+                                processDisplayData(response.data, resi);
                             } else {
-                                if(html5QrcodeScanner) html5QrcodeScanner.resume();
                                 resetForm();
                             }
                         });
                     } else {
-                        processDisplayData(data.data, decodedText);
+                        // Normal flow
+                        processDisplayData(response.data, resi);
                     }
+
                 } else {
-                    Swal.fire({icon: 'error', title: 'Gagal', text: 'Resi tidak ditemukan', timer: 1500});
+                    Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'Resi tidak ditemukan di data Barang Keluar.'});
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
+            },
+            error: function() {
+                Swal.close();
+                Swal.fire('Error', 'Terjadi kesalahan sistem', 'error');
+            }
+        });
     }
 
     function processDisplayData(items, resi) {
         if (items.length === 1) {
-            var item = items[0];
-            selectReturnItem(item, resi);
-            Swal.fire({icon: 'success', title: 'Resi Ditemukan', text: 'Barang: '+item.nama_barang, timer: 1500})
-            .then(() => {
-                 if(html5QrcodeScanner) html5QrcodeScanner.resume();
+             // Single Item - Direct Fill
+             fillFormReturn(items[0], resi);
+             Swal.fire({
+                icon: 'success', 
+                title: 'Data Ditemukan', 
+                text: 'Barang: ' + items[0].nama_barang,
+                timer: 1500
             });
         } else {
+            // Multiple Items - Show Inline Table & Hide Single Form
             showItemTable(items, resi);
              Swal.fire({
                 icon: 'info', 
@@ -259,38 +290,47 @@
         }
     }
 
-    function selectReturnItem(item, resi) {
-        $('#single-item-container').removeClass('d-none'); // Show single input
-        document.getElementById('message').value = item.nama_barang;
-        document.getElementById('id_barang').value = item.id_barang_master;
-        document.getElementById('qty').value = item.qty;
-        document.getElementById('resi').value = resi;
+    function fillFormReturn(item, resi) {
+        $('#single-item-container').removeClass('d-none'); // Show single form
+        $('#multiple-results-area').addClass('d-none'); // Optional: hide table if re-selecting single? 
+        // Logic: if selecting from table, we might want to hide table OR keep it.
+        // User asked: "tombol simpan pertama hilangkan" during bulk.
+        // But if they select ONE from bulk, does it go to single form?
+        // User said: "jangan pilih salah satu tapi bisa simpan keduanya".
+        // Wait, if they select "Pilih" (green button) from table, it currently calls fillFormReturn.
+        // If they click "Pilih", it implies they want to edit that single item.
+        // So showing single form is correct.
+        
+        $('#nama_barang').val(item.nama_barang);
+        $('#id_barang').val(item.id_barang_master); 
+        $('#qty').val(item.qty); 
+        $('#resi').val(resi);
+        $('#qty').focus();
+        $('#qty').select();
     }
 
     function showItemTable(items, resi) {
-        $('#single-item-container').addClass('d-none'); // HIDE Single Input Block
+        $('#single-item-container').addClass('d-none'); // HIDE Single Form
 
         let rows = '';
-        window.tempItems = items;
+        window.tempReturnItems = items;
         window.tempResi = resi;
 
         items.forEach((item, index) => {
             rows += `
                 <tr>
                     <td>
-                         <input type="checkbox" class="form-check-input item-checkbox" value="${index}" checked>
+                        <input type="checkbox" class="form-check-input item-checkbox" value="${index}" checked>
                     </td>
                     <td>${item.nama_barang}</td>
                     <td>${item.qty}</td>
                 </tr>
             `;
         });
-        
+
         $('#multiple-results-body').html(rows);
         $('#multiple-results-area').removeClass('d-none');
         
-        document.getElementById('multiple-results-area').scrollIntoView({ behavior: 'smooth' });
-
         // Handle Check All
         $('#check-all').prop('checked', true);
         $('#check-all').off('change').on('change', function() {
@@ -316,7 +356,7 @@
 
         let selectedItems = [];
         selectedIndices.forEach(idx => {
-            let item = window.tempItems[idx];
+            let item = window.tempReturnItems[idx];
             selectedItems.push({
                 id_barang: item.id_barang_master,
                 qty: item.qty,
@@ -344,7 +384,6 @@
                         timer: 2000
                     }).then(() => {
                         resetForm();
-                        if(html5QrcodeScanner) html5QrcodeScanner.resume();
                     });
                 } else {
                     Swal.fire('Gagal', 'Gagal menyimpan data', 'error');
@@ -356,20 +395,5 @@
             }
         });
     }
-
-    function onScanFailure(error) {
-        // handle scan failure, usually better to ignore and keep scanning.
-    }
-
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader", {
-            fps: 10,
-            qrbox: { width: 250, height: 150 },
-            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13 ]
-        },
-        /* verbose= */
-        false);
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 </script>
-
 <?= $this->endsection(); ?>

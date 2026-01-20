@@ -89,6 +89,95 @@
             </div>
         </div>
     </div>
+    
+    <!-- Stats Dashboard & Filter -->
+    <div class="container direction-rtl mb-3">
+        
+        <!-- Date Filter -->
+        <!-- Date Filter -->
+        <div class="card mb-3">
+            <div class="card-body p-2 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold text-dark px-2">Data Stok Gudang</h6>
+                <div class="d-flex align-items-center">
+                    <!-- Export Button -->
+                    <!-- Export Dropdown -->
+                    <div class="dropdown me-2">
+                        <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-download"></i> Export
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="exportExcel(); return false;"><i class="bi bi-file-earmark-excel text-success me-2"></i> Export Excel</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="shareWhatsapp(); return false;"><i class="bi bi-whatsapp text-success me-2"></i> Share to WhatsApp</a></li>
+                        </ul>
+                    </div>
+                    <div id="reportrange" style="background: #fff; cursor: pointer; padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 8px;" class="shadow-sm">
+                        <i class="bi bi-funnel-fill text-primary" style="font-size: 1.2rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="row g-2">
+            <div class="col-6">
+                <!-- Card Putih, Teks Hijau -->
+                <div class="card bg-white mb-2 shadow-sm border-0" onclick="showDetails('beli')" style="cursor: pointer;">
+                    <div class="card-body p-2 d-flex align-items-center">
+                        <div class="icon-circle bg-success-subtle text-success me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+                            <i class="bi bi-cart-check fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 text-success fw-bold" id="val-masuk-beli"><?= number_format($stats['masuk_beli'] ?? 0) ?></h5>
+                            <small class="text-secondary" style="font-size: 0.7rem;">Total Barang Beli</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <!-- Card Putih, Teks Biru -->
+                <div class="card bg-white mb-2 shadow-sm border-0" onclick="showDetails('return')" style="cursor: pointer;">
+                     <div class="card-body p-2 d-flex align-items-center">
+                        <div class="icon-circle bg-info-subtle text-info me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+                            <i class="bi bi-arrow-return-left fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 text-info fw-bold" id="val-masuk-return"><?= number_format($stats['masuk_return'] ?? 0) ?></h5>
+                            <small class="text-secondary" style="font-size: 0.7rem;">Total Barang Return</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <!-- Card Putih, Teks Merah -->
+                <div class="card bg-white mb-2 shadow-sm border-0" onclick="showDetails('keluar')" style="cursor: pointer;">
+                     <div class="card-body p-2 d-flex align-items-center">
+                         <div class="icon-circle bg-danger-subtle text-danger me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+                            <i class="bi bi-box-arrow-right fs-5"></i>
+                        </div>
+                        <div>
+                             <h5 class="mb-0 text-danger fw-bold" id="val-keluar"><?= number_format($stats['keluar'] ?? 0) ?></h5>
+                             <small class="text-secondary" style="font-size: 0.7rem;">Total Barang Keluar</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <!-- Card Putih, Teks Kuning (Warning) -->
+                <div class="card bg-white mb-2 shadow-sm border-0" onclick="showDetails('resi')" style="cursor: pointer;">
+                     <div class="card-body p-2 d-flex align-items-center">
+                        <div class="icon-circle bg-warning-subtle text-warning me-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+                            <i class="bi bi-receipt fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 text-warning fw-bold" id="val-resi"><?= number_format($stats['resi'] ?? 0) ?></h5>
+                            <small class="text-secondary" style="font-size: 0.7rem;">Total Resi</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container direction-rtl">
         <div class="card mb-3">
             <div class="card-body">
@@ -128,6 +217,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="row g-1 mt-2">
+                    <div class="col-4">
+                        <div class="feature-card mx-auto text-center">
+                            <div class="card mx-auto bg-gray">
+                                <a href="<?= base_url('stok-opname/bulk-barcode') ?>">
+                                    <img src="<?= base_url('mobile') ?>/assets/barcode.webp" alt=""> 
+                                    <!-- Note: using barcode.png as placeholder, assuming asset might not exist yet, but link works -->
+                                </a>
+                            </div>
+                            <p class="mb-0">Cetak Barcode</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -162,7 +264,141 @@
 </div> -->
 
 <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 <script>
+    // Track current dates
+    var currentStart = moment().format('YYYY-MM-DD');
+    var currentEnd = moment().format('YYYY-MM-DD');
+
+    $(document).ready(function() {
+        // Initialize DateRangePicker
+        var start = moment();
+        var end = moment();
+
+        function cb(start, end) {
+            // $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            
+            // Update tracking variables
+            currentStart = start.format('YYYY-MM-DD');
+            currentEnd = end.format('YYYY-MM-DD');
+            
+            updateStats(currentStart, currentEnd);
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+               'Today': [moment(), moment()],
+               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+               'This Month': [moment().startOf('month'), moment().endOf('month')],
+               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end); // Initial call
+    });
+
+    function showDetails(type) {
+        let url = '';
+        const params = `?start_date=${currentStart}&end_date=${currentEnd}`;
+
+        if(type === 'beli') {
+            url = `<?= base_url('stok-opname/barang-masuk') ?>${params}&type=Barang Beli`;
+        } else if (type === 'return') {
+            url = `<?= base_url('stok-opname/barang-masuk') ?>${params}&type=Barang Return`;
+        } else if (type === 'keluar') {
+            url = `<?= base_url('stok-opname/barang-keluar') ?>${params}`;
+        } else if (type === 'resi') {
+            // Resi info usually comes from Barang Keluar data
+            url = `<?= base_url('stok-opname/barang-keluar') ?>${params}`;
+        }
+
+        if(url) {
+            window.location.href = url;
+        }
+    }
+
+    function updateStats(start, end) {
+        // Show loading state
+        Swal.showLoading();
+
+        $.ajax({
+            url: '<?= base_url('stok-opname/home/get-stats') ?>',
+            type: 'POST',
+            data: {
+                start_date: start,
+                end_date: end
+            },
+            success: function(response) {
+                Swal.close();
+                if(response.status === 'success') {
+                    // Update DOM
+                    let fmt = new Intl.NumberFormat('en-US'); 
+                    
+                    $('#val-masuk-beli').text(fmt.format(response.stats.masuk_beli));
+                    $('#val-masuk-return').text(fmt.format(response.stats.masuk_return));
+                    $('#val-keluar').text(fmt.format(response.stats.keluar));
+                    $('#val-resi').text(fmt.format(response.stats.resi));
+
+                } else {
+                    Swal.fire('Gagal', response.message, 'error');
+                }
+            },
+            error: function() {
+                Swal.close();
+                // Swal.fire('Error', 'Gagal mengambil data', 'error');
+            }
+        });
+    }
+
+    function exportExcel() {
+        let url = '<?= base_url('stok-opname/barang-keluar/export') ?>' + 
+                  '?start_date=' + currentStart + 
+                  '&end_date=' + currentEnd;
+        window.location.href = url;
+    }
+
+    function shareWhatsapp() {
+        Swal.fire({
+             title: 'Memproses Data...',
+             text: 'Mohon tunggu sebentar',
+             allowOutsideClick: false,
+             didOpen: () => {
+                 Swal.showLoading();
+             }
+        });
+
+        $.ajax({
+            url: '<?= base_url('stok-opname/get-whatsapp-text') ?>',
+            type: 'POST',
+            data: {
+                start_date: currentStart,
+                end_date: currentEnd
+            },
+            success: function(response) {
+                Swal.close();
+                if(response.status === 'success') {
+                    // Open WhatsApp
+                    let text = response.text;
+                    let url = 'https://wa.me/?text=' + encodeURIComponent(text);
+                    window.open(url, '_blank');
+                } else {
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat memproses data', 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                Swal.close();
+                Swal.fire('Error', 'Gagal menghubungi server: ' + xhr.status + ' ' + error, 'error');
+            }
+        });
+    }
+
     function logout() {
         Swal.fire({
             title: 'Apakah anda yakin?',

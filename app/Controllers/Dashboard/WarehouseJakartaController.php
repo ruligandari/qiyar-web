@@ -6,6 +6,8 @@ use App\Controllers\BaseController;
 use \Hermawan\DataTables\DataTable;
 
 use DateTime;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class WarehouseJakartaController extends BaseController
 {
@@ -606,7 +608,7 @@ class WarehouseJakartaController extends BaseController
     public function listBarangKeluarJkt()
     {
         $db = db_connect();
-        $builder = $db->table('barang_keluar_jkt')->select('id, tanggal, nama_barang, qty, total_resi, bukti_pickup');
+        $builder = $db->table('barang_keluar_jkt')->select('id, tanggal, nama_barang, qty, total_resi, bukti_pickup, resi');
         return DataTable::of($builder)->addNumbering('no')->filter(function ($builder, $request) {
             // cek data diterima atau tidak
             if ($request->dates) {
@@ -649,4 +651,5 @@ class WarehouseJakartaController extends BaseController
             <button class="btn btn-danger" title="Hapus Bray" onclick="deleteStokJkt(' . $row->id . ')" role="button"><i class="fas fa-sm fa-trash"></i></button></div>';
         }, 'last')->toJson(true);
     }
+
 }

@@ -9,38 +9,64 @@ class BarangMasukController extends BaseController
     // constructor
     protected $barang_masuk_jkt;
     protected $master_jkt;
+    protected $barang_keluar_jkt;
+
     public function __construct()
     {
         // load model
-        $this->barang_masuk_jkt = new \App\Models\StokBarangJktModel();
-        $this->master_jkt = new \App\Models\BarangMasukJktModel();
+        $this->barang_masuk_jkt = new \App\Models\StokBarangJktModel(); // Log Masuk
+        $this->master_jkt = new \App\Models\BarangMasukJktModel(); // Master Stock
+        $this->barang_keluar_jkt = new \App\Models\BarangKeluarJktModel(); // Log Keluar
     }
     public function index()
     {
-        // Ambil query pencarian dari input
-        $search = $this->request->getGet('q');
-
-        // Inisialisasi model
-        $stokModel = $this->barang_masuk_jkt;
-
-        if ($search) {
-            // Jika ada pencarian, filter data berdasarkan pencarian
-            $stokModel->like('nama_barang', $search);
-        }
-
-        // Pagination dengan pencarian
-        $stok = $stokModel->orderBy('id', 'DESC')
-            ->paginate(30, 'stok_barang');
-
+        // CSR Implementation
         $data = [
             'title' => 'Barang Masuk',
-            'data' => $stok,
-            'pager' => $stokModel->pager,  // Untuk pagination
-            'search' => $search            // Untuk mempertahankan input pencarian di view
         ];
         return view('mobile/barang_masuk/index', $data);
     }
 
+    public function listData()
+    {
+        $search = $this->request->getPost('q');
+        $page = (int) ($this->request->getPost('page') ?? 1);
+        
+        $startDate = $this->request->getPost('start_date');
+        $endDate = $this->request->getPost('end_date');
+        $jenis = $this->request->getPost('jenis_barang_masuk');
+
+        $stokModel = $this->barang_masuk_jkt;
+
+        if ($search) {
+            $stokModel->like('nama_barang', $search);
+        }
+        
+        if ($startDate && $endDate) {
+            $stokModel->where("tanggal >=", $startDate)->where("tanggal <=", $endDate);
+        }
+
+        if ($jenis) {
+            $stokModel->where('jenis_barang_masuk', $jenis);
+        }
+
+        $stokModel->orderBy('id', 'DESC');
+
+        $data = $stokModel->paginate(30, 'stok_barang', $page);
+        
+        $pager = $stokModel->pager;
+        $pager->setPath(base_url('stok-opname/barang-masuk'));
+
+        return $this->response
+            ->setContentType('application/json')
+            ->setJSON([
+            'status' => 'success',
+            'data' => $data,
+            'pager' => $pager->links('stok_barang', 'bootstrap_pagination'),
+        ]);
+    }
+
+    // scan
     // scan
     public function scan()
     {
@@ -49,22 +75,113 @@ class BarangMasukController extends BaseController
 
         // Mengambil nilai 'kode_barang' dari array yang di-decode
         $kode_barang = $input['kode_barang'];
-        // find data ke master_jkt
-        $data = $this->master_jkt->find($kode_barang);
-        if ($data) {
-            // jika data ada
-            $response = [
-                'status' => 'success',
-                'data' => $data
-            ];
+        $mode = $input['mode'] ?? 'beli'; // beli or return
+
+        if ($mode == 'return') {
+            // Cari di data Barang Keluar berdasarkan Resi (Return ALL matches)
+            $items = $this->barang_keluar_jkt->where('resi', $kode_barang)->findAll();
+            
+            if ($items && count($items) > 0) {
+                // Enrich data with Master IDs
+                foreach ($items as &$item) {
+                    $masterItem = $this->master_jkt->where('nama_barang', $item['nama_barang'])->first();
+                    if($masterItem) {
+                        $item['id_barang_master'] = $masterItem['id'];
+                    }
+                }
+                
+                // Check if this Resi has been returned previously
+                $isDuplicate = $this->barang_masuk_jkt->where('resi', $kode_barang)->where('jenis_barang_masuk', 'Barang Return')->countAllResults() > 0;
+                
+                $response = [
+                    'status' => 'success',
+                    'data' => $items, 
+                    'count' => count($items),
+                    'is_duplicate' => $isDuplicate
+                ];
+            } else {
+                 $response = [
+                    'status' => 404,
+                    'message' => 'Resi tidak ditemukan'
+                ];
+            }
+
         } else {
-            // jika data tidak ada
-            $response = [
-                'status' => 404,
-                'message' => $kode_barang
-            ];
+            // Mode Beli (Default): Cari di Master Data by ID
+            $data = $this->master_jkt->find($kode_barang);
+            if ($data) {
+                $response = [
+                    'status' => 'success',
+                    'data' => $data
+                ];
+            } else {
+                $response = [
+                    'status' => 404,
+                    'message' => $kode_barang
+                ];
+            }
         }
-        return $this->response->setJSON($response);
+        
+        return $this->response->setContentType('application/json')->setJSON($response);
+    }
+
+    public function scanManual()
+    {
+        // find data ke master_jkt (Master Stock)
+        $master = $this->master_jkt->findAll();
+
+        $data = [
+            'title' => 'Scan Manual Barang Masuk',
+            'data' => $master
+        ];
+        return view('mobile/barang_masuk/scan_manual', $data);
+    }
+
+    public function addBulk()
+    {
+        // Accept JSON because we will send complex data
+        $input = json_decode($this->request->getBody(), true);
+        
+        if (!$input || !isset($input['items'])) {
+            return $this->response->setStatusCode(400)->setJSON(['status' => 'error', 'message' => 'Invalid Data']);
+        }
+
+        $items = $input['items'];
+        $resi = $input['resi'];
+        $jenis_barang_masuk = $input['jenis_barang_masuk'] ?? 'Barang Return';
+        $date = date('Y-m-d');
+
+        $successCount = 0;
+        
+        foreach($items as $item) {
+            $idMaster = $item['id_barang'];
+            $qty = $item['qty'];
+            $nama_barang = $item['nama_barang'];
+
+            // 1. Get Master Stock
+            $masterData = $this->master_jkt->find($idMaster);
+            if(!$masterData) continue; // Skip if somehow not found
+
+            // 2. Insert to Barang Masuk Log
+            $logData = [
+                'nama_barang' => $nama_barang,
+                'qty' => $qty,
+                'tanggal' => $date,
+                'jenis_barang_masuk' => $jenis_barang_masuk,
+                'resi' => $resi
+            ];
+            $this->barang_masuk_jkt->insert($logData);
+
+            // 3. Update Master Stock (Atomic Update)
+            $this->master_jkt->where('id', $idMaster)->set('qty', 'qty + ' . $qty, false)->update();
+
+            $successCount++;
+        }
+
+        return $this->response->setJSON([
+            'status' => 'success', 
+            'message' => "$successCount barang berhasil disimpan."
+        ]);
     }
 
     public function add()
@@ -76,6 +193,8 @@ class BarangMasukController extends BaseController
         $qty = $this->request->getPost('qty');
         $jenis_barang_masuk = $this->request->getPost('jenis_barang_masuk');
 
+        $resi = $this->request->getPost('resi'); // Get Resi from form
+
         // cari stok master
         $qtyMaster = $this->master_jkt->find($id);
         // input data ke barang_masuk_jkt
@@ -85,6 +204,7 @@ class BarangMasukController extends BaseController
             'qty' => $qty,
             'tanggal' => date('Y-m-d'),
             'jenis_barang_masuk' => $jenis_barang_masuk,
+            'resi' => $resi, // Save Resi
         ];
 
         $this->barang_masuk_jkt->insert($data);
@@ -115,7 +235,7 @@ class BarangMasukController extends BaseController
         // hapus data dengan data id
         $this->barang_masuk_jkt->delete($id);
         // kirim response json dengan status sukses
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil dihapus', 'data', $id]);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Data berhasil dihapus', 'data' => $id]);
     }
 
     public function edit()

@@ -3,7 +3,6 @@
 <?= $this->section('content'); ?>
 
 <!-- sweetalert -->
-
 <?php if (session()->getFlashdata('success')) : ?>
     <script>
         Swal.fire({
@@ -22,58 +21,54 @@
         })
     </script>
 <?php endif; ?>
+
 <!-- Header Area -->
 <div class="header-area" id="headerArea">
     <div class="container">
-        <!-- Header Content -->
         <div class="header-content position-relative d-flex align-items-center justify-content-between">
             <!-- Back Button -->
             <div class="back-button">
-                <a href="<?= base_url('/stok-opname') ?>">
+                <a href="<?= base_url('stok-opname/barang-keluar') ?>">
                     <i class="bi bi-arrow-left-short"></i>
                 </a>
             </div>
-
             <!-- Page Title -->
             <div class="page-heading">
                 <h6 class="mb-0"><?= $title ?></h6>
             </div>
-            <div class="setting-wrapper">
-            </div>
+            <div class="setting-wrapper"></div>
         </div>
     </div>
 </div>
+
 <div class="page-content-wrapper py-3">
     <div class="container">
         <!-- User Meta Data-->
         <div class="card user-data-card">
             <div class="card-body">
-                
-                <!-- Scan Mode Toggle -->
-                <!-- Scan Mode Toggle Removed as per request -->
-
                 <!-- 1. Sticky Resi -->
                 <div class="form-group mb-3">
-                    <label class="form-label fw-bold" for="resi">Nomor Resi</label>
+                    <label class="form-label fw-bold" for="resi">Nomor Resi (Satu resi banyak barang)</label>
                     <div class="input-group">
-                        <input class="form-control" id="resi" name="resi" placeholder="Scan Resi Awal..." required>
+                        <input class="form-control" id="resi" name="resi" placeholder="Scan/Input Resi Awal..." required>
                         <button class="btn btn-outline-danger" type="button" id="btnResetResi" onclick="resetResi()">
                             <i class="bi bi-x-lg"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Camera Element -->
-                <div class="card mb-3 shadow-sm">
-                     <div class="card-body p-2">
-                        <div id="reader" width="100%"></div>
-                     </div>
+                <hr class="my-2">
+
+                <!-- 2. Input Barang -->
+                <div class="form-group mb-2">
+                    <label class="form-label" for="qrcode">Scan / Cari Barang</label>
+                    <div class="input-group">
+                        <input class="form-control" id="qrcode" name="qrcode" placeholder="Scan atau ketik ID..." autofocus>
+                        <button class="btn btn-outline-secondary" type="button" id="btn-search"><i class="bi bi-search"></i></button>
+                    </div>
                 </div>
 
-                <!-- 2. Input Barang Results -->
                 <!-- Manual inputs removed for streamlined flow -->
-
-                <!-- 3. Cart List -->
 
                 <!-- 3. Cart List -->
                 <div class="table-responsive">
@@ -95,64 +90,69 @@
                 <button class="btn btn-primary w-100 mt-3" type="button" id="btn-save-all" onclick="submitBulk()">
                     <i class="bi bi-save"></i> Simpan Semua Barang
                 </button>
+
             </div>
         </div>
     </div>
-    <div class="pb-3"></div>
 </div>
-
-<!-- Footer Nav -->
-<!-- <div class="footer-nav-area" id="footerNav">
-    <div class="container px-0">
-        <div class="footer-nav position-relative shadow-sm footer-style-two">
-            <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
-                <li>
-                    <a href="<?= base_url('/') ?>">
-                        <i class="bi bi-house"></i>
-                    </a>
-                </li>
-
-                <li class="active">
-                    <a href="#">
-                        <i class="bi bi-plus-lg"></i>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="<?= base_url('/profile') ?>">
-                        <i class="bi bi-person"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div> -->
-
 
 <?= $this->endsection(); ?>
 
 <?= $this->section('script'); ?>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>
-    // State
-    var cart = [];
+    // Data Master Barang dari Server
     var dataMaster = <?php echo json_encode($data); ?>;
 
-    // Check Local Storage on Load
-    document.addEventListener('DOMContentLoaded', function() {
-        var savedResi = localStorage.getItem('current_resi');
-        if (savedResi) {
-            document.getElementById('resi').value = savedResi;
+    // Check if jQuery is loaded
+    if (typeof jQuery === 'undefined') {
+        alert("Error: jQuery not loaded! Please refresh or check connection.");
+    }
+
+    $(document).ready(function() {
+        console.log("Data Master Loaded:", dataMaster.length, "items");
+        if(dataMaster.length > 0) {
+            console.log("Sample Data:", dataMaster[0]);
+        } else {
+            console.log("Data Master is EMPTY!");
         }
         
-        // Listen to Resi changes
-        document.getElementById('resi').addEventListener('change', function() {
-            var val = this.value;
+        // Fokus otomatis ke input scan
+        $('#qrcode').focus();
+
+        // 1. Handle Enter key (Keyboard & Scanner)
+        $('#qrcode').on('keypress', function(e) {
+            if (e.which == 13 || e.keyCode == 13) {
+                e.preventDefault(); 
+                var code = $(this).val();
+                processScan(code);
+            }
+        });
+
+        // 2. Handle Search Button Click
+        $('#btn-search').on('click', function() {
+             var code = $('#qrcode').val();
+             processScan(code);
+        });
+    });
+
+    // State
+    var dataMaster = <?php echo json_encode($data); ?>;
+    var cart = []; 
+
+    // Sticky Resi Logic
+    function initStickyResi() {
+        var savedResi = localStorage.getItem('current_resi');
+        if (savedResi) {
+            $('#resi').val(savedResi);
+        }
+        
+        $('#resi').on('change', function() {
+            var val = $(this).val();
             localStorage.setItem('current_resi', val);
             if(val) checkResiAvailability(val);
         });
-    });
+    }
 
     function checkResiAvailability(resi) {
         $.ajax({
@@ -161,12 +161,9 @@
             data: {resi: resi},
             success: function(response) {
                 if(response.status === 'success' && response.exists) {
-                    // Pause camera if running
-                    try { html5QrcodeScanner.pause(true); } catch(e){}
-
                     Swal.fire({
                         title: 'Resi Sudah Ada',
-                        text: "Nomor resi ini sudah pernah digunakan sebelumnya. Apakah anda ingin melanjutkan?",
+                        text: "Nomor resi ini sudah pernah digunakan sebelumnya. Apakah anda ingin melanjutkan menambahkan barang ke resi ini?",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -175,11 +172,13 @@
                         cancelButtonText: 'Ganti Resi'
                     }).then((result) => {
                         if (!result.isConfirmed) {
+                             $('#resi').val('');
                              localStorage.removeItem('current_resi');
-                             document.getElementById('resi').value = '';
+                             $('#resi').focus();
+                        } else {
+                            // User wants to continue, maybe focus scanning
+                            $('#qrcode').focus();
                         }
-                         // Resume camera
-                         try { html5QrcodeScanner.resume(); } catch(e){}
                     });
                 }
             }
@@ -189,113 +188,76 @@
     function resetResi() {
         if(confirm('Reset Resi?')) {
             localStorage.removeItem('current_resi');
-            document.getElementById('resi').value = '';
-            Swal.fire({
-                icon: 'info', title: 'Resi Direset', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000
-            });
+            $('#resi').val('');
+            $('#resi').focus();
         }
     }
 
-    function onScanSuccess(decodedText, decodedResult) {
-        // Pause Camera
-        try {
-            html5QrcodeScanner.pause(true); 
-        } catch(e) {
-            console.error("Pause failed", e);
+    $(document).ready(function() {
+        console.log("Master Items:", dataMaster.length);
+        initStickyResi();
+        
+        // 1. Initial Focus Logic
+        if($('#resi').val() == '') {
+            $('#resi').focus();
+        } else {
+            $('#qrcode').focus();
         }
 
-        // Logic: If Resi is empty => Mode Resi. Else => Mode Barang.
-        var currentResi = document.getElementById('resi').value;
-
-        if(!currentResi) {
-        if(!currentResi) {
-            // Mode Scan Resi
-            var newResi = decodedText;
-            document.getElementById('resi').value = newResi;
-            localStorage.setItem('current_resi', newResi);
-            
-            // Check availability immediately
-            $.ajax({
-                url: '<?= base_url('stok-opname/barang-keluar/check-resi') ?>',
-                type: 'POST',
-                data: {resi: newResi},
-                success: function(response) {
-                    if(response.status === 'success' && response.exists) {
-                        Swal.fire({
-                            title: 'Resi Sudah Ada',
-                            text: "Resi " + newResi + " sudah pernah digunakan. Lanjut?",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonText: 'Ya',
-                            cancelButtonText: 'Ganti'
-                        }).then((result) => {
-                            if (!result.isConfirmed) {
-                                document.getElementById('resi').value = '';
-                                localStorage.removeItem('current_resi');
-                                resumeCamera();
-                            } else {
-                                Swal.fire({
-                                    icon: 'success', 
-                                    title: 'Resi Tersimpan', 
-                                    text: 'Nomor: ' + newResi,
-                                    timer: 1000,
-                                    showConfirmButton: false
-                                }).then(() => { resumeCamera(); });
-                            }
-                        });
-                    } else {
-                        // Not exists, safe to proceed
-                        Swal.fire({
-                            icon: 'success', 
-                            title: 'Resi Tersimpan', 
-                            text: 'Nomor: ' + newResi,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            resumeCamera();
-                        });
-                    }
+        // 2. Resi Enter Handler (Move to Barcode)
+        $('#resi').on('keypress', function(e) {
+            if (e.which == 13) {
+                e.preventDefault(); 
+                if($(this).val()) {
+                    $('#qrcode').focus();
                 }
-            });
-            return;
-        }
+            }
+        });
 
-        // Mode Scan Barang
-        // data array
-        var dataMaster = <?php echo json_encode($data); ?>;
-        var data = dataMaster.find(x => x.id == decodedText);
+        // 3. Handle Enter on QR Code (Rapid Scan)
+        $('#qrcode').on('keypress', function(e) {
+            if (e.which == 13) {
+                e.preventDefault(); 
+                processScan($(this).val());
+            }
+        });
+
+        $('#btn-search').on('click', function() {
+            processScan($('#qrcode').val());
+        });
+    });
+
+    function processScan(code) {
+        if(!code) return;
+        code = code.toString().trim();
+        
+        var data = dataMaster.find(x => x.id == code);
         
         if (!data) {
-            Swal.fire({
-                icon: 'error', 
-                title: 'Tidak Ditemukan', 
-                text: 'Barang tidak terdaftar', 
-                confirmButtonText: 'OK'
-            }).then(() => {
-                resumeCamera();
-            });
-            return;
+             Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'Barang tidak terdaftar', timer: 1000, showConfirmButton: false});
+             $('#qrcode').select();
+             return;
         }
 
-        // Found -> Direct Add
+        // Found -> Direct Add Mode
         addToCart(data.id, data.nama_barang, 1);
         
-        Swal.fire({
-            icon: 'success', 
-            title: 'Berhasil',
-            text: data.nama_barang + ' ditambahkan',
-            confirmButtonText: 'Lanjut Scan'
-        }).then(() => {
-            resumeCamera();
+        // Visual Feedback (Toast)
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true
         });
-    }
+        Toast.fire({
+            icon: 'success',
+            title: data.nama_barang + ' (+1)'
+        });
 
-    function resumeCamera() {
-        try {
-            html5QrcodeScanner.resume();
-        } catch(e) {
-            console.error("Resume failed", e);
-            // Fallback if needed
-        }
+        // Reset Scan Input
+        $('#qrcode').val('');
+        $('#qrcode').focus();
     }
 
     function addToCart(id, nama, qty) {
@@ -316,11 +278,17 @@
     function updateQty(index, newQty) {
         newQty = parseInt(newQty);
         if(newQty <= 0 || isNaN(newQty)) {
+            // Optional: Ask confirmation to delete if 0? Or just reset to 1?
+            // Let's reset to 1 for safety or delete if 0. 
+            // Better behavior: minimum 1.
             cart[index].qty = 1;
-            renderCart(); 
+            renderCart(); // re-render to fix input value
             return;
         }
         cart[index].qty = newQty;
+        // No full re-render needed if we trust the input, but safe to re-render or just update data
+        // Optimization: Don't re-render entire table to avoid losing focus if user is typing fast
+        // But since onchange triggers on blur/enter, re-render is fine.
     }
 
     function deleteItem(index) {
@@ -330,14 +298,10 @@
 
     function renderCart() {
         var html = '';
-        var tbody = document.getElementById('cart-body');
-        var emptyMsg = document.getElementById('empty-cart-msg');
-
         if(cart.length === 0) {
-            emptyMsg.style.display = 'block';
-            tbody.innerHTML = '';
+            $('#empty-cart-msg').show();
         } else {
-            emptyMsg.style.display = 'none';
+            $('#empty-cart-msg').hide();
             cart.forEach((item, index) => {
                 html += `
                     <tr>
@@ -355,12 +319,12 @@
                     </tr>
                 `;
             });
-            tbody.innerHTML = html;
         }
+        $('#cart-body').html(html);
     }
 
     function submitBulk() {
-        var resi = document.getElementById('resi').value;
+        var resi = $('#resi').val();
         if(!resi) {
             Swal.fire('Error', 'Resi wajib diisi!', 'error');
             return;
@@ -379,12 +343,6 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.showLoading();
-                // Use jQuery for Ajax because user has it loaded in layout usually, 
-                // or fetch API. Layout seems to have jQuery (from index.php context).
-                // But scaner.php didn't explicitly load jquery in section script.
-                // It is safer to use fetch or check if jquery is available.
-                // Assuming jQuery is available from layout.
-                
                 $.ajax({
                     url: '<?= base_url('stok-opname/barang-keluar/add-bulk') ?>',
                     type: 'POST',
@@ -396,18 +354,26 @@
                     success: function(response) {
                         if(response.status === 'success') {
                             Swal.fire('Berhasil', response.message, 'success').then(() => {
+                                // Clear cart
                                 cart = [];
                                 renderCart();
                                 
-                                // Clear Resi & Reset Mode
+                                // Clear Resi (Transaction Completed)
                                 localStorage.removeItem('current_resi');
-                                document.getElementById('resi').value = '';
-
-                                document.getElementById('resi').value = '';
-                                // Reset other variables if needed
+                                $('#resi').val('');
+                                
+                                // Reset inputs
+                                $('#qrcode').focus();
                             });
                         } else {
+                            // Partial or Error
                              Swal.fire('Info', response.message, 'warning');
+                             // If partial success, we might want to clear cart or only keep failed? 
+                             // For simplicity: Clear all for now or let user manually fix.
+                             // Let's clear nothing on error so user can fix.
+                             if(response.status === 'partial') {
+                                 // Maybe remove successful ones? Too complex for now.
+                             }
                         }
                     },
                     error: function() {
@@ -417,19 +383,5 @@
             }
         });
     }
-
-    function onScanFailure(error) {
-        // handle scan failure
-    }
-
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader", {
-            fps: 10,
-            qrbox: { width: 250, height: 150 },
-            formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.EAN_13 ]
-        },
-        /* verbose= */
-        false);
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 </script>
 <?= $this->endsection(); ?>
