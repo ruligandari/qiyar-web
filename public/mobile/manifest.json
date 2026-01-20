@@ -1,13 +1,13 @@
 {
   "name": "Warehouse Qiyarmedia",
   "short_name": "Warehouse",
-  "start_url": "http://localhost:8080/m/login",
+  "start_url": "https://qiyarmedia.com/m/login",
   "display": "standalone",
   "background_color": "#0d5afd",
   "theme_color": "#0d5afd",
   "orientation": "portrait",
   "description": "Warehouse Qiyarmedia",
- "icons": [
+  "icons": [
     {
       "src": "/mobile/img/icons/windows11/SmallTile.scale-100.png",
       "sizes": "71x71"
