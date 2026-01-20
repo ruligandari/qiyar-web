@@ -4,14 +4,13 @@
 /////////////////////////////////////////////////////////////////////////////
 
 // Cache name
-var CACHE_NAME = 'cache-version-1';
+var CACHE_NAME = 'cache-version-2';
 
 // Files required to make this app work offline
 var REQUIRED_FILES = [
-  'index.html',
   '/',
   'https://cdn.jsdelivr.net/npm/sweetalert2@11',
-  'https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js',
+  'https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js',
   'bootstrap.bundle.min.js',
   'slideToggle.min.js',
   'internet-status.js',
@@ -27,24 +26,24 @@ var REQUIRED_FILES = [
   '../style.css'
 ];
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   // Perform install step:  loading each required file into cache
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(function(cache) {
+      .then(function (cache) {
         // Add all offline dependencies to the cache
         return cache.addAll(REQUIRED_FILES);
       })
-      .then(function() {
+      .then(function () {
         return self.skipWaiting();
       })
   );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
     caches.match(event.request)
-      .then(function(response) {
+      .then(function (response) {
         // Cache hit - return the response from the cached version
         if (response) {
           return response;
@@ -53,11 +52,11 @@ self.addEventListener('fetch', function(event) {
         // `fetch` is essentially a "fallback"
         return fetch(event.request);
       }
-    )
+      )
   );
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   // Calling claim() to force a "controllerchange" event on navigator.serviceWorker
   event.waitUntil(self.clients.claim());
 });

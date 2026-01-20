@@ -110,12 +110,7 @@
     }
 
     $(document).ready(function() {
-        console.log("Data Master Loaded:", dataMaster.length, "items");
-        if(dataMaster.length > 0) {
-            console.log("Sample Data:", dataMaster[0]);
-        } else {
-            console.log("Data Master is EMPTY!");
-        }
+
         
         // Fokus otomatis ke input scan
         $('#qrcode').focus();
@@ -194,7 +189,7 @@
     }
 
     $(document).ready(function() {
-        console.log("Master Items:", dataMaster.length);
+
         initStickyResi();
         
         // 1. Initial Focus Logic

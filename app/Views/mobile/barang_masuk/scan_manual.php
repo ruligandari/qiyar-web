@@ -129,7 +129,7 @@
     var dataMaster = <?php echo json_encode($data); ?>;
 
     $(document).ready(function() {
-        console.log("Data Master Loaded:", dataMaster.length);
+
         
         // Focus intial
         $('#qrcode').focus();
