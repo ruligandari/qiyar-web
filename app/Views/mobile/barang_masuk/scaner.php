@@ -77,10 +77,7 @@
                             <input class="form-control" id="qty" name="qty" placeholder="Masukan Qty">
                         </div>
                         <!-- Input Resi (Hidden by default, shown for Return) -->
-                        <div class="form-group d-none" id="group-resi">
-                            <label class="form-label" for="resi">Nomor Resi (Referensi)</label>
-                            <input class="form-control" id="resi" name="resi" placeholder="Nomor Resi" readonly>
-                        </div>
+                        
 
                         <button class="btn btn-primary w-100 mt-3" type="submit">Simpan</button>
                     </div>
@@ -129,22 +126,19 @@
         
         if(mode === 'beli') {
             $('#jenis_barang_masuk').val('Barang Beli');
-            $('#label-scan').text('Nama Barang');
-            $('#message').attr('placeholder', 'Scan Kode QR Barang...');
-            $('#group-resi').addClass('d-none');
         } else {
             $('#jenis_barang_masuk').val('Barang Return');
-            $('#label-scan').text('Hasil Scan Resi');
-            $('#message').attr('placeholder', 'Scan QR Resi...');
-            $('#group-resi').removeClass('d-none');
         }
+        // UI always same
+        $('#label-scan').text('Nama Barang');
+        $('#message').attr('placeholder', 'Scan Kode QR Barang...');
     });
 
     function resetForm() {
         $('#message').val('');
         $('#id_barang').val('');
         $('#qty').val('');
-        $('#resi').val('');
+
         $('#multiple-results-area').addClass('d-none');
         $('#multiple-results-body').empty();
         $('#single-item-container').removeClass('d-none'); // Show single
@@ -152,91 +146,33 @@
 
     function onScanSuccess(decodedText, decodedResult) {
         console.log(`Code matched = ${decodedText}`, decodedResult);
-        var mode = $('input[name="mode_switch"]:checked').val();
+        
+        // Always Logic Barang Beli equivalent (Match with local master data)
+        var data = dataMaster.find(x => x.id == decodedText);
+        if (!data) {
+            // Try comparing Strings just in case
+            data = dataMaster.find(x => x.id == decodedText.toString());
+        }
 
-        if (mode === 'beli') {
-            // Logic Barang Beli: Match with local master data
-            var data = dataMaster.find(x => x.id == decodedText);
-            if (!data) {
-                // Try comparing Strings just in case
-                data = dataMaster.find(x => x.id == decodedText.toString());
-            }
+        if (data) {
+            // Success
+            if(html5QrcodeScanner) html5QrcodeScanner.pause(); // Pause camera
 
-            if (data) {
-                // Success
-                if(html5QrcodeScanner) html5QrcodeScanner.pause(); // Pause camera
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: data.nama_barang,
-                    confirmButtonText: 'OK',
-                    allowOutsideClick: false
-                }).then(() => {
-                    document.getElementById('message').value = data.nama_barang;
-                    document.getElementById('id_barang').value = data.id;
-                    $('#single-item-container').removeClass('d-none');
-                    // document.getElementById('qty').focus(); 
-                    if(html5QrcodeScanner) html5QrcodeScanner.resume(); // Resume camera
-                });
-            } else {
-                Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'Barang tidak terdaftar', timer: 1500});
-            }
-
-        } else {
-            // Logic Barang Return: Server lookup by Resi
-            // Get CSRF Token
-            var csrfName = '<?= csrf_token() ?>';
-            var csrfHash = '<?= csrf_hash() ?>'; // This should ideally be dynamic if using regeneration
-
-            fetch('<?= base_url('stok-opname/barang-masuk/scan') ?>', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    kode_barang: decodedText,
-                    mode: 'return',
-                    [csrfName]: csrfHash
-                })
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    if(html5QrcodeScanner) html5QrcodeScanner.pause(); // Pause camera while showing alert
-
-                    if(data.is_duplicate) {
-                         Swal.fire({
-                            icon: 'warning',
-                            title: 'SUDAH DIRETURN',
-                            text: 'Resi ini sudah tercatat sebagai Barang Return! Lanjut?',
-                            showCancelButton: true,
-                            confirmButtonText: 'Ya',
-                            cancelButtonText: 'Batal',
-                            confirmButtonColor: '#d33',
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                processDisplayData(data.data, decodedText);
-                            } else {
-                                if(html5QrcodeScanner) html5QrcodeScanner.resume();
-                                resetForm();
-                            }
-                        });
-                    } else {
-                        processDisplayData(data.data, decodedText);
-                    }
-                } else {
-                    Swal.fire({icon: 'error', title: 'Gagal', text: 'Resi tidak ditemukan', timer: 1500});
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: data.nama_barang,
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            }).then(() => {
+                document.getElementById('message').value = data.nama_barang;
+                document.getElementById('id_barang').value = data.id;
+                $('#single-item-container').removeClass('d-none');
+                // document.getElementById('qty').focus(); 
+                if(html5QrcodeScanner) html5QrcodeScanner.resume(); // Resume camera
             });
+        } else {
+            Swal.fire({icon: 'error', title: 'Tidak Ditemukan', text: 'Barang tidak terdaftar', timer: 1500});
         }
     }
 
@@ -264,7 +200,7 @@
         document.getElementById('message').value = item.nama_barang;
         document.getElementById('id_barang').value = item.id_barang_master;
         document.getElementById('qty').value = item.qty;
-        document.getElementById('resi').value = resi;
+
     }
 
     function showItemTable(items, resi) {

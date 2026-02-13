@@ -310,10 +310,7 @@
                     <label class="form-label">Jenis</label>
                     <input type="text" class="form-control" name="jenis_barang_masuk" readonly>
                 </div>
-                <div class="form-group" id="detail-resi-group">
-                    <label class="form-label">Nomor Resi</label>
-                    <input type="text" class="form-control" name="resi" readonly>
-                </div>
+                
                 <button class="btn btn-secondary w-100" type="button" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
@@ -459,12 +456,7 @@
                 $('#detailBarang input[name="tanggal"]').val(response.tanggal);
                 $('#detailBarang input[name="jenis_barang_masuk"]').val(response.jenis_barang_masuk);
                 
-                if(response.resi) {
-                    $('#detailBarang input[name="resi"]').val(response.resi);
-                    $('#detail-resi-group').show();
-                } else {
-                    $('#detail-resi-group').hide();
-                }
+
             },
             error: function() {
                 Swal.fire('Gagal!', 'Gagal mengambil detail data', 'error');

@@ -53,15 +53,7 @@
                 <!-- Scan Mode Toggle Removed as per request -->
 
                 <!-- 1. Sticky Resi -->
-                <div class="form-group mb-3">
-                    <label class="form-label fw-bold" for="resi">Nomor Resi</label>
-                    <div class="input-group">
-                        <input class="form-control" id="resi" name="resi" placeholder="Scan Resi Awal..." required>
-                        <button class="btn btn-outline-danger" type="button" id="btnResetResi" onclick="resetResi()">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                    </div>
-                </div>
+
 
                 <!-- Camera Element -->
                 <div class="card mb-3 shadow-sm">
@@ -82,6 +74,7 @@
                             <tr>
                                 <th>Barang</th>
                                 <th width="15%">Qty</th>
+                                <th width="15%">Total Resi</th>
                                 <th width="10%">Aksi</th>
                             </tr>
                         </thead>
@@ -139,124 +132,12 @@
     var cart = [];
     var dataMaster = <?php echo json_encode($data); ?>;
 
-    // Check Local Storage on Load
-    document.addEventListener('DOMContentLoaded', function() {
-        var savedResi = localStorage.getItem('current_resi');
-        if (savedResi) {
-            document.getElementById('resi').value = savedResi;
-        }
-        
-        // Listen to Resi changes
-        document.getElementById('resi').addEventListener('change', function() {
-            var val = this.value;
-            localStorage.setItem('current_resi', val);
-            if(val) checkResiAvailability(val);
-        });
-    });
-
-    function checkResiAvailability(resi) {
-        $.ajax({
-            url: '<?= base_url('stok-opname/barang-keluar/check-resi') ?>',
-            type: 'POST',
-            data: {resi: resi},
-            success: function(response) {
-                if(response.status === 'success' && response.exists) {
-                    // Pause camera if running
-                    try { html5QrcodeScanner.pause(true); } catch(e){}
-
-                    Swal.fire({
-                        title: 'Resi Sudah Ada',
-                        text: "Nomor resi ini sudah pernah digunakan sebelumnya. Apakah anda ingin melanjutkan?",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, Lanjutkan',
-                        cancelButtonText: 'Ganti Resi'
-                    }).then((result) => {
-                        if (!result.isConfirmed) {
-                             localStorage.removeItem('current_resi');
-                             document.getElementById('resi').value = '';
-                        }
-                         // Resume camera
-                         try { html5QrcodeScanner.resume(); } catch(e){}
-                    });
-                }
-            }
-        });
-    }
-
-    function resetResi() {
-        if(confirm('Reset Resi?')) {
-            localStorage.removeItem('current_resi');
-            document.getElementById('resi').value = '';
-            Swal.fire({
-                icon: 'info', title: 'Resi Direset', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000
-            });
-        }
-    }
-
     function onScanSuccess(decodedText, decodedResult) {
         // Pause Camera
         try {
             html5QrcodeScanner.pause(true); 
         } catch(e) {
             console.error("Pause failed", e);
-        }
-
-        // Logic: If Resi is empty => Mode Resi. Else => Mode Barang.
-        var currentResi = document.getElementById('resi').value;
-
-        if(!currentResi) {
-        if(!currentResi) {
-            // Mode Scan Resi
-            var newResi = decodedText;
-            document.getElementById('resi').value = newResi;
-            localStorage.setItem('current_resi', newResi);
-            
-            // Check availability immediately
-            $.ajax({
-                url: '<?= base_url('stok-opname/barang-keluar/check-resi') ?>',
-                type: 'POST',
-                data: {resi: newResi},
-                success: function(response) {
-                    if(response.status === 'success' && response.exists) {
-                        Swal.fire({
-                            title: 'Resi Sudah Ada',
-                            text: "Resi " + newResi + " sudah pernah digunakan. Lanjut?",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonText: 'Ya',
-                            cancelButtonText: 'Ganti'
-                        }).then((result) => {
-                            if (!result.isConfirmed) {
-                                document.getElementById('resi').value = '';
-                                localStorage.removeItem('current_resi');
-                                resumeCamera();
-                            } else {
-                                Swal.fire({
-                                    icon: 'success', 
-                                    title: 'Resi Tersimpan', 
-                                    text: 'Nomor: ' + newResi,
-                                    timer: 1000,
-                                    showConfirmButton: false
-                                }).then(() => { resumeCamera(); });
-                            }
-                        });
-                    } else {
-                        // Not exists, safe to proceed
-                        Swal.fire({
-                            icon: 'success', 
-                            title: 'Resi Tersimpan', 
-                            text: 'Nomor: ' + newResi,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            resumeCamera();
-                        });
-                    }
-                }
-            });
-            return;
         }
 
         // Mode Scan Barang
@@ -307,7 +188,8 @@
             cart.push({
                 id_barang: id,
                 nama_barang: nama,
-                qty: qty
+                qty: qty,
+                total_resi: 1 // Default 1
             });
         }
         renderCart();
@@ -321,6 +203,16 @@
             return;
         }
         cart[index].qty = newQty;
+    }
+
+    function updateTotalResi(index, newVal) {
+        newVal = parseInt(newVal);
+        if(newVal <= 0 || isNaN(newVal)) {
+            cart[index].total_resi = 1;
+            renderCart(); 
+            return;
+        }
+        cart[index].total_resi = newVal;
     }
 
     function deleteItem(index) {
@@ -349,6 +241,13 @@
                                 onchange="updateQty(${index}, this.value)"
                             >
                         </td>
+                        <td class="text-center" width="25%">
+                            <input type="number" class="form-control form-control-sm text-center" 
+                                value="${item.total_resi}" 
+                                min="1" 
+                                onchange="updateTotalResi(${index}, this.value)"
+                            >
+                        </td>
                         <td class="text-center align-middle">
                             <button class="btn btn-sm btn-danger py-1 px-2" onclick="deleteItem(${index})"><i class="bi bi-trash"></i></button>
                         </td>
@@ -360,11 +259,6 @@
     }
 
     function submitBulk() {
-        var resi = document.getElementById('resi').value;
-        if(!resi) {
-            Swal.fire('Error', 'Resi wajib diisi!', 'error');
-            return;
-        }
         if(cart.length === 0) {
             Swal.fire('Error', 'List barang kosong!', 'error');
             return;
@@ -372,25 +266,19 @@
 
         Swal.fire({
             title: 'Simpan Semua?',
-            text: `Akan menyimpan ${cart.length} jenis barang ke Resi ${resi}.`,
+            text: `Akan menyimpan ${cart.length} jenis barang.`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Ya, Simpan'
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.showLoading();
-                // Use jQuery for Ajax because user has it loaded in layout usually, 
-                // or fetch API. Layout seems to have jQuery (from index.php context).
-                // But scaner.php didn't explicitly load jquery in section script.
-                // It is safer to use fetch or check if jquery is available.
-                // Assuming jQuery is available from layout.
                 
                 $.ajax({
                     url: '<?= base_url('stok-opname/barang-keluar/add-bulk') ?>',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        resi: resi,
                         items: cart
                     }),
                     success: function(response) {
@@ -398,13 +286,6 @@
                             Swal.fire('Berhasil', response.message, 'success').then(() => {
                                 cart = [];
                                 renderCart();
-                                
-                                // Clear Resi & Reset Mode
-                                localStorage.removeItem('current_resi');
-                                document.getElementById('resi').value = '';
-
-                                document.getElementById('resi').value = '';
-                                // Reset other variables if needed
                             });
                         } else {
                              Swal.fire('Info', response.message, 'warning');

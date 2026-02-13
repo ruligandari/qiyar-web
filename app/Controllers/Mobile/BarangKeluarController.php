@@ -103,12 +103,8 @@ class BarangKeluarController extends BaseController
         }
 
         $items = $input['items'];
-        $resi = $input['resi'];
         $date = date('Y-m-d');
-        
-        if (empty($resi)) {
-             return $this->response->setJSON(['status' => 'error', 'message' => 'Resi wajib diisi']);
-        }
+
 
         $successCount = 0;
         $errors = [];
@@ -141,9 +137,8 @@ class BarangKeluarController extends BaseController
             $data = [
                 'nama_barang' => $nama_barang,
                 'qty' => $qty,
-                'tanggal' => $date,
-                'total_resi' => 1, 
-                'resi' => $resi,
+                'tanggal' => $date, // Use transaction date
+                'total_resi' => isset($item['total_resi']) ? $item['total_resi'] : 1,
             ];
             $this->barang_keluar_jkt->insert($data);
 
@@ -183,7 +178,6 @@ class BarangKeluarController extends BaseController
         $nama_barang = $this->request->getPost('nama_barang');
         $id = $this->request->getPost('id_barang');
         $qty = $this->request->getPost('qty');
-        $resi = $this->request->getPost('resi');
 
         // cari stok master
         $qtyMaster = $this->master_jkt->find($id);
@@ -192,16 +186,12 @@ class BarangKeluarController extends BaseController
         if ($addQty < 0) {
             return redirect()->to(base_url('stok-opname/barang-keluar'))->with('error', 'Stok Barang bernilai minus, Silahkan Cek Stok Terlebih Dahulu');
         }
-        if (empty($resi)) {
-             return redirect()->back()->with('error', 'Nomor Resi wajib diisi');
-        }
 
         $data = [
             'nama_barang' => $nama_barang,
             'qty' => $qty,
             'tanggal' => date('Y-m-d'),
-            'total_resi' => 1, // Default 1 as per request
-            'resi' => $resi,
+            'total_resi' => $this->request->getPost('total_resi') ?? 1,
         ];
 
         $this->barang_keluar_jkt->insert($data);
@@ -246,26 +236,27 @@ class BarangKeluarController extends BaseController
         $id = $this->request->getPost('id');
         $nama_barang = $this->request->getPost('nama_barang');
         $qty = $this->request->getPost('qty');
-        $resi = $this->request->getPost('resi');
-
-        if (empty($resi)) {
-            return redirect()->back()->with('error', 'Nomor Resi wajib diisi');
-        }
 
         $stokMaster = $this->master_jkt->where('nama_barang', $nama_barang)->first();
         if ($stokMaster == null || $stokMaster['qty'] < $qty) {
             return redirect()->to(base_url('stok-opname/barang-keluar'))->with('error', 'Stok barang tidak mencukupi');
         }
         $stokBarang = $this->barang_keluar_jkt->find($id);
+        
+        // Logic: 
+        // 1. Revert previous stock deduction (Current Master + Old Qty)
+        // 2. Subtract New Qty
+        // Formula: New Master = (Current Master + Old Log Qty) - New Log Qty
+        
         $stokBaru = ($stokMaster['qty'] + $stokBarang['qty']) - $qty;
+
         // INPUT ke stok master
         $this->master_jkt->where('nama_barang', $nama_barang)->set(['qty' => $stokBaru])->update();
 
         $data = [
             'nama_barang' => $nama_barang,
             'qty' => $qty,
-            'total_resi' => 1, // Default 1
-            'resi' => $resi,
+            'total_resi' => $this->request->getPost('total_resi') ?? 1,
         ];
 
         $this->barang_keluar_jkt->update($id, $data);

@@ -86,10 +86,7 @@
                         </div>
 
                         <!-- Input Resi (Hidden by default, shown for Return) -->
-                        <div class="form-group d-none" id="group-resi">
-                            <label class="form-label" for="resi">Nomor Resi (Referensi)</label>
-                            <input class="form-control" id="resi" name="resi" placeholder="Nomor Resi Barang Keluar" readonly>
-                        </div>
+                        
 
                         <button class="btn btn-primary w-100 mt-3" type="submit">Simpan</button>
                     </div>
@@ -141,20 +138,15 @@
             
             if(mode === 'beli') {
                 $('#jenis_barang_masuk').val('Barang Beli');
-                $('#label-scan').text('Scan Barcode Barang');
-                $('#qrcode').attr('placeholder', 'Scan atau ketik ID Barang...');
-                $('#help-text').text('Tekan Enter atau klik tombol Cari setelah mengetik ID Barang.');
-                $('#group-resi').addClass('d-none');
-                $('#qty').prop('readonly', false).val('');
             } else {
                 $('#jenis_barang_masuk').val('Barang Return');
-                $('#label-scan').text('Scan Resi Pengiriman');
-                $('#qrcode').attr('placeholder', 'Scan atau ketik Nomor Resi...');
-                $('#help-text').text('Masukkan Resi untuk mencari data Barang Keluar.');
-                $('#group-resi').removeClass('d-none');
-                // Qty might be auto-filled from return data, but usually return qty is entered manually or capped.
-                // For now allow edit.
             }
+            // Logic UI Scan always same
+            $('#label-scan').text('Scan Barcode Barang');
+            $('#qrcode').attr('placeholder', 'Scan atau ketik ID Barang...');
+            $('#help-text').text('Tekan Enter atau klik tombol Cari setelah mengetik ID Barang.');
+            $('#qty').prop('readonly', false).val('');
+            
             $('#qrcode').focus();
         });
 
@@ -178,7 +170,7 @@
         $('#nama_barang').val('');
         $('#id_barang').val('');
         $('#qty').val('');
-        $('#resi').val('');
+
         $('#qrcode').val('');
         $('#multiple-results-area').addClass('d-none');
         $('#multiple-results-body').empty();
@@ -190,16 +182,9 @@
              Swal.fire({icon: 'info', title: 'Input Kosong', text: 'Silakan scan atau ketik kode', timer: 1500});
              return;
         }
-
-        var mode = $('input[name="mode_switch"]:checked').val();
-
-        if (mode === 'beli') {
-            // Logic Barang Beli: Cari di Data Master (Client Side)
-            searchMasterBarang(code);
-        } else {
-            // Logic Barang Return: Cari Resi di Server (Ajax)
-            searchResiReturn(code);
-        }
+        
+        // Always search logic Barang Beli (Master Data) even for returns
+        searchMasterBarang(code);
     }
 
     function searchMasterBarang(id) {
@@ -304,7 +289,7 @@
         $('#nama_barang').val(item.nama_barang);
         $('#id_barang').val(item.id_barang_master); 
         $('#qty').val(item.qty); 
-        $('#resi').val(resi);
+
         $('#qty').focus();
         $('#qty').select();
     }

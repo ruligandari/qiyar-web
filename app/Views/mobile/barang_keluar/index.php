@@ -136,9 +136,10 @@
                         <input class="form-control" id="message" name="qty" placeholder="Masukan Qty">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="message">Nomor Resi</label>
-                        <input class="form-control" id="message" name="resi" placeholder="Masukan Nomor Resi" required>
+                        <label class="form-label" for="message">Total Resi</label>
+                        <input class="form-control" id="message" name="total_resi" placeholder="Masukan Total Resi (default 1)" value="1">
                     </div>
+
                     <!-- <div class="form-group">
                         <label class="form-label" for="message">Jenis Barang Masuk</label>
                         <select class="form-select" name="jenis_barang_masuk">
@@ -178,9 +179,10 @@
                     <input type="text" class="form-control" name="qty" readonly>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Nomor Resi</label>
-                    <input type="text" class="form-control" name="resi" readonly>
+                    <label class="form-label">Total Resi</label>
+                    <input type="text" class="form-control" name="total_resi" readonly>
                 </div>
+
                 <button class="btn btn-secondary w-100" type="button" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
@@ -218,9 +220,10 @@
                         <input type="number" class="form-control" id="message" name="qty" placeholder="Masukan Qty" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="message">Nomor Resi</label>
-                        <input type="text" class="form-control" id="message" name="resi" placeholder="Masukan Nomor Resi" value="" required>
+                        <label class="form-label" for="message">Total Resi</label>
+                        <input type="number" class="form-control" id="message" name="total_resi" placeholder="Masukan Total Resi" required>
                     </div>
+
                     <button class="btn btn-primary w-100" type="submit">Simpan</button>
                 </form>
             </div>
@@ -308,9 +311,10 @@
                                             <p class="mb-0 text-truncate">Qty:
                                                 <span class="badge rounded-pill bg-primary">${escapeHtml(item.qty)}</span>
                                             </p>
-                                            <p class="mb-0 text-truncate">Resi:
-                                                <span class="badge rounded-pill bg-primary">${escapeHtml(item.total_resi)}</span>
+                                            <p class="mb-0 text-truncate">Total Resi:
+                                                <span class="badge rounded-pill bg-info">${escapeHtml(item.total_resi)}</span>
                                             </p>
+
                                         </div>
                                     </div>
                                 </div>
@@ -416,11 +420,10 @@
                 $('#editBarang').modal('show');
                 $('#editBarang input[name="nama_barang"]').val(response.nama_barang);
                 $('#editBarang input[name="qty"]').val(response.qty);
-                // tanggal
                 $('#editBarang input[name="tanggal"]').val(response.tanggal);
                 $('#editBarang input[name="id"]').val(response.id);
-                // resi
-                $('#editBarang input[name="resi"]').val(response.resi);
+                $('#editBarang input[name="total_resi"]').val(response.total_resi);
+
             },
             error: function() {
                 Swal.fire(
@@ -442,7 +445,8 @@
                 $('#detailBarang input[name="nama_barang"]').val(response.nama_barang);
                 $('#detailBarang input[name="qty"]').val(response.qty);
                 $('#detailBarang input[name="tanggal"]').val(response.tanggal);
-                $('#detailBarang input[name="resi"]').val(response.resi);
+                $('#detailBarang input[name="total_resi"]').val(response.total_resi);
+
             },
             error: function() {
                 Swal.fire('Gagal!', 'Gagal mengambil detail data', 'error');

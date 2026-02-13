@@ -47,15 +47,7 @@
         <div class="card user-data-card">
             <div class="card-body">
                 <!-- 1. Sticky Resi -->
-                <div class="form-group mb-3">
-                    <label class="form-label fw-bold" for="resi">Nomor Resi (Satu resi banyak barang)</label>
-                    <div class="input-group">
-                        <input class="form-control" id="resi" name="resi" placeholder="Scan/Input Resi Awal..." required>
-                        <button class="btn btn-outline-danger" type="button" id="btnResetResi" onclick="resetResi()">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                    </div>
-                </div>
+
 
                 <hr class="my-2">
 
@@ -77,6 +69,7 @@
                             <tr>
                                 <th>Barang</th>
                                 <th width="15%">Qty</th>
+                                <th width="15%">Total Resi</th>
                                 <th width="10%">Aksi</th>
                             </tr>
                         </thead>
@@ -135,79 +128,13 @@
     var dataMaster = <?php echo json_encode($data); ?>;
     var cart = []; 
 
-    // Sticky Resi Logic
-    function initStickyResi() {
-        var savedResi = localStorage.getItem('current_resi');
-        if (savedResi) {
-            $('#resi').val(savedResi);
-        }
-        
-        $('#resi').on('change', function() {
-            var val = $(this).val();
-            localStorage.setItem('current_resi', val);
-            if(val) checkResiAvailability(val);
-        });
-    }
 
-    function checkResiAvailability(resi) {
-        $.ajax({
-            url: '<?= base_url('stok-opname/barang-keluar/check-resi') ?>',
-            type: 'POST',
-            data: {resi: resi},
-            success: function(response) {
-                if(response.status === 'success' && response.exists) {
-                    Swal.fire({
-                        title: 'Resi Sudah Ada',
-                        text: "Nomor resi ini sudah pernah digunakan sebelumnya. Apakah anda ingin melanjutkan menambahkan barang ke resi ini?",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, Lanjutkan',
-                        cancelButtonText: 'Ganti Resi'
-                    }).then((result) => {
-                        if (!result.isConfirmed) {
-                             $('#resi').val('');
-                             localStorage.removeItem('current_resi');
-                             $('#resi').focus();
-                        } else {
-                            // User wants to continue, maybe focus scanning
-                            $('#qrcode').focus();
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    function resetResi() {
-        if(confirm('Reset Resi?')) {
-            localStorage.removeItem('current_resi');
-            $('#resi').val('');
-            $('#resi').focus();
-        }
-    }
 
     $(document).ready(function() {
 
-        initStickyResi();
-        
         // 1. Initial Focus Logic
-        if($('#resi').val() == '') {
-            $('#resi').focus();
-        } else {
-            $('#qrcode').focus();
-        }
+        $('#qrcode').focus();
 
-        // 2. Resi Enter Handler (Move to Barcode)
-        $('#resi').on('keypress', function(e) {
-            if (e.which == 13) {
-                e.preventDefault(); 
-                if($(this).val()) {
-                    $('#qrcode').focus();
-                }
-            }
-        });
 
         // 3. Handle Enter on QR Code (Rapid Scan)
         $('#qrcode').on('keypress', function(e) {
@@ -264,7 +191,8 @@
             cart.push({
                 id_barang: id,
                 nama_barang: nama,
-                qty: qty
+                qty: qty,
+                total_resi: 1 // Default 1
             });
         }
         renderCart();
@@ -284,6 +212,16 @@
         // No full re-render needed if we trust the input, but safe to re-render or just update data
         // Optimization: Don't re-render entire table to avoid losing focus if user is typing fast
         // But since onchange triggers on blur/enter, re-render is fine.
+    }
+
+    function updateTotalResi(index, newVal) {
+        newVal = parseInt(newVal);
+        if(newVal <= 0 || isNaN(newVal)) {
+            cart[index].total_resi = 1;
+            renderCart(); 
+            return;
+        }
+        cart[index].total_resi = newVal;
     }
 
     function deleteItem(index) {
@@ -308,6 +246,13 @@
                                 onchange="updateQty(${index}, this.value)"
                             >
                         </td>
+                        <td class="text-center" width="25%">
+                            <input type="number" class="form-control form-control-sm text-center" 
+                                value="${item.total_resi}" 
+                                min="1" 
+                                onchange="updateTotalResi(${index}, this.value)"
+                            >
+                        </td>
                         <td class="text-center align-middle">
                             <button class="btn btn-sm btn-danger py-1 px-2" onclick="deleteItem(${index})"><i class="bi bi-trash"></i></button>
                         </td>
@@ -319,11 +264,6 @@
     }
 
     function submitBulk() {
-        var resi = $('#resi').val();
-        if(!resi) {
-            Swal.fire('Error', 'Resi wajib diisi!', 'error');
-            return;
-        }
         if(cart.length === 0) {
             Swal.fire('Error', 'List barang kosong!', 'error');
             return;
@@ -331,7 +271,7 @@
 
         Swal.fire({
             title: 'Simpan Semua?',
-            text: `Akan menyimpan ${cart.length} jenis barang ke Resi ${resi}.`,
+            text: `Akan menyimpan ${cart.length} jenis barang.`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Ya, Simpan'
@@ -343,7 +283,6 @@
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        resi: resi,
                         items: cart
                     }),
                     success: function(response) {
@@ -353,22 +292,11 @@
                                 cart = [];
                                 renderCart();
                                 
-                                // Clear Resi (Transaction Completed)
-                                localStorage.removeItem('current_resi');
-                                $('#resi').val('');
-                                
                                 // Reset inputs
                                 $('#qrcode').focus();
                             });
                         } else {
-                            // Partial or Error
                              Swal.fire('Info', response.message, 'warning');
-                             // If partial success, we might want to clear cart or only keep failed? 
-                             // For simplicity: Clear all for now or let user manually fix.
-                             // Let's clear nothing on error so user can fix.
-                             if(response.status === 'partial') {
-                                 // Maybe remove successful ones? Too complex for now.
-                             }
                         }
                     },
                     error: function() {
